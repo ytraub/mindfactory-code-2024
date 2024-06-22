@@ -1,5 +1,5 @@
-with tasksplit {
-    module_left speed=100 distance=1000
-}
+color RED
 
-drive_straight speed=100 distance=1000
+// This is a comment
+drive_forward (speed=100 distance=1000) // jajaja
+drive_backward (speed=100 distance=1000)
