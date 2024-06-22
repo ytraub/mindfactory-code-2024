@@ -1,6 +1,18 @@
 from enum import Enum
 
-KEYWORDS = ["with", "tasksplit", "drive_forward", "drive_backward", "speed", "distance"]
+KEYWORDS = [
+    "with",
+    "tasksplit",
+    "color",
+    "drive_forward",
+    "drive_backward",
+    "speed",
+    "distance",
+]
+
+COLORS = [
+    "RED"
+]
 
 
 class TokenType(Enum):
@@ -12,7 +24,8 @@ class TokenType(Enum):
     NUMBER = 5
     STRING = 6
     KEYWORD = 7
-    EOF = 8
+    COLOR = 8
+    EOF = 9
 
 
 class Token:
@@ -52,6 +65,8 @@ class Lexer:
 
                 if self.buffer in KEYWORDS:
                     self.make_token(TokenType.KEYWORD, self.buffer)
+                elif self.buffer in COLORS:
+                    self.make_token(TokenType.COLOR, self.buffer)
 
                 self.buffer = ""
 
