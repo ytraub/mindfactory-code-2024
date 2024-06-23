@@ -6,6 +6,8 @@ def main() -> None:
     lexer = Lexer()
     compiler = Compiler()
 
+    file_buffer = "import robot\n"
+
     with open("runs/test.txt", "r") as source:
         lexer.reset()
         (tokens, error) = lexer.scan_source(source.read())
@@ -13,11 +15,17 @@ def main() -> None:
         if error:
             log_error("Lexing", "test.txt", error)
             return
-        
-        error = compiler.compile(tokens, "output/runs.py", "test")
+
+        (output, error) = compiler.compile(tokens, "test")
         if error:
             log_error("Parsing", "test.txt", error)
             return
+
+        file_buffer += output
+
+    with open("output/runs.py", "w+") as output:
+        output.write(file_buffer)
+
 
 def log_error(type: str, filename: str, msg: str) -> None:
     print(f"==== ( {type} error -> {filename} ) ====\n{msg}")

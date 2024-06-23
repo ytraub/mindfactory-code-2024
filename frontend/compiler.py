@@ -20,27 +20,38 @@ class Compiler:
         self.output_buffer: str = ""
 
     def compile(
-        self, tokens: list[Token], output_path: str, run_name: str
-    ) -> str | None:
+        self, tokens: list[Token], run_name: str
+    ) -> tuple[str | None, str | None]:
         self.tokens = tokens
         self.token_ptr = 0
         self.current_token = self.tokens[0]
 
-        self.write_buffer(f"class {run_name.title()}:")
+        self.write_buffer(f"class {run_name.title()}:\n")
+        self.write_buffer(f"\tdef __init__(self):\n\t\tself.run_name = '{run_name}'\n")
 
         error = self.parse_color()
         if error:
-            return error
+            return (None, error)
+
+        if self.run_color:
+            self.write_buffer(f"\t\tself.run_color = '{self.run_color}'\n")
+        else:
+            return (None, self.error_current("Unexpected: No valid run color found"))
+
+        self.write_buffer(f"\tdef execute(self):\n")
 
         error = self.parse_block()
         if error:
-            return error
+            return (None, error)
+
+        return (self.output_buffer, None)
 
     def parse_color(self) -> str | None:
         if self.check_current_keyword("color"):
             if self.check_type(self.peek(), TokenType.COLOR):
                 self.advance()
                 self.run_color = self.current_token.lexeme
+                self.advance()
             else:
                 return self.error_current(
                     f"Expected a color after keyword: {self.current_token.lexeme}"
@@ -53,7 +64,7 @@ class Compiler:
 
     def parse_task(self) -> str | None:
         task = self.current_token
-        self.advance()
+        self.write_buffer(f"\t\trobot.{task.lexeme}(")
         return self.parse_params()
 
     def parse_params(self) -> str | None:
@@ -62,8 +73,34 @@ class Compiler:
         if error:
             return error
 
-        """ with open(output_path, "w+") as output:
-            output.write(f"class {run_name.title()}:") """
+        while not self.check_type(self.peek(), TokenType.RIGHT_PAREN):
+            self.parse_pair()
+
+        self.output_buffer = self.output_buffer.strip(",")
+        self.write_buffer(")\n")
+
+    def parse_pair(self) -> str | None:
+        self.advance()
+        error = self.expect(TokenType.PARAM)
+        if error:
+            return error
+
+        param = self.current_token.lexeme
+
+        self.advance()
+        error = self.expect(TokenType.EQUALS)
+        if error:
+            return error
+
+        self.advance()
+        match self.current_token.token_type:
+            case TokenType.NUMBER:
+                value = self.current_token.lexeme
+                self.write_buffer(f"{param}={value},")
+            case _:
+                return self.error_current(
+                    f"Expected: {TokenType.NUMBER}, got: {self.current_token.token_type}"
+                )
 
     def check_type(self, token: Token, token_type: TokenType) -> bool:
         return token.token_type == token_type

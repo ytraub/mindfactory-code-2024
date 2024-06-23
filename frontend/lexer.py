@@ -35,7 +35,7 @@ class TokenType(Enum):
 
 
 class Token:
-    def __init__(self, token_type: TokenType, lexeme: str | float, line: int) -> None:
+    def __init__(self, token_type: TokenType, lexeme: str | int, line: int) -> None:
         self.token_type = token_type
         self.lexeme = lexeme
         self.line = line
@@ -61,7 +61,7 @@ class Lexer:
                     self.buffer += char
                     char = next(source_iter, "\0")
 
-                self.make_token(TokenType.NUMBER, float(self.buffer))
+                self.make_token(TokenType.NUMBER, int(self.buffer))
                 self.buffer = ""
 
             if self.is_text(char):
@@ -99,10 +99,11 @@ class Lexer:
                 case "=":
                     self.make_token(TokenType.EQUALS, char)
                 case "/":
-                    if next(source_iter) == "/":
+                    if next(source_iter, "\0") == "/":
                         char = next(source_iter)
-                        while char != "\n":
-                            char = next(source_iter)
+                        while char != "\n" and char != "\0":
+                            char = next(source_iter, "\0")
+                        self.line_count += 1
                     else:
                         return self.error(
                             f"Unrecognized character found in source: '{char}'\n  ->  Consider adding another '/' in order to make a comment"
@@ -134,5 +135,5 @@ class Lexer:
     def error(self, msg: str) -> tuple[list[Token], str]:
         return ([], f"[Line {self.line_count}] {msg}")
 
-    def make_token(self, token_type: TokenType, lexeme: str | float) -> None:
+    def make_token(self, token_type: TokenType, lexeme: str | int) -> None:
         self.tokens.append(Token(token_type, lexeme, self.line_count))
