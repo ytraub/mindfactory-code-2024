@@ -4,4 +4,4 @@ class Test:
 		self.run_name = 'test'
 		self.run_color = 'RED'
 	def execute(self):
-		robot.drive_forward(speed=100,distance=1000)
+		robot.drive_backward(distance=100,speed=99)

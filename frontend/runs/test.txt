@@ -1,5 +1,4 @@
 color RED
 
 // This is a comment
-drive_forward (speed=100 distance=1000) // jajaja
-drive_backward (speed=100 distance=1000)
+drive_backward (distance=100 speed=99)

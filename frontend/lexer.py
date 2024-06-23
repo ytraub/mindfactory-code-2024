@@ -77,6 +77,10 @@ class Lexer:
                     self.make_token(TokenType.PARAM, self.buffer)
                 elif self.buffer in COLORS:
                     self.make_token(TokenType.COLOR, self.buffer)
+                else:
+                    return self.error(
+                        f"Unrecognized stream of characters found in source: {self.buffer}"
+                    )
 
                 self.buffer = ""
 
