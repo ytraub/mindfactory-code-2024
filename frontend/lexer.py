@@ -4,15 +4,19 @@ KEYWORDS = [
     "with",
     "tasksplit",
     "color",
+]
+
+TASKS = [
     "drive_forward",
     "drive_backward",
+]
+
+PARAMS = [
     "speed",
     "distance",
 ]
 
-COLORS = [
-    "RED"
-]
+COLORS = ["RED"]
 
 
 class TokenType(Enum):
@@ -24,8 +28,10 @@ class TokenType(Enum):
     NUMBER = 5
     STRING = 6
     KEYWORD = 7
-    COLOR = 8
-    EOF = 9
+    TASK = 8
+    PARAM = 9
+    COLOR = 10
+    EOF = 11
 
 
 class Token:
@@ -65,6 +71,10 @@ class Lexer:
 
                 if self.buffer in KEYWORDS:
                     self.make_token(TokenType.KEYWORD, self.buffer)
+                elif self.buffer in TASKS:
+                    self.make_token(TokenType.TASK, self.buffer)
+                elif self.buffer in PARAMS:
+                    self.make_token(TokenType.PARAM, self.buffer)
                 elif self.buffer in COLORS:
                     self.make_token(TokenType.COLOR, self.buffer)
 
