@@ -17,7 +17,7 @@ class Compiler:
         self.previous_token: Token = None
 
         self.run_color: str = ""
-        self.run_name: str = ""
+        self.output_buffer: str = ""
 
     def compile(
         self, tokens: list[Token], output_path: str, run_name: str
@@ -25,6 +25,8 @@ class Compiler:
         self.tokens = tokens
         self.token_ptr = 0
         self.current_token = self.tokens[0]
+
+        self.write_buffer(f"class {run_name.title()}:")
 
         error = self.parse_color()
         if error:
@@ -39,7 +41,6 @@ class Compiler:
             if self.check_type(self.peek(), TokenType.COLOR):
                 self.advance()
                 self.run_color = self.current_token.lexeme
-                self.advance()
             else:
                 return self.error_current(
                     f"Expected a color after keyword: {self.current_token.lexeme}"
@@ -51,7 +52,15 @@ class Compiler:
         return self.parse_task()
 
     def parse_task(self) -> str | None:
-        pass
+        task = self.current_token
+        self.advance()
+        return self.parse_params()
+
+    def parse_params(self) -> str | None:
+        self.advance()
+        error = self.expect(TokenType.LEFT_PAREN)
+        if error:
+            return error
 
         """ with open(output_path, "w+") as output:
             output.write(f"class {run_name.title()}:") """
@@ -71,6 +80,14 @@ class Compiler:
             and self.current_token.lexeme == keyword
         )
 
+    def expect(self, token_type: TokenType) -> str | None:
+        if self.current_token.token_type != token_type:
+            return self.error_current(
+                f"Expected: '{token_type}', got: '{self.current_token.token_type}'"
+            )
+
+        return None
+
     def peek(self) -> Token:
         if self.check_current_type(TokenType.EOF):
             return self.tokens[self.token_ptr]
@@ -87,3 +104,6 @@ class Compiler:
 
     def error(self, line, message) -> str:
         return f"[Line {line}] {message}"
+
+    def write_buffer(self, msg: str) -> None:
+        self.output_buffer += msg

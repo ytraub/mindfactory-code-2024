@@ -1,4 +1,4 @@
-color
+color RED
 
 // This is a comment
 drive_forward (speed=100 distance=1000) // jajaja
