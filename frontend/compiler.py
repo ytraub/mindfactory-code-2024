@@ -40,7 +40,7 @@ class Compiler:
 
         self.write_buffer(f"\tasync def execute(self, robot: Robot):")
 
-        error = self.parse_block()
+        error = self.parse_run()
         if error:
             return (None, error)
 
@@ -58,82 +58,73 @@ class Compiler:
                 )
         else:
             return self.error_current("Expected color decleration in beginning of file")
+        
+    def parse_run(self) -> str | None:
+        while not self.check_type(self.peek(), TokenType.EOF):
+            if self.check_current_type(TokenType.LEFT_BRACE):
+                error = self.parse_block()
+                if error:
+                    return error
+                if self.check_current_type(TokenType.EOF):
+                    break
+                
+            elif self.check_current_keyword("with"):
+                self.advance()
+                error = self.parse_multitask()
+                if error:
+                    return error
+                if self.check_current_type(TokenType.EOF):
+                    break
+                
+            self.write_buffer("\n\t\tawait ")
+            error = self.parse_task()
+            if error:
+                return error
 
     def parse_block(self, in_multitask: bool = False) -> str | None:
-        match self.current_token.token_type:
-            case TokenType.LEFT_BRACE:
-                # Sub block
-                self.advance()
+        if self.check_current_type(TokenType.LEFT_BRACE):
+            self.advance()
 
-                if in_multitask:
-                    self.write_buffer("\n\t\tawait multitask(")
-
-                while not self.check_current_type(TokenType.RIGHT_BRACE):
-                    if self.check_current_type(TokenType.LEFT_BRACE):
-                        if in_multitask:
-                            return self.error_current(f"No sub blocks in multitask allowed")
-                        error = self.parse_block()
-                        if error:
-                            return error
-                        
-                    elif self.check_current_keyword("with"):
-                        if in_multitask:
-                            return self.error_current(f"No sub blocks in multitask allowed")
-                        
-                        self.advance()
-                        error = self.parse_multitask()
-                        if error:
-                            return error
-
-                    if self.check_current_type(TokenType.EOF):
-                        return self.error_current(f"Unexpected {TokenType.EOF} in sub block\n  ->  Consider closing the block using '{"}"}'")
-                    elif self.check_current_type(TokenType.RIGHT_BRACE):
-                        self.advance()
-                        break
-                    
-                    if not in_multitask:
-                        self.write_buffer("\n\t\tawait ")
-
-                    error = self.parse_task()
-                    if error:
-                        return error
-                    
+            if in_multitask:
+                self.write_buffer("\n\t\tawait multitask(")
+            while not self.check_current_type(TokenType.RIGHT_BRACE):
+                if self.check_current_type(TokenType.LEFT_BRACE):
                     if in_multitask:
-                        self.write_buffer(",")
-                    
-                if in_multitask:
-                    self.strip_buffer(",")
-                    self.write_buffer(")")
-
-                self.advance()
-            case TokenType.TASK | TokenType.KEYWORD:
-                # Top level
-                while not self.check_type(self.peek(), TokenType.EOF):
-                    if self.check_current_type(TokenType.LEFT_BRACE):
-                        error = self.parse_block()
-                        if error:
-                            return error
-
-                        if self.check_current_type(TokenType.EOF):
-                            break
-                        
-                    elif self.check_current_keyword("with"):
-                        self.advance()
-                        error = self.parse_multitask()
-                        if error:
-                            return error
-
-                        if self.check_current_type(TokenType.EOF):
-                            break
-                        
-                    self.write_buffer("\n\t\tawait ")
-                    error = self.parse_task()
+                        return self.error_current(f"No sub blocks in multitask allowed")
+                    error = self.parse_block()
                     if error:
                         return error
-            case _:
-                return self.error_current(
-                    f"Expected: {TokenType.TASK}, got {self.current_token.token_type}: {self.current_token.lexeme}"
-                )
+                    
+                elif self.check_current_keyword("with"):
+                    if in_multitask:
+                        return self.error_current(f"No sub blocks in multitask allowed")
+                    
+                    self.advance()
+                    error = self.parse_multitask()
+                    if error:
+                        return error
+                if self.check_current_type(TokenType.EOF):
+                    return self.error_current(f"Unexpected {TokenType.EOF} in sub block\n  ->  Consider closing the block using '{"}"}'")
+                elif self.check_current_type(TokenType.RIGHT_BRACE):
+                    self.advance()
+                    break
+                    
+                if not in_multitask:
+                    self.write_buffer("\n\t\tawait ")
+
+                error = self.parse_task()
+                if error:
+                    return error
+                if in_multitask:
+                    self.write_buffer(",")
+            if in_multitask:
+                self.strip_buffer(",")
+                self.write_buffer(")")
+            self.advance()
+        else:
+            return self.error_current(
+                f"Expected: {TokenType.TASK}, got {self.current_token.token_type}: {self.current_token.lexeme}"
+            )
             
     def parse_multitask(self) -> str | None:
         if self.check_current_keyword("multitask"):
