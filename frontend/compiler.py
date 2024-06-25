@@ -38,7 +38,7 @@ class Compiler:
         else:
             return (None, self.error_current("Unexpected: No valid run color found"))
 
-        self.write_buffer(f"\tasync def execute(self, robot: Robot):\n")
+        self.write_buffer(f"\tasync def execute(self, robot: Robot):")
 
         error = self.parse_block()
         if error:
@@ -66,9 +66,7 @@ class Compiler:
                 self.advance()
 
                 if in_multitask:
-                    self.write_buffer("\t\t await multitask(")
-                else:
-                    self.write_buffer("\t\t await")
+                    self.write_buffer("\n\t\tawait multitask(")
 
                 while not self.check_current_type(TokenType.RIGHT_BRACE):
                     if self.check_current_type(TokenType.LEFT_BRACE):
@@ -81,6 +79,9 @@ class Compiler:
 
                     if self.check_current_type(TokenType.EOF):
                         return self.error_current(f"Unexpected {TokenType.EOF} in sub block\n  ->  Consider closing the block using '{"}"}'")
+
+                    if not in_multitask:
+                        self.write_buffer("\n\t\tawait ")
 
                     error = self.parse_task()
                     if error:
@@ -121,7 +122,7 @@ class Compiler:
                         else:
                             return self.error_current(f"Expected valid parameter to 'with', got: {self.current_token.lexeme}")
                         
-
+                    self.write_buffer("\n\t\tawait ")
                     error = self.parse_task()
                     if error:
                         return error
@@ -152,7 +153,7 @@ class Compiler:
                 return error
 
         self.strip_buffer(",")
-        self.write_buffer(")\n")
+        self.write_buffer(")")
         self.advance()
 
     def parse_pair(self) -> str | None:
