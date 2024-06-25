@@ -2,7 +2,7 @@ from enum import Enum
 
 KEYWORDS = [
     "with",
-    "tasksplit",
+    "multitask",
     "color",
 ]
 

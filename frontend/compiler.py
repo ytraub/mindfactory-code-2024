@@ -38,7 +38,7 @@ class Compiler:
         else:
             return (None, self.error_current("Unexpected: No valid run color found"))
 
-        self.write_buffer(f"\tdef execute(self, robot: Robot):\n")
+        self.write_buffer(f"\tasync def execute(self, robot: Robot):\n")
 
         error = self.parse_block()
         if error:
@@ -59,11 +59,17 @@ class Compiler:
         else:
             return self.error_current("Expected color decleration in beginning of file")
 
-    def parse_block(self) -> str | None:
+    def parse_block(self, in_multitask: bool = False) -> str | None:
         match self.current_token.token_type:
             case TokenType.LEFT_BRACE:
                 # Sub block
                 self.advance()
+
+                if in_multitask:
+                    self.write_buffer("\t\t await multitask(")
+                else:
+                    self.write_buffer("\t\t await")
+
                 while not self.check_current_type(TokenType.RIGHT_BRACE):
                     if self.check_current_type(TokenType.LEFT_BRACE):
                         error = self.parse_block()
@@ -79,9 +85,16 @@ class Compiler:
                     error = self.parse_task()
                     if error:
                         return error
+                    
+                    if in_multitask:
+                        self.write_buffer(",")
+                    
+                if in_multitask:
+                    self.strip_buffer(",")
+                    self.write_buffer(")")
 
                 self.advance()
-            case TokenType.TASK:
+            case TokenType.TASK | TokenType.KEYWORD:
                 # Top level
                 while not self.check_type(self.peek(), TokenType.EOF):
                     if self.check_current_type(TokenType.LEFT_BRACE):
@@ -91,18 +104,35 @@ class Compiler:
 
                         if self.check_current_type(TokenType.EOF):
                             break
+                        
+                    elif self.check_current_keyword("with"):
+                        self.advance()
+                        if self.check_current_keyword("multitask"):
+                            if self.check_type(self.peek(), TokenType.LEFT_BRACE):
+                                self.advance()
+                                error = self.parse_block(in_multitask=True)
+                                if error:
+                                    return error
+                                
+                                if self.check_current_type(TokenType.EOF):
+                                    break
+                            else:
+                                return self.error(f"Expected block after multitask expression")
+                        else:
+                            return self.error_current(f"Expected valid parameter to 'with', got: {self.current_token.lexeme}")
+                        
 
                     error = self.parse_task()
                     if error:
                         return error
             case _:
                 return self.error_current(
-                    f"Expected: {TokenType.TASK}, got: {self.current_token.token_type}"
+                    f"Expected: {TokenType.TASK}, got {self.current_token.token_type}: {self.current_token.lexeme}"
                 )
 
     def parse_task(self) -> str | None:
         task = self.current_token
-        self.write_buffer(f"\t\trobot.{task.lexeme}(")
+        self.write_buffer(f"robot.{task.lexeme}(")
 
         error = self.parse_params()
         if error:
@@ -121,7 +151,7 @@ class Compiler:
             if error:
                 return error
 
-        self.output_buffer = self.output_buffer.strip(",")
+        self.strip_buffer(",")
         self.write_buffer(")\n")
         self.advance()
 
@@ -190,3 +220,6 @@ class Compiler:
 
     def write_buffer(self, msg: str) -> None:
         self.output_buffer += msg
+
+    def strip_buffer(self, char: str) -> None:
+        self.output_buffer = self.output_buffer.strip(char)
