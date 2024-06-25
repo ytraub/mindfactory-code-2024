@@ -1,9 +1,14 @@
 color RED
 
 // This is top level
-with multitask {
+drive_backward (distance=67 speed=56)
+{
     drive_backward (distance=67 speed=56)
-    drive_forward (distance=67 speed=56)
+    {
+        drive_forward (distance=67 speed=56)
+        drive_forward (distance=67 speed=56)
+    }
+    drive_backward (distance=67 speed=56)
 }
 
 drive_backward (distance=67 speed=56)

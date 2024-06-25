@@ -70,16 +70,27 @@ class Compiler:
 
                 while not self.check_current_type(TokenType.RIGHT_BRACE):
                     if self.check_current_type(TokenType.LEFT_BRACE):
+                        if in_multitask:
+                            return self.error_current(f"No sub blocks in multitask allowed")
                         error = self.parse_block()
                         if error:
                             return error
-
-                        if self.check_current_type(TokenType.EOF):
-                            break
+                        
+                    elif self.check_current_keyword("with"):
+                        if in_multitask:
+                            return self.error_current(f"No sub blocks in multitask allowed")
+                        
+                        self.advance()
+                        error = self.parse_multitask()
+                        if error:
+                            return error
 
                     if self.check_current_type(TokenType.EOF):
                         return self.error_current(f"Unexpected {TokenType.EOF} in sub block\n  ->  Consider closing the block using '{"}"}'")
-
+                    elif self.check_current_type(TokenType.RIGHT_BRACE):
+                        self.advance()
+                        break
+                    
                     if not in_multitask:
                         self.write_buffer("\n\t\tawait ")
 
@@ -108,19 +119,12 @@ class Compiler:
                         
                     elif self.check_current_keyword("with"):
                         self.advance()
-                        if self.check_current_keyword("multitask"):
-                            if self.check_type(self.peek(), TokenType.LEFT_BRACE):
-                                self.advance()
-                                error = self.parse_block(in_multitask=True)
-                                if error:
-                                    return error
-                                
-                                if self.check_current_type(TokenType.EOF):
-                                    break
-                            else:
-                                return self.error(f"Expected block after multitask expression")
-                        else:
-                            return self.error_current(f"Expected valid parameter to 'with', got: {self.current_token.lexeme}")
+                        error = self.parse_multitask()
+                        if error:
+                            return error
+
+                        if self.check_current_type(TokenType.EOF):
+                            break
                         
                     self.write_buffer("\n\t\tawait ")
                     error = self.parse_task()
@@ -130,8 +134,25 @@ class Compiler:
                 return self.error_current(
                     f"Expected: {TokenType.TASK}, got {self.current_token.token_type}: {self.current_token.lexeme}"
                 )
+            
+    def parse_multitask(self) -> str | None:
+        if self.check_current_keyword("multitask"):
+            if self.check_type(self.peek(), TokenType.LEFT_BRACE):
+                self.advance()
+                error = self.parse_block(in_multitask=True)
+                if error:
+                    return error
+
+            else:
+                return self.error_current(f"Expected block after multitask expression")
+        else:
+            return self.error_current(f"Expected valid parameter to 'with', got: {self.current_token.lexeme}")
 
     def parse_task(self) -> str | None:
+        error = self.expect(TokenType.TASK)
+        if error:
+            return error
+        
         task = self.current_token
         self.write_buffer(f"robot.{task.lexeme}(")
 
