@@ -6,7 +6,7 @@ def main() -> None:
     lexer = Lexer()
     compiler = Compiler()
 
-    file_buffer = "import robot\n"
+    file_buffer = "from robot import Robot\n"
 
     with open("runs/test.txt", "r") as source:
         lexer.reset()

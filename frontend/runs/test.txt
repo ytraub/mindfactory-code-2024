@@ -1,4 +1,18 @@
 color RED
 
-// This is a comment
-drive_backward (distance=100 speed=99)
+// This is top level
+drive_backward (
+    distance = 1 
+    speed = 45
+)
+
+{
+    // This is a sub block
+    drive_forward (distance = 56 speed = 89)
+    drive_backward (
+        distance=89
+        speed=9
+    )
+}
+
+drive_forward (distance = 1 speed = 89)

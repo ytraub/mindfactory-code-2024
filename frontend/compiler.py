@@ -38,7 +38,7 @@ class Compiler:
         else:
             return (None, self.error_current("Unexpected: No valid run color found"))
 
-        self.write_buffer(f"\tdef execute(self):\n")
+        self.write_buffer(f"\tdef execute(self, robot: Robot):\n")
 
         error = self.parse_block()
         if error:
@@ -60,12 +60,55 @@ class Compiler:
             return self.error_current("Expected color decleration in beginning of file")
 
     def parse_block(self) -> str | None:
-        return self.parse_task()
+        match self.current_token.token_type:
+            case TokenType.LEFT_BRACE:
+                # Sub block
+                self.advance()
+                while not self.check_current_type(TokenType.RIGHT_BRACE):
+                    if self.check_current_type(TokenType.LEFT_BRACE):
+                        error = self.parse_block()
+                        if error:
+                            return error
+
+                        if self.check_current_type(TokenType.EOF):
+                            break
+
+                    if self.check_current_type(TokenType.EOF):
+                        return self.error_current(f"Unexpected {TokenType.EOF} in sub block\n  ->  Consider closing the block using '{"}"}'")
+
+                    error = self.parse_task()
+                    if error:
+                        return error
+
+                self.advance()
+            case TokenType.TASK:
+                # Top level
+                while not self.check_type(self.peek(), TokenType.EOF):
+                    if self.check_current_type(TokenType.LEFT_BRACE):
+                        error = self.parse_block()
+                        if error:
+                            return error
+
+                        if self.check_current_type(TokenType.EOF):
+                            break
+
+                    error = self.parse_task()
+                    if error:
+                        return error
+            case _:
+                return self.error_current(
+                    f"Expected: {TokenType.TASK}, got: {self.current_token.token_type}"
+                )
 
     def parse_task(self) -> str | None:
         task = self.current_token
         self.write_buffer(f"\t\trobot.{task.lexeme}(")
-        return self.parse_params()
+
+        error = self.parse_params()
+        if error:
+            return error
+
+        self.advance()
 
     def parse_params(self) -> str | None:
         self.advance()
@@ -74,10 +117,13 @@ class Compiler:
             return error
 
         while not self.check_type(self.peek(), TokenType.RIGHT_PAREN):
-            self.parse_pair()
+            error = self.parse_pair()
+            if error:
+                return error
 
         self.output_buffer = self.output_buffer.strip(",")
         self.write_buffer(")\n")
+        self.advance()
 
     def parse_pair(self) -> str | None:
         self.advance()
