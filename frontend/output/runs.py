@@ -8,4 +8,4 @@ class Test:
 		self.run_name = 'test'
 		self.run_color = 'RED'
 	async def execute(self, robot: Robot):
-		await robot.drive_forward(distance=1000,speed=20)
+		await multitask(robot.drive_forward(distance=1000,speed=20),robot.module_left(distance=1000,speed=50))
