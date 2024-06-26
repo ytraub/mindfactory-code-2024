@@ -6,7 +6,7 @@ def main() -> None:
     lexer = Lexer()
     compiler = Compiler()
 
-    file_buffer = "from robot import Robot\n"
+    file_buffer = '"""\nThis is an generated file. Don\'t change anything manually.\n"""\nfrom pybricks.tools import multitask\nfrom robot import Robot\n'
 
     with open("runs/test.run", "r") as source:
         lexer.reset()

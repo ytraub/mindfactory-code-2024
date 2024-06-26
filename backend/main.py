@@ -1,4 +1,4 @@
-from pybricks.tools import run_task, StopWatch
+from pybricks.tools import run_task
 from robot import Robot
 
 robot = Robot()
