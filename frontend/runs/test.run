@@ -1,6 +1,16 @@
 color RED
 
 with multitask {
-    drive_forward (distance=1000 speed=20)
-    module_left (distance=1000 speed=50)
+    drive_forward (distance=200 speed=20)
+    module_right (distance=1000 speed=100)
 }
+
+with multitask {
+    module_left (distance=1000 speed=50)
+    drive_forward (distance=1000 speed=20)
+}
+
+drive_backward (
+    speed=60
+    distance=300
+)
