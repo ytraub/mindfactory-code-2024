@@ -87,13 +87,17 @@ class Compiler:
 
             if in_multitask:
                 self.write_buffer("\n\t\tawait multitask(")
+
             while not self.check_current_type(TokenType.RIGHT_BRACE):
                 if self.check_current_type(TokenType.LEFT_BRACE):
                     if in_multitask:
                         return self.error_current(f"No sub blocks in multitask allowed")
                     error = self.parse_block()
                     if error:
-                        return error     
+                        return error
+                    
+                    continue
+                
                 elif self.check_current_keyword("with"):
                     if in_multitask:
                         return self.error_current(f"No sub blocks in multitask allowed")
@@ -102,6 +106,8 @@ class Compiler:
                     error = self.parse_multitask()
                     if error:
                         return error
+                    
+                    continue
                     
                 if self.check_current_type(TokenType.EOF):
                     return self.error_current(f"Unexpected {TokenType.EOF} in sub block\n  ->  Consider closing the block using '{"}"}'")
@@ -124,7 +130,7 @@ class Compiler:
                 self.write_buffer(")")
 
             self.advance()
-            
+
         else:
             return self.error_current(
                 f"Expected: {TokenType.TASK}, got {self.current_token.token_type}: {self.current_token.lexeme}"

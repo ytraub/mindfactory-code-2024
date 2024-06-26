@@ -6,6 +6,9 @@ class Test:
 	async def execute(self, robot: Robot):
 		await robot.drive_forward(distance=1,speed=1)
 		await robot.drive_backward(distance=67,speed=56)
+		await multitask(robot.drive_backward(distance=67,speed=56))
 		await robot.drive_forward(distance=1,speed=1)
 		await multitask(robot.drive_forward(distance=1,speed=1),robot.drive_backward(distance=67,speed=56))
+		await robot.drive_forward(distance=1,speed=1)
 		await robot.drive_backward(distance=67,speed=56)
+		await multitask(robot.drive_backward(distance=67,speed=56))
