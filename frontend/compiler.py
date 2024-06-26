@@ -67,6 +67,8 @@ class Compiler:
                     return error
                 if self.check_current_type(TokenType.EOF):
                     break
+
+                continue
                 
             elif self.check_current_keyword("with"):
                 self.advance()
@@ -75,6 +77,8 @@ class Compiler:
                     return error
                 if self.check_current_type(TokenType.EOF):
                     break
+
+                continue
                 
             self.write_buffer("\n\t\tawait ")
             error = self.parse_task()
