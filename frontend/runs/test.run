@@ -1,5 +1,3 @@
 color RED
 
-drive_forward (distance=100 speed=10)
-drive_backward (speed=56 distance=670)
-module_left (speed=100 distance=500)
+drive_forward (distance=1000 speed=20)

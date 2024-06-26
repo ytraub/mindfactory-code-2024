@@ -16,6 +16,20 @@ class Robot:
         self.module_left_e = Motor(Port.E)
         self.module_color_c = ColorSensor(Port.C)
 
+    def main(self) -> None:
+        import runs
+
+        class_names = ["Test"]
+
+        instances = {}
+
+        for class_name in class_names:
+            cls = getattr(runs, class_name, None)
+            if cls:
+                instances[class_name] = cls()
+
+        run_task(instances["Test"].execute(self))
+
     async def drive_forward(self, speed: int, distance: int):
         speed = abs(speed) * SPEED_MULTIPLIER
         distance = abs(distance)
@@ -38,10 +52,10 @@ class Robot:
         speed = abs(speed) * SPEED_MULTIPLIER
         distance = abs(distance)
 
-        self.module_left_e.run_target(speed, distance)
+        await self.module_left_e.run_target(speed, distance)
 
     async def module_right(self, speed: int, distance: int):
         speed = abs(speed) * SPEED_MULTIPLIER
         distance = abs(distance)
 
-        self.module_right_a.run_target(speed, distance)
+        await self.module_right_a.run_target(speed, distance)
