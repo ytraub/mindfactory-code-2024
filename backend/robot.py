@@ -16,20 +16,32 @@ class Robot:
         self.module_left_e = Motor(Port.E)
         self.module_color_c = ColorSensor(Port.C)
 
-    async def run_drive_target_forward(self, speed: int, target: int):
+    async def drive_forward(self, speed: int, distance: int):
         speed = abs(speed) * SPEED_MULTIPLIER
-        target = abs(target)
+        distance = abs(distance)
 
         await multitask(
-            self.drive_right_b.run_target(speed, target),
-            self.drive_left_f.run_target(speed, target),
+            self.drive_right_b.run_target(speed, distance),
+            self.drive_left_f.run_target(speed, distance),
         )
 
-    async def run_drive_target_backward(self, speed: int, target: int):
+    async def drive_backward(self, speed: int, distance: int):
         speed = -(abs(speed) * SPEED_MULTIPLIER)
-        target = abs(target)
+        distance = abs(distance)
 
         await multitask(
-            self.drive_right_b.run_target(speed, target),
-            self.drive_left_f.run_target(speed, target),
+            self.drive_right_b.run_target(speed, distance),
+            self.drive_left_f.run_target(speed, distance),
         )
+
+    async def module_left(self, speed: int, distance: int):
+        speed = abs(speed) * SPEED_MULTIPLIER
+        distance = abs(distance)
+
+        self.module_left_e.run_target(speed, distance)
+
+    async def module_right(self, speed: int, distance: int):
+        speed = abs(speed) * SPEED_MULTIPLIER
+        distance = abs(distance)
+
+        self.module_right_a.run_target(speed, distance)

@@ -6,10 +6,7 @@ KEYWORDS = [
     "color",
 ]
 
-TASKS = [
-    "drive_forward",
-    "drive_backward",
-]
+TASKS = ["drive_forward", "drive_backward", "module_left", "module_right"]
 
 PARAMS = [
     "speed",
