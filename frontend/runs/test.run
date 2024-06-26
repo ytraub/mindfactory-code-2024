@@ -11,6 +11,6 @@ with multitask {
 }
 
 drive_backward (
-    speed=60
-    distance=300
+    speed = 60
+    distance = 300
 )
