@@ -1,0 +1,12 @@
+color RED
+
+drive_forward (distance=1 speed=1)
+drive_backward (distance=67 speed=56)
+
+
+{
+    with multitask {
+        drive_forward (distance=1 speed=1)
+        drive_backward (distance=67 speed=56)
+    }
+}

@@ -8,17 +8,17 @@ def main() -> None:
 
     file_buffer = "from robot import Robot\n"
 
-    with open("runs/test.txt", "r") as source:
+    with open("runs/test.run", "r") as source:
         lexer.reset()
         (tokens, error) = lexer.scan_source(source.read())
 
         if error:
-            log_error("Lexing", "test.txt", error)
+            log_error("Lexing", "test.run", error)
             return
 
         (output, error) = compiler.compile(tokens, "test")
         if error:
-            log_error("Parsing", "test.txt", error)
+            log_error("Parsing", "test.run", error)
             return
 
         file_buffer += output
