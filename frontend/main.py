@@ -13,7 +13,6 @@ def main() -> None:
     file_buffer = '"""\nThis is a generated file. Don\'t change anything manually.\n"""\n\nfrom pybricks.tools import multitask\nfrom robot import Robot\n\n'
 
     for filename in os.listdir(RUN_DIRECTORY):
-        print(filename)
         if not filename.endswith(".run"):
             continue
 
