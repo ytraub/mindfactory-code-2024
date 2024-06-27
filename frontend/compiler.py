@@ -22,8 +22,8 @@ class Compiler:
     def compile(
         self, tokens: list[Token], run_name: str
     ) -> tuple[str | None, str | None]:
+        self.reset()
         self.tokens = tokens
-        self.token_ptr = 0
         self.current_token = self.tokens[0]
 
         self.write_buffer(f"class {run_name.title()}:\n")
@@ -43,8 +43,19 @@ class Compiler:
         error = self.parse_run()
         if error:
             return (None, error)
+        
+        self.write_buffer("\n\n")
 
         return (self.output_buffer, None)
+    
+    def reset(self) -> None:
+        self.tokens = []
+        self.token_ptr = 0
+        self.current_token = None
+        self.previous_token = None
+
+        self.run_color = ""
+        self.output_buffer = ""
 
     def parse_color(self) -> str | None:
         if self.check_current_keyword("color"):

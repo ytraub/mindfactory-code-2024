@@ -1,0 +1,6 @@
+color RED
+
+drive_backward (
+    speed = 60
+    distance = 300
+)
