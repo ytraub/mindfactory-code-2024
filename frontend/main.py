@@ -11,6 +11,7 @@ def main() -> None:
     compiler = Compiler()
 
     file_buffer = '"""\nThis is a generated file. Don\'t change anything manually.\n"""\n\nfrom pybricks.tools import multitask\nfrom robot import Robot\n\n'
+    run_names = []
 
     for filename in os.listdir(RUN_DIRECTORY):
         if not filename.endswith(".run"):
@@ -24,15 +25,29 @@ def main() -> None:
                 log_error("Lexing", filename, error)
                 return
 
-            (output, error) = compiler.compile(tokens, filename.removesuffix(".run"))
+            run_name = filename.removesuffix(".run")
+            (output, error) = compiler.compile(tokens, run_name)
             if error:
                 log_error("Parsing", filename, error)
                 return
 
             file_buffer += output
+            run_names.append(run_name.title())
+
+    file_buffer += list_runs(run_names)
 
     with open("output/runs.py", "w+") as output:
         output.write(file_buffer)
+
+
+def list_runs(names: list[str]) -> str:
+    buffer = "\nRuns = [\n"
+
+    for name in names:
+        buffer += f"\t{name}(),\n"
+
+    buffer += "]"
+    return buffer
 
 
 def log_error(type: str, filename: str, msg: str) -> None:
