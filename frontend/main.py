@@ -41,7 +41,7 @@ def main() -> None:
 
 
 def list_runs(names: list[str]) -> str:
-    buffer = "\nRuns = [\n"
+    buffer = "\nruns = [\n"
 
     for name in names:
         buffer += f"\t{name}(),\n"

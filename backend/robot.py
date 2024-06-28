@@ -1,6 +1,6 @@
 from pybricks.hubs import PrimeHub
 from pybricks.pupdevices import Motor, ColorSensor
-from pybricks.parameters import Port, Direction
+from pybricks.parameters import Port, Direction, Side, Button
 from pybricks.tools import multitask, run_task
 
 SPEED_MULTIPLIER = 10
@@ -16,19 +16,34 @@ class Robot:
         self.module_left_e = Motor(Port.E)
         self.module_color_c = ColorSensor(Port.C)
 
+        self.runs = []
+
     def main(self) -> None:
         import runs
 
-        class_names = ["Test"]
+        self.runs = runs.runs
+        self.setup()
+        #run_task(self.menu())
 
-        instances = {}
+    def setup(self) -> None:
+        self.hub.display.orientation(Side.TOP)
 
-        for class_name in class_names:
-            cls = getattr(runs, class_name, None)
-            if cls:
-                instances[class_name] = cls()
+    async def menu(self):
+        index = 0
+        while True:
+            buttons = self.hub.buttons.pressed()
 
-        run_task(instances["Test"].execute(self))
+            if len(buttons) != 1:
+                continue
+
+            button = buttons.pop()
+            match button:
+                case Button.LEFT:
+                    index -= 1
+                case Button.RIGHT:
+                    index += 1
+
+            self.hub.display.number(index)
 
     async def drive_forward(self, speed: int, distance: int):
         speed = abs(speed) * SPEED_MULTIPLIER

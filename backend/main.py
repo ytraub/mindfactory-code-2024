@@ -1,5 +1,4 @@
-from pybricks.tools import run_task
 from robot import Robot
 
-robot = Robot()
-robot.main()
+#robot = Robot()
+#robot.main()

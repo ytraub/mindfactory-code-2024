@@ -33,7 +33,7 @@ class Run3:
 		await multitask(robot.drive_forward(speed=100,distance=2000),robot.module_left(speed=60,distance=1200))
 
 
-Runs = [
+runs = [
 	Run1(),
 	Run2(),
 	Run3(),

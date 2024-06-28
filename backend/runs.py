@@ -1,13 +1,40 @@
 """
-This is an generated file. Don't change anything manually.
+This is a generated file. Don't change anything manually.
 """
+
 from pybricks.tools import multitask
 from robot import Robot
-class Test:
+
+class Run1:
 	def __init__(self):
-		self.run_name = 'test'
+		self.run_name = 'run1'
 		self.run_color = 'RED'
 	async def execute(self, robot: Robot):
-		await multitask(robot.drive_forward(distance=200,speed=20),robot.module_right(distance=1000,speed=100))
-		await multitask(robot.module_left(distance=1000,speed=50),robot.drive_forward(distance=1000,speed=20))
-		await robot.drive_backward(speed=60,distance=300)
+		await robot.drive_forward(speed=100,distance=2000)
+		await robot.drive_backward(distance=500,speed=30)
+		await multitask(robot.drive_forward(speed=100,distance=2000),robot.module_left(speed=60,distance=1200))
+
+class Run2:
+	def __init__(self):
+		self.run_name = 'run2'
+		self.run_color = 'RED'
+	async def execute(self, robot: Robot):
+		await robot.drive_forward(speed=100,distance=2000)
+		await robot.drive_backward(distance=500,speed=30)
+		await multitask(robot.drive_forward(speed=100,distance=2000),robot.module_left(speed=60,distance=1200))
+
+class Run3:
+	def __init__(self):
+		self.run_name = 'run3'
+		self.run_color = 'RED'
+	async def execute(self, robot: Robot):
+		await robot.drive_forward(speed=100,distance=2000)
+		await robot.drive_backward(distance=500,speed=30)
+		await multitask(robot.drive_forward(speed=100,distance=2000),robot.module_left(speed=60,distance=1200))
+
+
+runs = [
+	Run1(),
+	Run2(),
+	Run3(),
+]
