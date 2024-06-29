@@ -74,12 +74,15 @@ class Robot:
         self.drive_left_f.brake()
         self.drive_left_f.brake()
         self.drive_left_f.brake()
+
         self.drive_right_b.brake()
         self.drive_right_b.brake()
         self.drive_right_b.brake()
+
         self.module_right_a.brake()
         self.module_right_a.brake()
         self.module_right_a.brake()
+
         self.module_left_e.brake()
         self.module_left_e.brake()
         self.module_left_e.brake()
@@ -107,9 +110,17 @@ class Robot:
         distance = abs(distance)
 
         await self.module_left_e.run_target(speed, distance)
+        self.module_left_e.brake()
+        self.module_left_e.brake()
+        self.module_left_e.brake()
+        self.module_left_e.reset_angle(0)
 
     async def module_right(self, speed: int, distance: int):
         speed = abs(speed) * SPEED_MULTIPLIER
         distance = abs(distance)
 
         await self.module_right_a.run_target(speed, distance)
+        self.module_right_a.brake()
+        self.module_right_a.brake()
+        self.module_right_a.brake()
+        self.module_right_a.reset_angle(0)

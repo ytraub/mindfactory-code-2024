@@ -10,9 +10,11 @@ class Run1:
 		self.run_name = 'run1'
 		self.run_color = 'RED'
 	async def execute(self, robot: Robot):
+		await robot.module_left(speed=60,distance=500)
 		await robot.drive_forward(speed=100,distance=100)
 		await robot.drive_backward(distance=500,speed=30)
-		await multitask(robot.drive_forward(speed=100,distance=300),robot.module_left(speed=60,distance=500))
+		await multitask(robot.module_left(speed=60,distance=500),robot.drive_forward(speed=100,distance=300))
+		await robot.module_left(speed=60,distance=500)
 
 class Run2:
 	def __init__(self):
@@ -20,7 +22,8 @@ class Run2:
 		self.run_color = 'RED'
 	async def execute(self, robot: Robot):
 		await robot.drive_forward(speed=100,distance=400)
-		await multitask(robot.drive_forward(speed=100,distance=300),robot.module_right(speed=60,distance=500))
+		await robot.module_right(speed=60,distance=500)
+		await multitask(robot.module_right(speed=60,distance=500),robot.drive_forward(speed=100,distance=300))
 		await robot.drive_backward(distance=500,speed=30)
 
 class Run3:
@@ -28,7 +31,8 @@ class Run3:
 		self.run_name = 'run3'
 		self.run_color = 'RED'
 	async def execute(self, robot: Robot):
-		await multitask(robot.drive_forward(speed=100,distance=300),robot.module_left(speed=60,distance=500))
+		await robot.module_right(speed=60,distance=500)
+		await multitask(robot.module_left(speed=60,distance=500),robot.drive_forward(speed=100,distance=300))
 		await robot.drive_forward(speed=100,distance=500)
 		await robot.drive_backward(distance=240,speed=45)
 
