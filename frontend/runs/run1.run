@@ -1,9 +1,9 @@
 color RED
 
-drive_forward (speed=100 distance=2000)
+drive_forward (speed=100 distance=100)
 drive_backward (distance=500 speed=30)
 
 with multitask {
-    drive_forward (speed=100 distance=2000)
-    module_left (speed=60 distance=1200)
+    drive_forward (speed=100 distance=300)
+    module_left (speed=60 distance=200)
 }

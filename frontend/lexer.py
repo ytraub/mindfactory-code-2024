@@ -49,6 +49,8 @@ class Lexer:
         self.buffer: str = ""
 
     def scan_source(self, source: str) -> tuple[list[Token], str]:
+        self.tokens = []
+        
         source_iter = iter([*source])
         while True:
             char = next(source_iter, "\0")

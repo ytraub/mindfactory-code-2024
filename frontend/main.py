@@ -26,6 +26,7 @@ def main() -> None:
                 return
 
             run_name = filename.removesuffix(".run")
+            print(len(tokens))
             (output, error) = compiler.compile(tokens, run_name)
             if error:
                 log_error("Parsing", filename, error)

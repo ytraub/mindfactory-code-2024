@@ -49,6 +49,12 @@ class Robot:
                     index = len(self.runs) - 1
                 else:
                     index -= 1
+            elif button == Button.CENTER:
+                try:
+                    await self.runs[index].execute(self)
+                    await self.stop_motors()
+                except Exception as err:
+                    print(f"An error occured while running: {err}")
 
             await wait(100)
 
@@ -63,6 +69,20 @@ class Robot:
             await wait(50)
 
         return buttons
+
+    async def stop_motors(self):
+        self.drive_left_f.brake()
+        self.drive_left_f.brake()
+        self.drive_left_f.brake()
+        self.drive_right_b.brake()
+        self.drive_right_b.brake()
+        self.drive_right_b.brake()
+        self.module_right_a.brake()
+        self.module_right_a.brake()
+        self.module_right_a.brake()
+        self.module_left_e.brake()
+        self.module_left_e.brake()
+        self.module_left_e.brake()
 
     async def drive_forward(self, speed: int, distance: int):
         speed = abs(speed) * SPEED_MULTIPLIER
