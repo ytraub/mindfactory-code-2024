@@ -3,4 +3,5 @@ python main.py
 cd ..
 cp frontend/output/runs.py backend/runs.py
 
-pybricksdev run ble backend/main.py
+cd backend
+pybricksdev run ble main.py

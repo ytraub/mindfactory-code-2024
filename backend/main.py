@@ -1,4 +1,4 @@
 from robot import Robot
 
-#robot = Robot()
-#robot.main()
+robot = Robot()
+robot.main()
