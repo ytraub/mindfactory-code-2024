@@ -1,12 +1,4 @@
 color RED
 
-module_left (speed=60 distance=500)
-drive_forward (speed=100 distance=100)
-drive_backward (distance=500 speed=30)
-
-with multitask {
-    module_left (speed=60 distance=500)
-    drive_forward (speed=100 distance=300)
-}
-
-module_left (speed=60 distance=500)
+turn_left (angle=90 speed=50)
+//drive_forward (speed=100 distance=400)

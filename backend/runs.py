@@ -10,11 +10,7 @@ class Run1:
 		self.run_name = 'run1'
 		self.run_color = 'RED'
 	async def execute(self, robot: Robot):
-		await robot.module_left(speed=60,distance=500)
-		await robot.drive_forward(speed=100,distance=100)
-		await robot.drive_backward(distance=500,speed=30)
-		await multitask(robot.module_left(speed=60,distance=500),robot.drive_forward(speed=100,distance=300))
-		await robot.module_left(speed=60,distance=500)
+		await robot.turn_left(angle=90,speed=50)
 
 class Run2:
 	def __init__(self):

@@ -1,6 +1,6 @@
 from pybricks.hubs import PrimeHub
 from pybricks.pupdevices import Motor, ColorSensor
-from pybricks.parameters import Port, Direction, Side, Button
+from pybricks.parameters import Port, Direction, Side, Button, Color, Axis
 from pybricks.tools import multitask, run_task, wait
 
 SPEED_MULTIPLIER = 10
@@ -29,9 +29,17 @@ class Robot:
         self.hub.display.orientation(Side.TOP)
         self.hub.system.set_stop_button((Button.LEFT, Button.RIGHT))
 
+    def get_gyro_angle(self):
+        return self.hub.imu.rotation(Axis.Z)
+
     async def menu(self):
         index = 0
         while True:
+            if self.hub.imu.ready():
+                self.hub.light.on(Color.GREEN)
+            else:
+                self.hub.light.on(Color.RED)
+
             self.hub.display.char(str(index + 1))
             buttons = await self.get_buttons()
 
@@ -87,6 +95,12 @@ class Robot:
         self.module_left_e.brake()
         self.module_left_e.brake()
 
+    async def run_drive_right(self, speed: int):
+        self.drive_right_b.run(speed)
+
+    async def run_drive_left(self, speed: int):
+        self.drive_left_f.run(speed)
+
     async def drive_forward(self, speed: int, distance: int):
         speed = abs(speed) * SPEED_MULTIPLIER
         distance = abs(distance)
@@ -124,3 +138,10 @@ class Robot:
         self.module_right_a.brake()
         self.module_right_a.brake()
         self.module_right_a.reset_angle(0)
+
+    async def turn_left(self, speed: int, angle: int):
+        speed = abs(speed) * SPEED_MULTIPLIER
+        angle = abs(angle)
+
+        while True:
+            print(self.get_gyro_angle())

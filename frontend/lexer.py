@@ -6,12 +6,9 @@ KEYWORDS = [
     "color",
 ]
 
-TASKS = ["drive_forward", "drive_backward", "module_left", "module_right"]
+TASKS = ["drive_forward", "drive_backward", "module_left", "module_right", "turn_left"]
 
-PARAMS = [
-    "speed",
-    "distance",
-]
+PARAMS = ["speed", "distance", "angle"]
 
 COLORS = ["RED"]
 
@@ -50,7 +47,7 @@ class Lexer:
 
     def scan_source(self, source: str) -> tuple[list[Token], str]:
         self.tokens = []
-        
+
         source_iter = iter([*source])
         while True:
             char = next(source_iter, "\0")
