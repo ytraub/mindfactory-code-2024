@@ -68,63 +68,75 @@ class Robot:
         distance = abs(distance)
 
         current_distance = 0
+        self.controller.reset_drive(0)
 
-        await multitask(
-            self.drive_right_b.run_target(speed, distance),
-            self.drive_left_f.run_target(speed, distance),
-        )
+        while current_distance <= distance and self.controller.running:
+            await multitask(
+                self.controller.run_drive_left(speed),
+                self.controller.run_drive_right(speed),
+            )
+
+            current_distance = self.controller.angle_drive_left()
 
     async def drive_backward(self, speed: int, distance: int):
         speed = -abs(speed)
         distance = abs(distance)
 
-        await multitask(
-            self.drive_right_b.run_target(speed, distance),
-            self.drive_left_f.run_target(speed, distance),
-        )
+        current_distance = 0
+        self.controller.reset_drive(0)
+
+        while current_distance <= distance and self.controller.running:
+            await multitask(
+                self.controller.run_drive_left(speed),
+                self.controller.run_drive_right(speed),
+            )
+
+            current_distance = self.controller.angle_drive_left()
 
     async def module_left(self, speed: int, distance: int):
         speed = abs(speed)
         distance = abs(distance)
 
-        await self.module_left_e.run_target(speed, distance)
-        self.module_left_e.brake()
-        self.module_left_e.brake()
-        self.module_left_e.brake()
-        self.module_left_e.reset_angle(0)
+        current_distance = 0
+        self.controller.reset_module_left(0)
+
+        while current_distance <= distance and self.controller.running:
+            self.controller.run_module_left()
+            current_distance = self.controller.angle_module_left()
 
     async def module_right(self, speed: int, distance: int):
         speed = abs(speed)
         distance = abs(distance)
 
-        await self.module_right_a.run_target(speed, distance)
-        self.module_right_a.brake()
-        self.module_right_a.brake()
-        self.module_right_a.brake()
-        self.module_right_a.reset_angle(0)
+        current_distance = 0
+        self.controller.reset_module_right(0)
+
+        while current_distance <= distance and self.controller.running:
+            self.controller.run_module_left()
+            current_distance = self.controller.reset_module_right()
 
     async def turn_left(self, speed: int, angle: int):
         speed = abs(speed)
         target = -float(abs(angle))
 
-        start_target = self.get_gyro_angle()
-        gyro_angle = self.get_gyro_angle() - start_target
+        start_target = self.controller.get_gyro_angle()
+        gyro_angle = self.controller.get_gyro_angle() - start_target
 
-        while gyro_angle > target:
-            gyro_angle = self.get_gyro_angle() - start_target
-            self.run_drive_right(speed)
+        while gyro_angle > target and self.controller.running:
+            gyro_angle = self.controller.get_gyro_angle() - start_target
+            self.controller.run_drive_left(speed)
 
-        self.brake_drive_right()
+        self.controller.brake_drive_left()
 
     async def turn_right(self, speed: int, angle: int):
         speed = abs(speed)
         target = float(abs(angle))
 
-        start_target = self.get_gyro_angle()
-        gyro_angle = self.get_gyro_angle() - start_target
+        start_target = self.controller.get_gyro_angle()
+        gyro_angle = self.controller.get_gyro_angle() - start_target
 
-        while gyro_angle < target:
-            gyro_angle = self.get_gyro_angle() - start_target
-            self.run_drive_left(speed)
+        while gyro_angle < target and self.controller.running:
+            gyro_angle = self.controller.get_gyro_angle() - start_target
+            self.controller.run_drive_right(speed)
 
-        self.brake_drive_right()
+        self.controller.brake_drive_right()
