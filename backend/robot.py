@@ -19,18 +19,12 @@ class Robot:
         run_task(self.menu())
 
     def setup(self) -> None:
-        self.hub.display.orientation(Side.TOP)
-        self.hub.system.set_stop_button((Button.LEFT, Button.RIGHT))
+        self.controller.hub.display.orientation(Side.TOP)
+        self.controller.hub.system.set_stop_button((Button.LEFT, Button.RIGHT))
 
-        self.reset_gyro_angle()
+        self.controller.reset_gyro_angle()
 
-    def get_gyro_angle(self):
-        return self.hub.imu.heading()
-
-    def reset_gyro_angle(self):
-        self.hub.imu.reset_heading(0)
-
-    async def menu(self):
+    async def menu(self) -> None:
         index = 0
         while True:
             if self.hub.imu.ready():
@@ -70,48 +64,6 @@ class Robot:
             print(f"An error occured while running: {err}")
 
         self.controller.running = False
-
-    async def get_buttons(self) -> set[Button]:
-        buttons = set()
-
-        while not buttons:
-            buttons = self.hub.buttons.pressed()
-            await wait(50)
-
-        while self.hub.buttons.pressed():
-            await wait(50)
-
-        return buttons
-
-    async def stop_motors(self):
-        self.drive_left_f.brake()
-        self.drive_left_f.brake()
-        self.drive_left_f.brake()
-
-        self.drive_right_b.brake()
-        self.drive_right_b.brake()
-        self.drive_right_b.brake()
-
-        self.module_right_a.brake()
-        self.module_right_a.brake()
-        self.module_right_a.brake()
-
-        self.module_left_e.brake()
-        self.module_left_e.brake()
-        self.module_left_e.brake()
-
-    def brake_drive_right(self):
-        self.drive_right_b.brake()
-        self.drive_right_b.brake()
-        self.drive_right_b.brake()
-
-    def run_drive_left(self, speed: int):
-        self.drive_left_f.run(speed)
-
-    def brake_drive_left(self):
-        self.drive_left_f.brake()
-        self.drive_left_f.brake()
-        self.drive_left_f.brake()
 
     async def drive_forward(self, speed: int, distance: int):
         speed = abs(speed) * SPEED_MULTIPLIER
