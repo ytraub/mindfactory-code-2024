@@ -3,6 +3,8 @@ from pybricks.pupdevices import Motor, ColorSensor
 from pybricks.parameters import Port, Direction, Side, Button, Color, Axis
 from pybricks.tools import multitask, run_task, wait
 
+SPEED_MULTIPLIER = 10
+
 
 def control(func):
     def wrapper(self, *args, **kwargs):
@@ -28,38 +30,21 @@ class Controller:
 
     @control
     def run_drive_left(self, speed: int) -> None:
-        self.drive_left_f.run(speed)
+        self.drive_left_f.run(speed * SPEED_MULTIPLIER)
 
     @control
     def run_drive_right(self, speed: int) -> None:
-        self.drive_right_b.run(speed)
+        self.drive_right_b.run(speed * SPEED_MULTIPLIER)
 
     @control
     def run_module_left(self, speed: int) -> None:
-        self.module_left_e.run(speed)
+        self.module_left_e.run(speed * SPEED_MULTIPLIER)
 
     @control
     def run_module_right(self, speed: int) -> None:
-        self.module_right_a.run(speed);
+        self.module_right_a.run(speed * SPEED_MULTIPLIER)
 
     ###### < Stop > ######
-
-    def stop_motors(self) -> None:
-        self.drive_left_f.brake()
-        self.drive_left_f.brake()
-        self.drive_left_f.brake()
-
-        self.drive_right_b.brake()
-        self.drive_right_b.brake()
-        self.drive_right_b.brake()
-
-        self.module_right_a.brake()
-        self.module_right_a.brake()
-        self.module_right_a.brake()
-
-        self.module_left_e.brake()
-        self.module_left_e.brake()
-        self.module_left_e.brake()
 
     def brake_drive_left(self) -> None:
         self.drive_left_f.brake()
@@ -80,6 +65,44 @@ class Controller:
         self.module_right_a.brake()
         self.module_right_a.brake()
         self.module_right_a.brake()
+
+    def brake_motors(self) -> None:
+        self.brake_drive_left()
+        self.brake_drive_right()
+        self.brake_module_left()
+        self.brake_module_right()
+
+    def brake_drive(self) -> None:
+        self.brake_drive_left()
+        self.brake_drive_right()
+
+    def brake_module(self) -> None:
+        self.brake_module_left()
+        self.brake_module_right()
+
+    ###### < Reset > ######
+
+    def reset_drive_left(self, angle: int) -> None:
+        self.drive_left_f.reset_angle(angle)
+
+    def reset_drive_right(self, angle: int):
+        self.drive_right_b.reset_angle(angle)
+
+    def reset_module_left(self, angle: int) -> None:
+        self.module_left_e.reset_angle(angle)
+
+    def reset_module_right(self, angle: int) -> None:
+        self.module_right_a.reset_angle(angle)
+
+    def reset_motors(self, angle: int) -> None:
+        self.reset_drive_left(angle)
+        self.reset_drive_right(angle)
+        self.reset_module_left(angle)
+        self.reset_module_right(angle)
+
+    def reset_module(self, angle: int) -> None:
+        self.reset_module_left(angle)
+        self.reset_module_right(angle)
 
     ###### < Gyro > ######
 

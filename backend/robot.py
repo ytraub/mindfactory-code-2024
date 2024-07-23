@@ -1,9 +1,7 @@
-from pybricks.parameters import Port, Direction, Side, Button, Color, Axis
+from pybricks.parameters import Side, Button, Color
 from pybricks.tools import multitask, run_task, wait
 
 from controller import Controller
-
-SPEED_MULTIPLIER = 10
 
 
 class Robot:
@@ -66,8 +64,10 @@ class Robot:
         self.controller.running = False
 
     async def drive_forward(self, speed: int, distance: int):
-        speed = abs(speed) * SPEED_MULTIPLIER
+        speed = abs(speed)
         distance = abs(distance)
+
+        current_distance = 0
 
         await multitask(
             self.drive_right_b.run_target(speed, distance),
@@ -75,7 +75,7 @@ class Robot:
         )
 
     async def drive_backward(self, speed: int, distance: int):
-        speed = -(abs(speed) * SPEED_MULTIPLIER)
+        speed = -abs(speed)
         distance = abs(distance)
 
         await multitask(
@@ -84,7 +84,7 @@ class Robot:
         )
 
     async def module_left(self, speed: int, distance: int):
-        speed = abs(speed) * SPEED_MULTIPLIER
+        speed = abs(speed)
         distance = abs(distance)
 
         await self.module_left_e.run_target(speed, distance)
@@ -94,7 +94,7 @@ class Robot:
         self.module_left_e.reset_angle(0)
 
     async def module_right(self, speed: int, distance: int):
-        speed = abs(speed) * SPEED_MULTIPLIER
+        speed = abs(speed)
         distance = abs(distance)
 
         await self.module_right_a.run_target(speed, distance)
@@ -104,7 +104,7 @@ class Robot:
         self.module_right_a.reset_angle(0)
 
     async def turn_left(self, speed: int, angle: int):
-        speed = abs(speed) * SPEED_MULTIPLIER
+        speed = abs(speed)
         target = -float(abs(angle))
 
         start_target = self.get_gyro_angle()
@@ -117,7 +117,7 @@ class Robot:
         self.brake_drive_right()
 
     async def turn_right(self, speed: int, angle: int):
-        speed = abs(speed) * SPEED_MULTIPLIER
+        speed = abs(speed)
         target = float(abs(angle))
 
         start_target = self.get_gyro_angle()
