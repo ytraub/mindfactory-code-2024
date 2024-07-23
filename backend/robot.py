@@ -78,6 +78,8 @@ class Robot:
 
             current_distance = self.controller.angle_drive_left()
 
+        self.controller.brake_drive()
+
     async def drive_backward(self, speed: int, distance: int):
         speed = -abs(speed)
         distance = abs(distance)
@@ -93,6 +95,8 @@ class Robot:
 
             current_distance = self.controller.angle_drive_left()
 
+        self.controller.brake_drive()
+
     async def module_left(self, speed: int, distance: int):
         speed = abs(speed)
         distance = abs(distance)
@@ -104,6 +108,8 @@ class Robot:
             self.controller.run_module_left()
             current_distance = self.controller.angle_module_left()
 
+        self.controller.brake_module_left()
+
     async def module_right(self, speed: int, distance: int):
         speed = abs(speed)
         distance = abs(distance)
@@ -114,6 +120,8 @@ class Robot:
         while current_distance <= distance and self.controller.running:
             self.controller.run_module_left()
             current_distance = self.controller.reset_module_right()
+
+        self.controller.brake_module_right()
 
     async def turn_left(self, speed: int, angle: int):
         speed = abs(speed)
