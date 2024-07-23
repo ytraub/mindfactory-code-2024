@@ -1,4 +1,4 @@
 color RED
 
 turn_left (angle=90 speed=50)
-//drive_forward (speed=100 distance=400)
+turn_right (angle=90 speed=50)

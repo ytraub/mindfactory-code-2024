@@ -11,6 +11,7 @@ class Run1:
 		self.run_color = 'RED'
 	async def execute(self, robot: Robot):
 		await robot.turn_left(angle=90,speed=50)
+		await robot.turn_right(angle=90,speed=50)
 
 class Run2:
 	def __init__(self):

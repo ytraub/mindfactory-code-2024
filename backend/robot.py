@@ -29,8 +29,13 @@ class Robot:
         self.hub.display.orientation(Side.TOP)
         self.hub.system.set_stop_button((Button.LEFT, Button.RIGHT))
 
+        self.reset_gyro_angle()
+
     def get_gyro_angle(self):
-        return self.hub.imu.rotation(Axis.Z)
+        return self.hub.imu.heading()
+    
+    def reset_gyro_angle(self):
+        self.hub.imu.reset_heading(0)
 
     async def menu(self):
         index = 0
@@ -95,11 +100,21 @@ class Robot:
         self.module_left_e.brake()
         self.module_left_e.brake()
 
-    async def run_drive_right(self, speed: int):
+    def run_drive_right(self, speed: int):
         self.drive_right_b.run(speed)
 
-    async def run_drive_left(self, speed: int):
+    def brake_drive_right(self):
+        self.drive_right_b.brake()
+        self.drive_right_b.brake()
+        self.drive_right_b.brake()
+
+    def run_drive_left(self, speed: int):
         self.drive_left_f.run(speed)
+
+    def brake_drive_left(self):
+        self.drive_left_f.brake()
+        self.drive_left_f.brake()
+        self.drive_left_f.brake()
 
     async def drive_forward(self, speed: int, distance: int):
         speed = abs(speed) * SPEED_MULTIPLIER
@@ -141,7 +156,26 @@ class Robot:
 
     async def turn_left(self, speed: int, angle: int):
         speed = abs(speed) * SPEED_MULTIPLIER
-        angle = abs(angle)
+        target = -float(abs(angle))
 
-        while True:
-            print(self.get_gyro_angle())
+        start_target = self.get_gyro_angle()
+        gyro_angle = self.get_gyro_angle() - start_target
+
+        while gyro_angle > target:
+            gyro_angle = self.get_gyro_angle() - start_target
+            self.run_drive_right(speed)
+
+        self.brake_drive_right()
+
+    async def turn_right(self, speed: int, angle: int):
+        speed = abs(speed) * SPEED_MULTIPLIER
+        target = float(abs(angle))
+
+        start_target = self.get_gyro_angle()
+        gyro_angle = self.get_gyro_angle() - start_target
+
+        while gyro_angle < target:
+            gyro_angle = self.get_gyro_angle() - start_target
+            self.run_drive_left(speed)
+
+        self.brake_drive_right()
