@@ -9,9 +9,7 @@ SPEED_MULTIPLIER = 10
 class Robot:
     def __init__(self) -> None:
         self.controller = Controller()
-
         self.runs = []
-        self.running = False
 
     def main(self) -> None:
         import runs
@@ -63,7 +61,7 @@ class Robot:
             await wait(100)
 
     async def execute_run(self, index: int) -> None:
-        self.running = True
+        self.controller.running = True
 
         try:
             await self.runs[index].execute(self)
@@ -71,7 +69,7 @@ class Robot:
         except Exception as err:
             print(f"An error occured while running: {err}")
 
-        self.running = False
+        self.controller.running = False
 
     async def get_buttons(self) -> set[Button]:
         buttons = set()
@@ -101,9 +99,6 @@ class Robot:
         self.module_left_e.brake()
         self.module_left_e.brake()
         self.module_left_e.brake()
-
-    def run_drive_right(self, speed: int):
-        self.drive_right_b.run(speed)
 
     def brake_drive_right(self):
         self.drive_right_b.brake()
