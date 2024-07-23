@@ -34,8 +34,4 @@ class Run3:
 		await robot.drive_backward(distance=240,speed=45)
 
 
-runs = [
-	Run1(),
-	Run2(),
-	Run3(),
-]
+runs = [Run1(),Run2(),Run3(),]

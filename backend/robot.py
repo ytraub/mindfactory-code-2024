@@ -1,22 +1,17 @@
-from pybricks.hubs import PrimeHub
-from pybricks.pupdevices import Motor, ColorSensor
 from pybricks.parameters import Port, Direction, Side, Button, Color, Axis
 from pybricks.tools import multitask, run_task, wait
+
+from controller import Controller
 
 SPEED_MULTIPLIER = 10
 
 
 class Robot:
     def __init__(self) -> None:
-        self.hub = PrimeHub()
-
-        self.drive_right_b = Motor(Port.B, Direction.CLOCKWISE)
-        self.drive_left_f = Motor(Port.F, Direction.COUNTERCLOCKWISE)
-        self.module_right_a = Motor(Port.A)
-        self.module_left_e = Motor(Port.E)
-        self.module_color_c = ColorSensor(Port.C)
+        self.controller = Controller()
 
         self.runs = []
+        self.running = False
 
     def main(self) -> None:
         import runs
@@ -33,7 +28,7 @@ class Robot:
 
     def get_gyro_angle(self):
         return self.hub.imu.heading()
-    
+
     def reset_gyro_angle(self):
         self.hub.imu.reset_heading(0)
 
@@ -63,13 +58,20 @@ class Robot:
                 else:
                     index -= 1
             elif button == Button.CENTER:
-                try:
-                    await self.runs[index].execute(self)
-                    await self.stop_motors()
-                except Exception as err:
-                    print(f"An error occured while running: {err}")
+                self.execute_run(index)
 
             await wait(100)
+
+    async def execute_run(self, index: int) -> None:
+        self.running = True
+
+        try:
+            await self.runs[index].execute(self)
+            await self.stop_motors()
+        except Exception as err:
+            print(f"An error occured while running: {err}")
+
+        self.running = False
 
     async def get_buttons(self) -> set[Button]:
         buttons = set()
