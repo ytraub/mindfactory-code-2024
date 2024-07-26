@@ -26,6 +26,14 @@ class Controller:
         self.module_left_e = Motor(Port.E)
         self.module_color_c = ColorSensor(Port.C)
 
+    ###### < Get / Set > ######
+
+    def get_running(self) -> bool:
+        return self.running
+
+    def set_running(self, state: bool) -> None:
+        self.running = state
+
     ###### < Movement > ######
 
     @control
