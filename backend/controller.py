@@ -1,7 +1,7 @@
 from pybricks.hubs import PrimeHub
 from pybricks.pupdevices import Motor, ColorSensor
-from pybricks.parameters import Port, Direction, Side, Button, Color, Axis
-from pybricks.tools import multitask, run_task, wait
+from pybricks.parameters import Port, Direction, Button
+from pybricks.tools import wait
 
 SPEED_MULTIPLIER = 10
 
