@@ -1,4 +1,5 @@
 from lexer import Token, TokenType
+from generated.data import TASK_PARAMS
 
 
 class Run:
@@ -183,9 +184,11 @@ class Compiler:
         error = self.expect(TokenType.LEFT_PAREN)
         if error:
             return error
+        
+        task = self.previous_token
 
         while not self.check_type(self.peek(), TokenType.RIGHT_PAREN):
-            error = self.parse_pair()
+            error = self.parse_pair(task.lexeme)
             if error:
                 return error
 
@@ -193,13 +196,18 @@ class Compiler:
         self.write_buffer(")")
         self.advance()
 
-    def parse_pair(self) -> str | None:
+    def parse_pair(self, task: str) -> str | None:
         self.advance()
         error = self.expect(TokenType.PARAM)
         if error:
             return error
 
         param = self.current_token.lexeme
+
+        if not param in TASK_PARAMS.get(task):
+            return self.error_current(
+                    f"No param: '{param}' on task: '{task}'\n\rAvailable params: {TASK_PARAMS.get(task)}"
+                )
 
         self.advance()
         error = self.expect(TokenType.EQUALS)
