@@ -1,5 +1,5 @@
 from enum import Enum
-from data import TASKS, PARAMS
+from frontend.generated.data import TASKS, PARAMS
 
 KEYWORDS = [
     "with",

@@ -12,8 +12,6 @@ class Robot:
 
         self.runs = []
 
-    ###### < Util > ######
-
     def main(self) -> None:
         import backend.generated.runs as runs
 
@@ -88,5 +86,3 @@ class Robot:
         self.controller.brake_motors()
         self.controller.reset_motors()
         self.controller.reset_gyro_angle()
-
-    ###### < Blocks > ######

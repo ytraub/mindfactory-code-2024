@@ -4,6 +4,7 @@ from lexer import Lexer
 from compiler import Compiler
 
 RUN_DIRECTORY = "runs"
+OUTPUT_DIRECTORY = "output"
 
 
 def main() -> None:
@@ -36,7 +37,7 @@ def main() -> None:
 
     file_buffer += list_runs(run_names)
 
-    with open("output/runs.py", "w+") as output:
+    with open(f"{OUTPUT_DIRECTORY}/runs.py", "w+") as output:
         output.write(file_buffer)
 
 
