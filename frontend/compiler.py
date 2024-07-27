@@ -170,7 +170,7 @@ class Compiler:
             return error
         
         task = self.current_token
-        self.write_buffer(f"robot.{task.lexeme}(")
+        self.write_buffer(f"robot.blocks.{task.lexeme}(")
 
         error = self.parse_params()
         if error:
