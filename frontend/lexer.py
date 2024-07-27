@@ -1,14 +1,11 @@
 from enum import Enum
+from data import TASKS, PARAMS
 
 KEYWORDS = [
     "with",
     "multitask",
     "color",
 ]
-
-TASKS = ["drive_forward", "drive_backward", "module_left", "module_right", "turn_left", "turn_right"]
-
-PARAMS = ["speed", "distance", "angle"]
 
 COLORS = ["RED"]
 
