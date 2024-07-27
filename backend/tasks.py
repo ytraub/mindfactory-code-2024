@@ -1,7 +1,7 @@
 from pybricks.tools import multitask
 
 
-class Blocks:
+class Tasks:
     def __init__(self, robot) -> None:
         self.robot = robot
         self.controller = robot.controller

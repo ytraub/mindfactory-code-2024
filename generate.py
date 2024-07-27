@@ -1,21 +1,21 @@
 import inspect
 
-from backend.blocks import Blocks
+from backend.tasks import Tasks
 
 DATA_DIRECTORY = "frontend/generated"
 
 
 def main() -> None:
-    blocks = [
+    tasks = [
         method
-        for method in dir(Blocks)
-        if callable(getattr(Blocks, method)) and not method.startswith("__")
+        for method in dir(Tasks)
+        if callable(getattr(Tasks, method)) and not method.startswith("__")
     ]
 
     param_sets = [
-        inspect.getfullargspec(getattr(Blocks, method)).args
-        for method in dir(Blocks)
-        if callable(getattr(Blocks, method)) and not method.startswith("__")
+        inspect.getfullargspec(getattr(Tasks, method)).args
+        for method in dir(Tasks)
+        if callable(getattr(Tasks, method)) and not method.startswith("__")
     ]
 
     params = set()
@@ -28,7 +28,7 @@ def main() -> None:
     params = list(params)
 
     with open(f"{DATA_DIRECTORY}/data.py", "w+") as data:
-        data.write(f"TASKS={blocks}\nPARAMS={params}")
+        data.write(f"TASKS={tasks}\nPARAMS={params}")
 
 
 if __name__ == "__main__":
