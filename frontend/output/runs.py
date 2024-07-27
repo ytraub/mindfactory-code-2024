@@ -10,7 +10,7 @@ class Run1:
 		self.run_name = 'run1'
 		self.run_color = 'RED'
 	async def execute(self, robot: Robot):
-		await robot.tasks.turn_left(angle=90,speed=50)
+		await robot.tasks.turn_left(angle=100,speed=50)
 		await robot.tasks.turn_right(angle=90,speed=50)
 
 class Run2:

@@ -1,4 +1,6 @@
 color RED
 
-turn_left (distance=90 speed=50)
-turn_right (angle=90 speed=50)
+{
+    turn_left (speed=90 distance=50)
+    turn_right (angle=90 speed=50)
+}
