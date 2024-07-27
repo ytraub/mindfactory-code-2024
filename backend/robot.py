@@ -15,7 +15,7 @@ class Robot:
     ###### < Util > ######
 
     def main(self) -> None:
-        import runs
+        import backend.generated.runs as runs
 
         self.runs = runs.runs
         self.setup()
