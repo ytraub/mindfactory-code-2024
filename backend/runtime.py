@@ -11,11 +11,16 @@ class Task:
     def stop(self):
         pass
 
-    def add_next_tasks(self, next_tasks):
-        self.next_tasks.append(next_tasks)
+    def add_next_tasks(self, tasks: list[any]):
+        self.next_tasks.extend(tasks)
 
     def get_next_tasks(self):
         return self.next_tasks
+
+
+class Chain:
+    def __init__(self, start_task) -> None:
+        self.start_task = start_task
 
 
 class Runtime:

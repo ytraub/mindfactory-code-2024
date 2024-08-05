@@ -2,11 +2,13 @@ from pybricks.parameters import Side, Button, Color
 from pybricks.tools import run_task, wait
 
 from controller import Controller
+from runtime import Runtime, Task
 from tasks import Tasks
 
 
 class Robot:
     def __init__(self) -> None:
+        self.runtime = Runtime()
         self.controller = Controller()
         self.tasks = Tasks(self)
 
@@ -86,3 +88,11 @@ class Robot:
         self.controller.brake_motors()
         self.controller.reset_motors(0)
         self.controller.reset_gyro_angle()
+
+    def add_run(self, tasks: list[Task]):
+        prev_task: Task | None = None
+        for task in tasks:
+            if prev_task:
+                task.add_next_tasks([task])
+            
+

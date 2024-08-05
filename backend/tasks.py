@@ -1,27 +1,38 @@
 from pybricks.tools import multitask
 
+from runtime import Task
+
+
+class DriveForward(Task):
+    def __init__(self, controller, speed: int, distance: int) -> None:
+        super().__init__()
+        self.controller = controller
+
+        self.speed = abs(speed)
+        self.distance = abs(distance)
+
+        self.current_distance = 0
+
+    def start(self):
+        self.controller.reset_drive(0)
+
+    def check(self):
+        self.controller.run_drive_left(self.speed),
+        self.controller.run_drive_right(self.speed)
+
+        return self.current_distance >= self.distance
+
+    def stop(self):
+        self.controller.brake_drive()
+
 
 class Tasks:
     def __init__(self, robot) -> None:
         self.robot = robot
         self.controller = robot.controller
 
-    async def drive_forward(self, speed: int, distance: int):
-        speed = abs(speed)
-        distance = abs(distance)
-
-        current_distance = 0
-        self.controller.reset_drive(0)
-
-        while self.robot.check(current_distance <= distance):
-            await multitask(
-                self.controller.run_drive_left(speed),
-                self.controller.run_drive_right(speed),
-            )
-
-            current_distance = self.controller.angle_drive_left()
-
-        self.controller.brake_drive()
+    def drive_forward(self, speed: int, distance: int) -> DriveForward:
+        return DriveForward(self.controller, speed=speed, distance=distance)
 
     async def drive_backward(self, speed: int, distance: int):
         speed = -abs(speed)
