@@ -2,6 +2,9 @@ class Chain:
     def __init__(self, start_task) -> None:
         self.start_task = start_task
 
+    def __str__(self) -> str:
+        return f"<Chain start_task={self.start_task}>"
+
 
 class Runtime:
     def __init__(self) -> None:
