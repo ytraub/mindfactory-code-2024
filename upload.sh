@@ -3,4 +3,4 @@ python generate.py
 cd frontend
 python main.py
 cd ..
-cp frontend/output/runs.py backend/generated/runs.py
+cp frontend/output/runs.py backend/runs.py

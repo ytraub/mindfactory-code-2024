@@ -2,7 +2,7 @@ from pybricks.parameters import Side, Button, Color
 from pybricks.tools import run_task, wait
 
 from controller import Controller
-from backend.tasks import Tasks
+from tasks import Tasks
 
 
 class Robot:
@@ -13,7 +13,7 @@ class Robot:
         self.runs = []
 
     def main(self) -> None:
-        import backend.generated.runs as runs
+        import runs
 
         self.runs = runs.runs
         self.setup()
