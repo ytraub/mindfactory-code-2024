@@ -47,7 +47,6 @@ class Robot:
             button = list(buttons)[0]
             if self.controller.get_running():
                 if button == Button.CENTER:
-                    print()
                     self.end_run()
             else:
                 if button == Button.RIGHT:
