@@ -2,7 +2,7 @@ from pybricks.parameters import Side, Button, Color
 from pybricks.tools import run_task, wait
 
 from controller import Controller
-from runtime import Runtime, Task
+from runtime import Runtime, Chain
 from tasks import Tasks
 
 
@@ -89,10 +89,13 @@ class Robot:
         self.controller.reset_motors(0)
         self.controller.reset_gyro_angle()
 
-    def add_run(self, tasks: list[Task]):
-        prev_task: Task | None = None
-        for task in tasks:
-            if prev_task:
-                task.add_next_tasks([task])
-            
+    def create_chain(self, tasks: list[any | list[any]]) -> Chain:
+        prev_task: any | None = None
 
+        for task in reversed(tasks):
+            if prev_task:
+                task.add_next_tasks(task)
+
+            prev_task = task
+
+        Chain(prev_task)

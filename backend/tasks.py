@@ -1,6 +1,27 @@
 from pybricks.tools import multitask
 
-from runtime import Task
+
+class Task:
+    def __init__(self) -> None:
+        self.next_tasks = []
+
+    def start(self):
+        pass
+
+    def check(self):
+        return True
+
+    def stop(self):
+        pass
+
+    def add_next_tasks(self, tasks):
+        if type(tasks) == list:
+            self.next_tasks.extend(tasks)
+        else:
+            self.next_tasks.append(tasks)
+
+    def get_next_tasks(self):
+        return self.next_tasks
 
 
 class DriveForward(Task):

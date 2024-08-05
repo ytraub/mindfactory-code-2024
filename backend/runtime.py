@@ -1,23 +1,3 @@
-class Task:
-    def __init__(self) -> None:
-        self.next_tasks = []
-
-    def start(self):
-        pass
-
-    def check(self):
-        return True
-
-    def stop(self):
-        pass
-
-    def add_next_tasks(self, tasks: list[any]):
-        self.next_tasks.extend(tasks)
-
-    def get_next_tasks(self):
-        return self.next_tasks
-
-
 class Chain:
     def __init__(self, start_task) -> None:
         self.start_task = start_task
@@ -25,7 +5,7 @@ class Chain:
 
 class Runtime:
     def __init__(self) -> None:
-        self.tasks: list[Task] = []
+        self.tasks = []
 
     def start(self) -> None:
         while self.tasks:
@@ -39,7 +19,7 @@ class Runtime:
             else:
                 self.tasks.append(task)
 
-    def add_tasks(self, tasks: list[Task]) -> None:
+    def add_tasks(self, tasks: list[any]) -> None:
         for task in tasks:
             task.start()
             self.tasks.append(task)
