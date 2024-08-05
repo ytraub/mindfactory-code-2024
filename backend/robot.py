@@ -25,7 +25,7 @@ class Robot:
         self.controller.hub.system.set_stop_button((Button.LEFT, Button.RIGHT))
 
         self.controller.reset_gyro_angle()
-        self.controller.reset_motors()
+        self.controller.reset_motors(0)
 
     def check(self, arg: bool) -> bool:
         return arg and self.controller.get_running()
@@ -33,13 +33,13 @@ class Robot:
     async def menu(self) -> None:
         index = 0
         while True:
-            if self.hub.imu.ready():
-                self.hub.light.on(Color.GREEN)
+            if self.controller.hub.imu.ready():
+                self.controller.hub.light.on(Color.GREEN)
             else:
-                self.hub.light.on(Color.RED)
+                self.controller.hub.light.on(Color.RED)
 
-            self.hub.display.char(str(index + 1))
-            buttons = await self.get_buttons()
+            self.controller.hub.display.char(str(index + 1))
+            buttons = await self.controller.get_buttons()
 
             if len(buttons) != 1:
                 continue
@@ -47,6 +47,7 @@ class Robot:
             button = list(buttons)[0]
             if self.controller.get_running():
                 if button == Button.CENTER:
+                    print()
                     self.end_run()
             else:
                 if button == Button.RIGHT:
@@ -60,7 +61,7 @@ class Robot:
                     else:
                         index -= 1
                 elif button == Button.CENTER:
-                    self.execute_run(index)
+                    await self.execute_run(index)
 
             await wait(100)
 
@@ -77,12 +78,12 @@ class Robot:
     def start_run(self) -> None:
         self.controller.set_running(True)
 
-        self.controller.reset_motors()
+        self.controller.reset_motors(0)
         self.controller.reset_gyro_angle()
 
     def end_run(self) -> None:
         self.controller.set_running(False)
 
         self.controller.brake_motors()
-        self.controller.reset_motors()
+        self.controller.reset_motors(0)
         self.controller.reset_gyro_angle()
