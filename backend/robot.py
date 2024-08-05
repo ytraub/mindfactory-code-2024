@@ -98,4 +98,4 @@ class Robot:
 
             prev_task = task
 
-        Chain(prev_task)
+        return Chain(prev_task)
