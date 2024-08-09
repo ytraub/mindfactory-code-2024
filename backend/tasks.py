@@ -50,6 +50,9 @@ class Menu(Task):
         return False
 
     def handle_button(self, button: Button) -> None:
+        while len(self.controller.get_buttons()):
+            continue
+
         if self.robot.get_running():
             if button == Button.CENTER:
                 self.robot.end_run()
@@ -196,15 +199,12 @@ class TurnRight(Task):
 
 
 class Tasks:
-    def __init__(self) -> None:
-        self.robot = None
-        self.controller = None
-
-    def menu(self, robot) -> Menu:
+    def __init__(self, robot, controller) -> None:
         self.robot = robot
-        self.controller = robot.controller
+        self.controller = controller
 
-        return Menu(robot, robot.controller)
+    def menu(self) -> Menu:
+        return Menu(self.robot, self.controller)
 
     def drive_forward(self, speed: int, distance: int) -> DriveForward:
         return DriveForward(self.controller, speed=speed, distance=distance)

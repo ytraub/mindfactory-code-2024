@@ -6,14 +6,6 @@ from pybricks.tools import wait
 SPEED_MULTIPLIER = 10
 
 
-def control(func):
-    def wrapper(self, *args, **kwargs):
-        if self.running:
-            func(self, *args, **kwargs)
-
-    return wrapper
-
-
 class Controller:
     def __init__(self) -> None:
         self.hub = PrimeHub()
@@ -25,20 +17,15 @@ class Controller:
         self.module_color_c = ColorSensor(Port.C)
 
     ###### < Movement > ######
-
-    @control
     def run_drive_left(self, speed: int) -> None:
         self.drive_left_f.run(speed * SPEED_MULTIPLIER)
 
-    @control
     def run_drive_right(self, speed: int) -> None:
         self.drive_right_b.run(speed * SPEED_MULTIPLIER)
 
-    @control
     def run_module_left(self, speed: int) -> None:
         self.module_left_e.run(speed * SPEED_MULTIPLIER)
 
-    @control
     def run_module_right(self, speed: int) -> None:
         self.module_right_a.run(speed * SPEED_MULTIPLIER)
 

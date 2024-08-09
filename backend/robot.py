@@ -9,7 +9,7 @@ class Robot:
     def __init__(self) -> None:
         self.runtime = Runtime()
         self.controller = Controller()
-        self.tasks = Tasks()
+        self.tasks = Tasks(self, self.controller)
 
         self.running = False
 
@@ -22,8 +22,8 @@ class Robot:
         self.running = state
 
     def main(self) -> None:
-        self.setup()
         self.load_runs()
+        self.setup()
 
     def load_runs(self) -> None:
         from runs import __runs
@@ -38,23 +38,25 @@ class Robot:
         self.controller.reset_gyro_angle()
         self.controller.reset_motors(0)
 
-        self.runtime.add_tasks(self.tasks.menu(self))
+        self.runtime.add_tasks(self.tasks.menu())
         self.runtime.start()
 
     def execute_run(self, index: int) -> None:
         self.start_run()
 
-        try:
+        """ try:
             if index <= len(self.runs) - 1:
                 run_chain = self.runs[index]
-
                 self.runtime.add_tasks(run_chain.start_task)
             else:
                 print(
                     f"Run: {index + 1} (index {index}) is not available. There are only {len(self.runs)} runs."
                 )
         except Exception as err:
-            print(f"An error occured while running: {err}")
+            print(f"An error occured while running: {err}") """
+
+        run_chain = self.runs[index]
+        self.runtime.add_tasks(run_chain.start_task)
 
         self.end_run()
 
@@ -66,13 +68,13 @@ class Robot:
         self.end_run()
 
     def start_run(self) -> None:
-        self.controller.set_running(True)
+        self.set_running(True)
 
         self.controller.reset_motors(0)
         self.controller.reset_gyro_angle()
 
     def end_run(self) -> None:
-        self.controller.set_running(False)
+        self.set_running(False)
 
         self.controller.brake_motors()
         self.controller.reset_motors(0)
