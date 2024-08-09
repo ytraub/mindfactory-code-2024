@@ -196,12 +196,15 @@ class TurnRight(Task):
 
 
 class Tasks:
-    def __init__(self, robot) -> None:
+    def __init__(self) -> None:
+        self.robot = None
+        self.controller = None
+
+    def menu(self, robot) -> Menu:
         self.robot = robot
         self.controller = robot.controller
 
-    def menu(self) -> Menu:
-        return Menu(self.robot)
+        return Menu(robot)
 
     def drive_forward(self, speed: int, distance: int) -> DriveForward:
         return DriveForward(self.controller, speed=speed, distance=distance)

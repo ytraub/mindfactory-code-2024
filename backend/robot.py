@@ -9,7 +9,7 @@ class Robot:
     def __init__(self) -> None:
         self.runtime = Runtime()
         self.controller = Controller()
-        self.tasks = Tasks(self)
+        self.tasks = Tasks()
 
         self.running = False
 
@@ -22,8 +22,8 @@ class Robot:
         self.running = state
 
     def main(self) -> None:
-        self.load_runs()
         self.setup()
+        self.load_runs()
 
     def load_runs(self) -> None:
         from runs import __runs
@@ -37,6 +37,8 @@ class Robot:
 
         self.controller.reset_gyro_angle()
         self.controller.reset_motors(0)
+
+        self.runtime.add_tasks(self.tasks.menu(self))
 
     def execute_run(self, index: int) -> None:
         self.start_run()
@@ -58,7 +60,7 @@ class Robot:
     def interrupt_run(self) -> None:
         old_tasks = self.runtime.get_tasks()
         new_tasks = [task for task in old_tasks if type(task) == Menu]
-        
+
         self.runtime.add_tasks(new_tasks)
         self.end_run()
 
