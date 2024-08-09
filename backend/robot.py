@@ -2,7 +2,7 @@ from pybricks.parameters import Side, Button
 
 from controller import Controller
 from runtime import Runtime, Chain
-from tasks import Tasks
+from tasks import Tasks, Menu
 
 
 class Robot:
@@ -42,10 +42,24 @@ class Robot:
         self.start_run()
 
         try:
-            self.runtime.add_tasks(self.runs[index])
+            if index <= len(self.runs) - 1:
+                run_chain = self.runs[index]
+
+                self.runtime.add_tasks(run_chain.start_task)
+            else:
+                print(
+                    f"Run: {index + 1} (index {index}) is not available. There are only {len(self.runs)} runs."
+                )
         except Exception as err:
             print(f"An error occured while running: {err}")
 
+        self.end_run()
+
+    def interrupt_run(self) -> None:
+        old_tasks = self.runtime.get_tasks()
+        new_tasks = [task for task in old_tasks if type(task) == Menu]
+        
+        self.runtime.add_tasks(new_tasks)
         self.end_run()
 
     def start_run(self) -> None:

@@ -10,6 +10,12 @@ class Runtime:
     def __init__(self) -> None:
         self.tasks = []
 
+    def get_tasks(self) -> list[any]:
+        return self.tasks
+
+    def set_tasks(self, state: list[any]) -> None:
+        self.tasks = state
+
     def start(self) -> None:
         while self.tasks:
             task = self.tasks.pop(0)
