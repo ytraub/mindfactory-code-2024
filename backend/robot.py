@@ -44,7 +44,7 @@ class Robot:
     def execute_run(self, index: int) -> None:
         self.start_run()
 
-        """ try:
+        try:
             if index <= len(self.runs) - 1:
                 run_chain = self.runs[index]
                 self.runtime.add_tasks(run_chain.start_task)
@@ -53,31 +53,23 @@ class Robot:
                     f"Run: {index + 1} (index {index}) is not available. There are only {len(self.runs)} runs."
                 )
         except Exception as err:
-            print(f"An error occured while running: {err}") """
-
-        run_chain = self.runs[index]
-        self.runtime.add_tasks(run_chain.start_task)
+            print(f"An error occured while running: {err}")
 
     def interrupt_run(self) -> None:
         old_tasks = self.runtime.get_tasks()
         self.runtime.tasks.clear()
         self.end_run()
 
-        print(old_tasks)
         new_tasks = [task for task in old_tasks if type(task) == Menu]
-        print(new_tasks)
-
         self.runtime.add_tasks(new_tasks)
 
     def start_run(self) -> None:
-        print("Start run")
         self.set_running(True)
 
         self.controller.reset_motors(0)
         self.controller.reset_gyro_angle()
 
     def end_run(self) -> None:
-        print("End run")
         self.set_running(False)
 
         self.controller.brake_motors()
