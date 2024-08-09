@@ -18,10 +18,7 @@ class Run2:
 		self.run_name = 'run2'
 		self.run_color = 'RED'
 	def create_chain(self, robot: Robot):			robot.chain([
-		robot.tasks.drive_forward(speed=100,distance=400),
-		robot.tasks.module_right(speed=60,distance=500),
-		[robot.tasks.module_right(speed=60,distance=500),robot.tasks.drive_forward(speed=100,distance=300)],
-		robot.tasks.drive_backward(distance=500,speed=30),])
+		robot.tasks.drive_forward(speed=100,distance=1000),])
 
 
 class Run3:

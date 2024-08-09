@@ -1,11 +1,3 @@
 color RED
 
-drive_forward (speed=100 distance=400)
-module_right (speed=60 distance=500)
-
-with tasksplit {
-    module_right (speed=60 distance=500)
-    drive_forward (speed=100 distance=300)
-}
-
-drive_backward (distance=500 speed=30)
+drive_forward (speed=100 distance=1000)
