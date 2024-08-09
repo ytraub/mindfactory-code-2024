@@ -15,12 +15,12 @@ class Robot:
         self.runs = []
 
     def main(self) -> None:
-        import runs
+        from runs import __runs
 
-        self.runs = runs.runs
+        for run in __runs:
+            run.create_chain(self)
+
         self.setup()
-
-        run_task(self.menu())
 
     def setup(self) -> None:
         self.controller.hub.display.orientation(Side.TOP)
@@ -29,10 +29,7 @@ class Robot:
         self.controller.reset_gyro_angle()
         self.controller.reset_motors(0)
 
-    def check(self, arg: bool) -> bool:
-        return arg and self.controller.get_running()
-
-    async def menu(self) -> None:
+    def menu(self) -> None:
         index = 0
         while True:
             if self.controller.hub.imu.ready():
@@ -41,7 +38,7 @@ class Robot:
                 self.controller.hub.light.on(Color.RED)
 
             self.controller.hub.display.char(str(index + 1))
-            buttons = await self.controller.get_buttons()
+            buttons =  self.controller.get_buttons()
 
             if len(buttons) != 1:
                 continue
@@ -62,15 +59,15 @@ class Robot:
                     else:
                         index -= 1
                 elif button == Button.CENTER:
-                    await self.execute_run(index)
+                    self.execute_run(index)
 
-            await wait(100)
+            wait(100)
 
-    async def execute_run(self, index: int) -> None:
+    def execute_run(self, index: int) -> None:
         self.start_run()
 
         try:
-            await self.runs[index].execute(self)
+             self.runs[index].execute(self)
         except Exception as err:
             print(f"An error occured while running: {err}")
 
@@ -89,7 +86,7 @@ class Robot:
         self.controller.reset_motors(0)
         self.controller.reset_gyro_angle()
 
-    def create_chain(self, tasks: list[any | list[any]]) -> Chain:
+    def chain(self, tasks: list[any | list[any]]) -> Chain:
         prev_task: any | None = None
 
         for task in reversed(tasks):
@@ -98,4 +95,4 @@ class Robot:
 
             prev_task = task
 
-        return Chain(prev_task)
+        self.runs.append(Chain(prev_task))

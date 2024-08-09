@@ -18,21 +18,11 @@ class Controller:
     def __init__(self) -> None:
         self.hub = PrimeHub()
 
-        self.running = False
-
         self.drive_right_b = Motor(Port.B, Direction.CLOCKWISE)
         self.drive_left_f = Motor(Port.F, Direction.COUNTERCLOCKWISE)
         self.module_right_a = Motor(Port.A)
         self.module_left_e = Motor(Port.E)
         self.module_color_c = ColorSensor(Port.C)
-
-    ###### < Get / Set > ######
-
-    def get_running(self) -> bool:
-        return self.running
-
-    def set_running(self, state: bool) -> None:
-        self.running = state
 
     ###### < Movement > ######
 
@@ -140,14 +130,14 @@ class Controller:
 
     ###### < Util > ######
 
-    async def get_buttons(self) -> set[Button]:
+    def get_buttons(self) -> set[Button]:
         buttons = set()
 
         while not buttons:
             buttons = self.hub.buttons.pressed()
-            await wait(50)
+            wait(50)
 
         while self.hub.buttons.pressed():
-            await wait(50)
+            wait(50)
 
         return buttons
