@@ -5,9 +5,6 @@ class Task:
     def __init__(self) -> None:
         self.next_tasks = []
 
-    def __str__(self) -> str:
-        return f"<Task next_tasks={self.next_tasks}>"
-
     def start(self) -> None:
         pass
 
@@ -85,8 +82,6 @@ class DriveForward(Task):
         self.speed = abs(speed)
         self.distance = abs(distance)
 
-        self.current_distance = 0
-
     def start(self) -> None:
         self.controller.reset_drive(0)
 
@@ -94,7 +89,7 @@ class DriveForward(Task):
         self.controller.run_drive_left(self.speed),
         self.controller.run_drive_right(self.speed)
 
-        return self.current_distance >= self.distance
+        return self.controller.angle_drive_left() >= self.distance
 
     def stop(self) -> None:
         self.controller.brake_drive()
@@ -111,10 +106,10 @@ class DriveBackward(Task):
         self.controller.reset_drive(0)
 
     def check(self) -> bool:
-        self.current_distance = self.controller.angle_drive_left()
         self.controller.run_drive_left(self.speed)
         self.controller.run_drive_right(self.speed)
-        return self.current_distance >= self.distance
+
+        return self.controller.angle_drive_left() >= self.distance
 
     def stop(self) -> None:
         self.controller.brake_drive()
@@ -131,9 +126,9 @@ class ModuleLeft(Task):
         self.controller.reset_module_left(0)
 
     def check(self) -> bool:
-        self.current_distance = self.controller.angle_module_left()
         self.controller.run_module_left(self.speed)
-        return self.current_distance >= self.distance
+
+        return self.controller.angle_module_left() >= self.distance
 
     def stop(self) -> None:
         self.controller.brake_module_left()
@@ -150,9 +145,9 @@ class ModuleRight(Task):
         self.controller.reset_module_right(0)
 
     def check(self) -> bool:
-        self.current_distance = self.controller.angle_module_right()
         self.controller.run_module_right(self.speed)
-        return self.current_distance >= self.distance
+
+        return self.controller.angle_module_right() >= self.distance
 
     def stop(self) -> None:
         self.controller.brake_module_right()
@@ -165,9 +160,6 @@ class TurnLeft(Task):
         self.speed = abs(speed)
         self.target = -float(abs(angle))
         self.start_target = self.controller.get_gyro_angle()
-
-    def start(self) -> None:
-        pass
 
     def check(self) -> bool:
         gyro_angle = self.controller.get_gyro_angle() - self.start_target
@@ -185,9 +177,6 @@ class TurnRight(Task):
         self.speed = abs(speed)
         self.target = float(abs(angle))
         self.start_target = self.controller.get_gyro_angle()
-
-    def start(self) -> None:
-        pass
 
     def check(self) -> bool:
         gyro_angle = self.controller.get_gyro_angle() - self.start_target

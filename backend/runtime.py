@@ -24,7 +24,9 @@ class Runtime:
             if task_finished:
                 task.stop()
 
-                self.add_tasks(task.get_next_tasks())
+                next_tasks = task.get_next_tasks()
+                if next_tasks:
+                    self.add_tasks(next_tasks)
             else:
                 self.tasks.append(task)
 

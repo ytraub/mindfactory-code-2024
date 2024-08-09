@@ -1,7 +1,6 @@
 from pybricks.hubs import PrimeHub
 from pybricks.pupdevices import Motor, ColorSensor
 from pybricks.parameters import Port, Direction, Button
-from pybricks.tools import wait
 
 SPEED_MULTIPLIER = 10
 
@@ -10,46 +9,47 @@ class Controller:
     def __init__(self) -> None:
         self.hub = PrimeHub()
 
-        self.drive_right_b = Motor(Port.B, Direction.CLOCKWISE)
-        self.drive_left_f = Motor(Port.F, Direction.COUNTERCLOCKWISE)
-        self.module_right_a = Motor(Port.A)
-        self.module_left_e = Motor(Port.E)
-        self.module_color_c = ColorSensor(Port.C)
+        self.drive_left_b = Motor(Port.B, Direction.COUNTERCLOCKWISE)
+        self.drive_right_e = Motor(Port.E, Direction.CLOCKWISE)
+        self.module_left_a = Motor(Port.A)
+        self.module_right_f = Motor(Port.F)
+        self.module_color_d = ColorSensor(Port.D)
+        self.ground_color_c = ColorSensor(Port.C)
 
     ###### < Movement > ######
     def run_drive_left(self, speed: int) -> None:
-        self.drive_left_f.run(speed * SPEED_MULTIPLIER)
+        self.drive_left_b.run(speed * SPEED_MULTIPLIER)
 
     def run_drive_right(self, speed: int) -> None:
-        self.drive_right_b.run(speed * SPEED_MULTIPLIER)
+        self.drive_right_e.run(speed * SPEED_MULTIPLIER)
 
     def run_module_left(self, speed: int) -> None:
-        self.module_left_e.run(speed * SPEED_MULTIPLIER)
+        self.module_right_f.run(speed * SPEED_MULTIPLIER)
 
     def run_module_right(self, speed: int) -> None:
-        self.module_right_a.run(speed * SPEED_MULTIPLIER)
+        self.module_left_a.run(speed * SPEED_MULTIPLIER)
 
     ###### < Stop > ######
 
     def brake_drive_left(self) -> None:
-        self.drive_left_f.brake()
-        self.drive_left_f.brake()
-        self.drive_left_f.brake()
+        self.drive_left_b.brake()
+        self.drive_left_b.brake()
+        self.drive_left_b.brake()
 
     def brake_drive_right(self) -> None:
-        self.drive_right_b.brake()
-        self.drive_right_b.brake()
-        self.drive_right_b.brake()
+        self.drive_right_e.brake()
+        self.drive_right_e.brake()
+        self.drive_right_e.brake()
 
     def brake_module_left(self) -> None:
-        self.module_left_e.brake()
-        self.module_left_e.brake()
-        self.module_left_e.brake()
+        self.module_right_f.brake()
+        self.module_right_f.brake()
+        self.module_right_f.brake()
 
     def brake_module_right(self) -> None:
-        self.module_right_a.brake()
-        self.module_right_a.brake()
-        self.module_right_a.brake()
+        self.module_left_a.brake()
+        self.module_left_a.brake()
+        self.module_left_a.brake()
 
     def brake_motors(self) -> None:
         self.brake_drive_left()
@@ -68,16 +68,16 @@ class Controller:
     ###### < Reset > ######
 
     def reset_drive_left(self, angle: int) -> None:
-        self.drive_left_f.reset_angle(angle)
+        self.drive_left_b.reset_angle(angle)
 
     def reset_drive_right(self, angle: int) -> None:
-        self.drive_right_b.reset_angle(angle)
+        self.drive_right_e.reset_angle(angle)
 
     def reset_module_left(self, angle: int) -> None:
-        self.module_left_e.reset_angle(angle)
+        self.module_right_f.reset_angle(angle)
 
     def reset_module_right(self, angle: int) -> None:
-        self.module_right_a.reset_angle(angle)
+        self.module_left_a.reset_angle(angle)
 
     def reset_motors(self, angle: int) -> None:
         self.reset_drive_left(angle)
@@ -96,16 +96,16 @@ class Controller:
     ###### < Angle > ######
 
     def angle_drive_left(self) -> int:
-        return self.drive_left_f.angle()
+        return self.drive_left_b.angle()
 
     def angle_drive_right(self) -> int:
-        return self.drive_right_b.angle()
+        return self.drive_right_e.angle()
 
     def angle_module_left(self) -> int:
-        return self.module_left_e.angle()
+        return self.module_right_f.angle()
 
     def angle_module_right(self) -> int:
-        return self.module_right_a.angle()
+        return self.module_left_a.angle()
 
     ###### < Gyro > ######
 

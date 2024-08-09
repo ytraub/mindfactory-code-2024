@@ -81,7 +81,7 @@ class Robot:
 
         for task in reversed(tasks):
             if prev_task:
-                task.add_next_tasks(task)
+                task.add_next_tasks(prev_task)
 
             prev_task = task
 
