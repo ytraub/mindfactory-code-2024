@@ -1,3 +1,6 @@
+from pybricks.parameters import Side, Button, Color
+
+
 class Task:
     def __init__(self) -> None:
         self.next_tasks = []
@@ -5,23 +8,64 @@ class Task:
     def __str__(self) -> str:
         return f"<Task next_tasks={self.next_tasks}>"
 
-    def start(self):
+    def start(self) -> None:
         pass
 
-    def check(self):
+    def check(self) -> bool:
         return True
 
-    def stop(self):
+    def stop(self) -> None:
         pass
 
-    def add_next_tasks(self, tasks):
+    def add_next_tasks(self, tasks) -> None:
         if type(tasks) == list:
             self.next_tasks.extend(tasks)
         else:
             self.next_tasks.append(tasks)
 
-    def get_next_tasks(self):
+    def get_next_tasks(self) -> None:
         return self.next_tasks
+
+
+class Menu(Task):
+    def __init__(self, robot, controller) -> None:
+        super().__init__()
+        self.robot = robot
+        self.controller = controller
+
+        self.run_index = 0
+
+    def check(self) -> bool:
+        if self.controller.hub.imu.ready():
+            self.controller.hub.light.on(Color.GREEN)
+        else:
+            self.controller.hub.light.on(Color.RED)
+
+        self.controller.hub.display.char(str(index + 1))
+        buttons = self.controller.get_buttons()
+
+        if len(buttons) == 1:
+            self.handle_button(list(buttons)[0])
+
+        return False
+
+    def handle_button(self, button: Button) -> None:
+        if self.controller.get_running():
+            if button == Button.CENTER:
+                self.end_run()
+        else:
+            if button == Button.RIGHT:
+                if index == len(self.runs) - 1:
+                    index = 0
+                else:
+                    index += 1
+            elif button == Button.LEFT:
+                if index == 0:
+                    index = len(self.runs) - 1
+                else:
+                    index -= 1
+            elif button == Button.CENTER:
+                self.execute_run(index)
 
 
 class DriveForward(Task):
@@ -34,16 +78,16 @@ class DriveForward(Task):
 
         self.current_distance = 0
 
-    def start(self):
+    def start(self) -> None:
         self.controller.reset_drive(0)
 
-    def check(self):
+    def check(self) -> bool:
         self.controller.run_drive_left(self.speed),
         self.controller.run_drive_right(self.speed)
 
         return self.current_distance >= self.distance
 
-    def stop(self):
+    def stop(self) -> None:
         self.controller.brake_drive()
 
 
@@ -54,16 +98,16 @@ class DriveBackward(Task):
         self.speed = -abs(speed)
         self.distance = abs(distance)
 
-    def start(self):
+    def start(self) -> None:
         self.controller.reset_drive(0)
 
-    def check(self):
+    def check(self) -> bool:
         self.current_distance = self.controller.angle_drive_left()
         self.controller.run_drive_left(self.speed)
         self.controller.run_drive_right(self.speed)
         return self.current_distance >= self.distance
 
-    def stop(self):
+    def stop(self) -> None:
         self.controller.brake_drive()
 
 
@@ -74,15 +118,15 @@ class ModuleLeft(Task):
         self.speed = abs(speed)
         self.distance = abs(distance)
 
-    def start(self):
+    def start(self) -> None:
         self.controller.reset_module_left(0)
 
-    def check(self):
+    def check(self) -> bool:
         self.current_distance = self.controller.angle_module_left()
         self.controller.run_module_left(self.speed)
         return self.current_distance >= self.distance
 
-    def stop(self):
+    def stop(self) -> None:
         self.controller.brake_module_left()
 
 
@@ -93,15 +137,15 @@ class ModuleRight(Task):
         self.speed = abs(speed)
         self.distance = abs(distance)
 
-    def start(self):
+    def start(self) -> None:
         self.controller.reset_module_right(0)
 
-    def check(self):
+    def check(self) -> bool:
         self.current_distance = self.controller.angle_module_right()
         self.controller.run_module_right(self.speed)
         return self.current_distance >= self.distance
 
-    def stop(self):
+    def stop(self) -> None:
         self.controller.brake_module_right()
 
 
@@ -113,15 +157,15 @@ class TurnLeft(Task):
         self.target = -float(abs(angle))
         self.start_target = self.controller.get_gyro_angle()
 
-    def start(self):
+    def start(self) -> None:
         pass
 
-    def check(self):
+    def check(self) -> bool:
         gyro_angle = self.controller.get_gyro_angle() - self.start_target
         self.controller.run_drive_left(self.speed)
         return gyro_angle <= self.target
 
-    def stop(self):
+    def stop(self) -> None:
         self.controller.brake_drive_left()
 
 
@@ -133,15 +177,15 @@ class TurnRight(Task):
         self.target = float(abs(angle))
         self.start_target = self.controller.get_gyro_angle()
 
-    def start(self):
+    def start(self) -> None:
         pass
 
-    def check(self):
+    def check(self) -> bool:
         gyro_angle = self.controller.get_gyro_angle() - self.start_target
         self.controller.run_drive_right(self.speed)
         return gyro_angle >= self.target
 
-    def stop(self):
+    def stop(self) -> None:
         self.controller.brake_drive_right()
 
 
@@ -149,6 +193,9 @@ class Tasks:
     def __init__(self, robot) -> None:
         self.robot = robot
         self.controller = robot.controller
+
+    def menu(self) -> Menu:
+        return Menu(self.robot)
 
     def drive_forward(self, speed: int, distance: int) -> DriveForward:
         return DriveForward(self.controller, speed=speed, distance=distance)

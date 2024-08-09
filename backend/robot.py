@@ -1,5 +1,4 @@
 from pybricks.parameters import Side, Button, Color
-from pybricks.tools import run_task, wait
 
 from controller import Controller
 from runtime import Runtime, Chain
@@ -12,7 +11,15 @@ class Robot:
         self.controller = Controller()
         self.tasks = Tasks(self)
 
+        self.running = False
+
         self.runs = []
+
+    def get_running(self) -> bool:
+        return self.running
+
+    def set_running(self, state: bool) -> bool:
+        self.running = state
 
     def main(self) -> None:
         from runs import __runs
@@ -29,45 +36,11 @@ class Robot:
         self.controller.reset_gyro_angle()
         self.controller.reset_motors(0)
 
-    def menu(self) -> None:
-        index = 0
-        while True:
-            if self.controller.hub.imu.ready():
-                self.controller.hub.light.on(Color.GREEN)
-            else:
-                self.controller.hub.light.on(Color.RED)
-
-            self.controller.hub.display.char(str(index + 1))
-            buttons =  self.controller.get_buttons()
-
-            if len(buttons) != 1:
-                continue
-
-            button = list(buttons)[0]
-            if self.controller.get_running():
-                if button == Button.CENTER:
-                    self.end_run()
-            else:
-                if button == Button.RIGHT:
-                    if index == len(self.runs) - 1:
-                        index = 0
-                    else:
-                        index += 1
-                elif button == Button.LEFT:
-                    if index == 0:
-                        index = len(self.runs) - 1
-                    else:
-                        index -= 1
-                elif button == Button.CENTER:
-                    self.execute_run(index)
-
-            wait(100)
-
     def execute_run(self, index: int) -> None:
         self.start_run()
 
         try:
-             self.runs[index].execute(self)
+            self.runs[index].execute(self)
         except Exception as err:
             print(f"An error occured while running: {err}")
 

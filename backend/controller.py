@@ -131,13 +131,4 @@ class Controller:
     ###### < Util > ######
 
     def get_buttons(self) -> set[Button]:
-        buttons = set()
-
-        while not buttons:
-            buttons = self.hub.buttons.pressed()
-            wait(50)
-
-        while self.hub.buttons.pressed():
-            wait(50)
-
-        return buttons
+        return self.hub.buttons.pressed()
