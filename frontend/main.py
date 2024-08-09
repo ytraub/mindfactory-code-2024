@@ -11,7 +11,7 @@ def main() -> None:
     lexer = Lexer()
     compiler = Compiler()
 
-    file_buffer = '"""\nThis is a generated file. Don\'t change anything manually.\n"""\n\nfrom pybricks.tools import tasksplit\nfrom robot import Robot\n\n'
+    file_buffer = '"""\nThis is a generated file. Don\'t change anything manually.\n"""\n\nfrom robot import Robot\n\n'
     run_names = []
 
     for filename in os.listdir(RUN_DIRECTORY):
@@ -42,7 +42,7 @@ def main() -> None:
 
 
 def list_runs(names: list[str]) -> str:
-    buffer = "\nruns = ["
+    buffer = "\n__runs = ["
 
     for name in names:
         buffer += f"{name}(),"

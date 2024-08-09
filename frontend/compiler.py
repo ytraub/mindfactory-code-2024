@@ -16,7 +16,6 @@ class Compiler:
         self.token_ptr: int = 0
         self.current_token: Token = None
         self.previous_token: Token = None
-
         self.run_color: str = ""
         self.output_buffer: str = ""
 
@@ -32,29 +31,29 @@ class Compiler:
 
         error = self.parse_color()
         if error:
-            return (None, error)
+            return None, error
 
         if self.run_color:
-            self.write_buffer(f"\t\tself.run_color = '{self.run_color}'\n")
+            self.write_buffer(f"\t\tself.run_color = '{self.run_color}'")
         else:
-            return (None, self.error_current("Unexpected: No valid run color found"))
+            return None, self.error_current("Unexpected: No valid run color found")
 
-        self.write_buffer(f"\ndef execute(self, robot: Robot):")
+        self.write_buffer(
+            f"\n\r\tdef create_chain(self, robot: Robot):\r\t\t\trobot.chain(["
+        )
 
         error = self.parse_run()
         if error:
-            return (None, error)
-        
-        self.write_buffer("\n\n")
+            return None, error
 
-        return (self.output_buffer, None)
-    
+        self.write_buffer("])\n\n\n")
+        return self.output_buffer, None
+
     def reset(self) -> None:
         self.tokens = []
         self.token_ptr = 0
         self.current_token = None
         self.previous_token = None
-
         self.run_color = ""
         self.output_buffer = ""
 
@@ -69,8 +68,8 @@ class Compiler:
                     f"Expected a color after keyword: {self.current_token.lexeme}"
                 )
         else:
-            return self.error_current("Expected color decleration in beginning of file")
-        
+            return self.error_current("Expected color declaration in beginning of file")
+
     def parse_run(self) -> str | None:
         while not self.check_type(self.peek(), TokenType.EOF):
             if self.check_current_type(TokenType.LEFT_BRACE):
@@ -79,9 +78,7 @@ class Compiler:
                     return error
                 if self.check_current_type(TokenType.EOF):
                     break
-
                 continue
-                
             elif self.check_current_keyword("with"):
                 self.advance()
                 error = self.parse_tasksplit()
@@ -89,9 +86,7 @@ class Compiler:
                     return error
                 if self.check_current_type(TokenType.EOF):
                     break
-
                 continue
-                
             self.write_buffer("\n\t\t")
             error = self.parse_task()
             if error:
@@ -100,58 +95,46 @@ class Compiler:
     def parse_block(self, in_tasksplit: bool = False) -> str | None:
         if self.check_current_type(TokenType.LEFT_BRACE):
             self.advance()
-
             if in_tasksplit:
-                self.write_buffer("\n\t\ttasksplit(")
-
+                self.write_buffer("\n\t\t[")
             while not self.check_current_type(TokenType.RIGHT_BRACE):
                 if self.check_current_type(TokenType.LEFT_BRACE):
                     if in_tasksplit:
-                        return self.error_current(f"No sub blocks in tasksplit allowed")
+                        return self.error_current("No sub blocks in tasksplit allowed")
                     error = self.parse_block()
                     if error:
                         return error
-                    
                     continue
-                
                 elif self.check_current_keyword("with"):
                     if in_tasksplit:
-                        return self.error_current(f"No sub blocks in tasksplit allowed")
-                    
+                        return self.error_current("No sub blocks in tasksplit allowed")
                     self.advance()
                     error = self.parse_tasksplit()
                     if error:
                         return error
-                    
                     continue
-                    
                 if self.check_current_type(TokenType.EOF):
-                    return self.error_current(f"Unexpected {TokenType.EOF} in sub block\n  ->  Consider closing the block using '{"}"}'")
+                    return self.error_current(
+                        f"Unexpected {TokenType.EOF} in sub block\n  ->  Consider closing the block using '}}'"
+                    )
                 elif self.check_current_type(TokenType.RIGHT_BRACE):
                     self.advance()
                     break
-                    
                 if not in_tasksplit:
-                    self.write_buffer("\n\t\tawait ")
-
+                    self.write_buffer("\n\t\t")
                 error = self.parse_task()
                 if error:
                     return error
-                
-                if in_tasksplit:
-                    self.write_buffer(",")
 
             if in_tasksplit:
                 self.strip_buffer(",")
-                self.write_buffer(")")
-
+                self.write_buffer("],")
             self.advance()
-
         else:
             return self.error_current(
                 f"Expected: {TokenType.TASK}, got {self.current_token.token_type}: {self.current_token.lexeme}"
             )
-            
+
     def parse_tasksplit(self) -> str | None:
         if self.check_current_keyword("tasksplit"):
             if self.check_type(self.peek(), TokenType.LEFT_BRACE):
@@ -159,24 +142,22 @@ class Compiler:
                 error = self.parse_block(in_tasksplit=True)
                 if error:
                     return error
-
             else:
-                return self.error_current(f"Expected block after tasksplit expression")
+                return self.error_current("Expected block after tasksplit expression")
         else:
-            return self.error_current(f"Expected valid parameter to 'with', got: {self.current_token.lexeme}")
+            return self.error_current(
+                f"Expected valid parameter to 'with', got: {self.current_token.lexeme}"
+            )
 
     def parse_task(self) -> str | None:
         error = self.expect(TokenType.TASK)
         if error:
             return error
-        
         task = self.current_token
         self.write_buffer(f"robot.tasks.{task.lexeme}(")
-
         error = self.parse_params()
         if error:
             return error
-
         self.advance()
 
     def parse_params(self) -> str | None:
@@ -184,16 +165,13 @@ class Compiler:
         error = self.expect(TokenType.LEFT_PAREN)
         if error:
             return error
-        
         task = self.previous_token
-
         while not self.check_type(self.peek(), TokenType.RIGHT_PAREN):
             error = self.parse_pair(task.lexeme)
             if error:
                 return error
-
         self.strip_buffer(",")
-        self.write_buffer(")")
+        self.write_buffer("),")
         self.advance()
 
     def parse_pair(self, task: str) -> str | None:
@@ -201,19 +179,15 @@ class Compiler:
         error = self.expect(TokenType.PARAM)
         if error:
             return error
-
         param = self.current_token.lexeme
-
-        if not param in TASK_PARAMS.get(task):
+        if param not in TASK_PARAMS.get(task):
             return self.error_current(
-                    f"No param: '{param}' on task: '{task}'\n\rAvailable params: {TASK_PARAMS.get(task)}"
-                )
-
+                f"No param: '{param}' on task: '{task}'\n\rAvailable params: {TASK_PARAMS.get(task)}"
+            )
         self.advance()
         error = self.expect(TokenType.EQUALS)
         if error:
             return error
-
         self.advance()
         match self.current_token.token_type:
             case TokenType.NUMBER:
@@ -244,13 +218,11 @@ class Compiler:
             return self.error_current(
                 f"Expected: '{token_type}', got: '{self.current_token.token_type}'"
             )
-
         return None
 
     def peek(self) -> Token:
         if self.check_current_type(TokenType.EOF):
             return self.tokens[self.token_ptr]
-
         return self.tokens[self.token_ptr + 1]
 
     def advance(self) -> None:

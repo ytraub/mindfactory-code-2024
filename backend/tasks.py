@@ -14,7 +14,7 @@ class Task:
     def stop(self) -> None:
         pass
 
-    def add_next_tasks(self, tasks: any | list[any]) -> None:
+    def add_next_tasks(self, tasks) -> None:
         if type(tasks) == list:
             self.next_tasks.extend(tasks)
         else:
