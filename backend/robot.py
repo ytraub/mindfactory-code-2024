@@ -39,6 +39,7 @@ class Robot:
         self.controller.reset_motors(0)
 
         self.runtime.add_tasks(self.tasks.menu(self))
+        self.runtime.start()
 
     def execute_run(self, index: int) -> None:
         self.start_run()

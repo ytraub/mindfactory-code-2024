@@ -34,5 +34,7 @@ class Runtime:
                 task.start()
                 self.tasks.append(task)
         else:
-            tasks.start()
-            self.next_tasks.append(tasks)
+            task = tasks
+
+            task.start()
+            self.tasks.append(task)

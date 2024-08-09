@@ -204,7 +204,7 @@ class Tasks:
         self.robot = robot
         self.controller = robot.controller
 
-        return Menu(robot)
+        return Menu(robot, robot.controller)
 
     def drive_forward(self, speed: int, distance: int) -> DriveForward:
         return DriveForward(self.controller, speed=speed, distance=distance)
