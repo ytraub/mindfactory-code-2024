@@ -1,4 +1,4 @@
-from pybricks.parameters import Side, Button, Color
+from pybricks.parameters import Button, Color
 
 
 class Task:
