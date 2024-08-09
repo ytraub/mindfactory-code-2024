@@ -58,22 +58,26 @@ class Robot:
         run_chain = self.runs[index]
         self.runtime.add_tasks(run_chain.start_task)
 
-        self.end_run()
-
     def interrupt_run(self) -> None:
         old_tasks = self.runtime.get_tasks()
-        new_tasks = [task for task in old_tasks if type(task) == Menu]
-
-        self.runtime.add_tasks(new_tasks)
+        self.runtime.tasks.clear()
         self.end_run()
 
+        print(old_tasks)
+        new_tasks = [task for task in old_tasks if type(task) == Menu]
+        print(new_tasks)
+
+        self.runtime.add_tasks(new_tasks)
+
     def start_run(self) -> None:
+        print("Start run")
         self.set_running(True)
 
         self.controller.reset_motors(0)
         self.controller.reset_gyro_angle()
 
     def end_run(self) -> None:
+        print("End run")
         self.set_running(False)
 
         self.controller.brake_motors()

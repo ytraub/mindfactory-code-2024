@@ -32,8 +32,8 @@ class Menu(Task):
         super().__init__()
         self.robot = robot
         self.controller = controller
-
         self.run_index = 0
+        self.previous_buttons = set()
 
     def check(self) -> bool:
         if self.controller.hub.imu.ready():
@@ -44,18 +44,18 @@ class Menu(Task):
         self.controller.hub.display.char(str(self.run_index + 1))
 
         buttons = self.controller.get_buttons()
-        if len(buttons) == 1:
-            self.handle_button(list(buttons)[0])
+        new_buttons = buttons - self.previous_buttons
+        if len(new_buttons) == 1:
+            self.handle_button(list(new_buttons)[0])
+
+        self.previous_buttons = buttons
 
         return False
 
     def handle_button(self, button: Button) -> None:
-        while len(self.controller.get_buttons()):
-            continue
-
         if self.robot.get_running():
             if button == Button.CENTER:
-                self.robot.end_run()
+                self.robot.interrupt_run()
         else:
             if button == Button.RIGHT:
                 self.incerement_index()
