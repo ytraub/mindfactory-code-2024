@@ -2,7 +2,7 @@ color RED
 
 module_right (speed=60 distance=500)
 
-with multitask {
+with tasksplit {
     module_left (speed=60 distance=500)
     drive_forward (speed=100 distance=300)
 }

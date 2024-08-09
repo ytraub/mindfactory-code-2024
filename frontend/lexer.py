@@ -3,7 +3,7 @@ from generated.data import TASKS, PARAMS
 
 KEYWORDS = [
     "with",
-    "multitask",
+    "tasksplit",
     "color",
 ]
 
