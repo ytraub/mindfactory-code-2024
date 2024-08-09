@@ -17,7 +17,7 @@ class Task:
     def stop(self) -> None:
         pass
 
-    def add_next_tasks(self, tasks) -> None:
+    def add_next_tasks(self, tasks: any | list[any]) -> None:
         if type(tasks) == list:
             self.next_tasks.extend(tasks)
         else:
@@ -41,31 +41,37 @@ class Menu(Task):
         else:
             self.controller.hub.light.on(Color.RED)
 
-        self.controller.hub.display.char(str(index + 1))
-        buttons = self.controller.get_buttons()
+        self.controller.hub.display.char(str(self.run_index + 1))
 
+        buttons = self.controller.get_buttons()
         if len(buttons) == 1:
             self.handle_button(list(buttons)[0])
 
         return False
 
     def handle_button(self, button: Button) -> None:
-        if self.controller.get_running():
+        if self.robot.get_running():
             if button == Button.CENTER:
-                self.end_run()
+                self.robot.end_run()
         else:
             if button == Button.RIGHT:
-                if index == len(self.runs) - 1:
-                    index = 0
-                else:
-                    index += 1
+                self.incerement_index()
             elif button == Button.LEFT:
-                if index == 0:
-                    index = len(self.runs) - 1
-                else:
-                    index -= 1
+                self.decrement_index()
             elif button == Button.CENTER:
-                self.execute_run(index)
+                self.robot.execute_run(self.run_index)
+
+    def incerement_index(self) -> None:
+        if self.run_index == len(self.robot.runs) - 1:
+            self.run_index = 0
+        else:
+            self.run_index += 1
+
+    def decrement_index(self) -> None:
+        if self.run_index == 0:
+            self.run_index = len(self.robot.runs) - 1
+        else:
+            self.run_index -= 1
 
 
 class DriveForward(Task):

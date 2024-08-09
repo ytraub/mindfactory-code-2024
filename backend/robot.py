@@ -1,4 +1,4 @@
-from pybricks.parameters import Side, Button, Color
+from pybricks.parameters import Side, Button
 
 from controller import Controller
 from runtime import Runtime, Chain
@@ -22,12 +22,14 @@ class Robot:
         self.running = state
 
     def main(self) -> None:
+        self.load_runs()
+        self.setup()
+
+    def load_runs(self) -> None:
         from runs import __runs
 
         for run in __runs:
             run.create_chain(self)
-
-        self.setup()
 
     def setup(self) -> None:
         self.controller.hub.display.orientation(Side.TOP)
@@ -40,7 +42,7 @@ class Robot:
         self.start_run()
 
         try:
-            self.runs[index].execute(self)
+            self.runtime.add_tasks(self.runs[index])
         except Exception as err:
             print(f"An error occured while running: {err}")
 

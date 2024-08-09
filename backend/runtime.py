@@ -22,7 +22,11 @@ class Runtime:
             else:
                 self.tasks.append(task)
 
-    def add_tasks(self, tasks: list[any]) -> None:
-        for task in tasks:
-            task.start()
-            self.tasks.append(task)
+    def add_tasks(self, tasks: any | list[any]) -> None:
+        if type(tasks) == list:
+            for task in tasks:
+                task.start()
+                self.tasks.append(task)
+        else:
+            tasks.start()
+            self.next_tasks.append(tasks)
