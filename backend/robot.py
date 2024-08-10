@@ -3,7 +3,6 @@ from pybricks.parameters import Side, Button
 from controller import Controller
 from runtime import Runtime, Chain
 from tasks import Tasks, Menu
-from rpc import RPCClient
 
 
 class Robot:
@@ -39,7 +38,7 @@ class Robot:
         self.controller.reset_motors(0)
 
         self.runtime.add_tasks(self.tasks.menu())
-        self.runtime.start()
+        self.runtime.start(self)
 
     def execute_run(self, index: int) -> None:
         self.start_run()
@@ -56,12 +55,8 @@ class Robot:
             print(f"An error occured while running: {err}")
 
     def interrupt_run(self) -> None:
-        old_tasks = self.runtime.get_tasks()
         self.runtime.tasks.clear()
         self.end_run()
-
-        new_tasks = [task for task in old_tasks if type(task) == Menu]
-        self.runtime.add_tasks(new_tasks)
 
     def start_run(self) -> None:
         self.set_running(True)
