@@ -10,7 +10,6 @@ class Robot:
     def __init__(self) -> None:
         self.runtime = Runtime()
         self.controller = Controller()
-        self.server = RPCClient("0.0.0.0", 8080)
         self.tasks = Tasks(self, self.controller)
 
         self.running = False
