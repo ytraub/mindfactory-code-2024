@@ -3,16 +3,17 @@ from pybricks.parameters import Side, Button
 from controller import Controller
 from runtime import Runtime, Chain
 from tasks import Tasks, Menu
+from rpc import RPCClient
 
 
 class Robot:
     def __init__(self) -> None:
         self.runtime = Runtime()
         self.controller = Controller()
+        self.server = RPCClient("0.0.0.0", 8080)
         self.tasks = Tasks(self, self.controller)
 
         self.running = False
-
         self.runs = []
 
     def get_running(self) -> bool:
