@@ -161,6 +161,9 @@ class TurnLeft(Task):
         self.target = -float(abs(angle))
         self.start_target = self.controller.get_gyro_angle()
 
+    def start(self) -> None:
+        self.controller.reset_gyro()
+
     def check(self) -> bool:
         gyro_angle = self.controller.get_gyro_angle() - self.start_target
         self.controller.run_drive_right(self.speed)
@@ -178,10 +181,12 @@ class TurnRight(Task):
         self.target = float(abs(angle))
         self.start_target = self.controller.get_gyro_angle()
 
+    def start(self) -> None:
+        self.controller.reset_gyro()
+
     def check(self) -> bool:
         gyro_angle = self.controller.get_gyro_angle() - self.start_target
         self.controller.run_drive_left(self.speed)
-        print(gyro_angle, self.target, gyro_angle >= self.target)
         return gyro_angle >= self.target
 
     def stop(self) -> None:

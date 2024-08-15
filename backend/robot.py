@@ -34,7 +34,7 @@ class Robot:
         self.controller.hub.display.orientation(Side.TOP)
         self.controller.hub.system.set_stop_button((Button.LEFT, Button.RIGHT))
 
-        self.controller.reset_gyro_angle()
+        self.controller.reset_gyro_angle(0)
         self.controller.reset_motors(0)
 
         self.runtime.add_tasks(self.tasks.menu())
@@ -62,14 +62,12 @@ class Robot:
         self.set_running(True)
 
         self.controller.reset_motors(0)
-        self.controller.reset_gyro_angle()
 
     def end_run(self) -> None:
         self.set_running(False)
 
         self.controller.brake_motors()
         self.controller.reset_motors(0)
-        self.controller.reset_gyro_angle()
 
     def chain(self, tasks: list[any | list[any]]) -> Chain:
         prev_task: any | None = None

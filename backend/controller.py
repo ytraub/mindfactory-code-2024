@@ -16,7 +16,10 @@ class Controller:
         self.module_color_d = ColorSensor(Port.D)
         self.ground_color_c = ColorSensor(Port.C)
 
+        self.gyro_offset_angle = self.get_gyro_raw_angle()
+
     ###### < Movement > ######
+
     def run_drive_left(self, speed: int) -> None:
         self.drive_left_b.run(speed * SPEED_MULTIPLIER)
 
@@ -109,11 +112,17 @@ class Controller:
 
     ###### < Gyro > ######
 
-    def get_gyro_angle(self) -> None:
-        return self.hub.imu.heading()
+    def get_gyro_angle(self) -> float:
+        return self.hub.imu.heading() - self.gyro_offset_angle
 
-    def reset_gyro_angle(self) -> None:
-        self.hub.imu.reset_heading(0)
+    def get_gyro_raw_angle(self) -> float:
+        return self.hub.imu.heading()
+    
+    def reset_gyro(self) -> None:
+        self.gyro_offset_angle = self.get_gyro_raw_angle()
+
+    def reset_gyro_angle(self, angle: int) -> None:
+        self.hub.imu.reset_heading(angle)
 
     ###### < Util > ######
 
