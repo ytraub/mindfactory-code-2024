@@ -3,4 +3,5 @@ color RED
 {
     //drive_forward(distance=500 speed=60 accel_distance=500 deaccel_distance=0)
     turn_right_on_spot(speed=20 angle=90)
+    turn_left_on_spot(speed=20 angle=90)
 }
