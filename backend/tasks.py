@@ -33,10 +33,13 @@ class Menu(Task):
         self.run_index = 0
 
     def check(self) -> bool:
-        if self.controller.hub.imu.ready():
-            self.controller.hub.light.on(Color.GREEN)
-        else:
+        if not self.controller.hub.imu.ready():
             self.controller.hub.light.on(Color.RED)
+        else:
+            if self.robot.running:
+                self.controller.hub.light.on(Color.BLUE)
+            else:
+                self.controller.hub.light.on(Color.GREEN)
 
         self.controller.hub.display.char(str(self.run_index + 1))
 
