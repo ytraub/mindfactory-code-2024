@@ -1,5 +1,13 @@
 from pybricks.parameters import Button, Color
 
+from umath import sqrt
+
+
+## Helper function for accel/deaccel
+# Can be adjusted as needed
+def f(x):
+    return sqrt(x)
+
 
 class Task:
     def __init__(self) -> None:
@@ -90,21 +98,36 @@ class DriveForward(Task):
         super().__init__()
         self.controller = controller
 
-        self.speed = abs(speed)
-        self.distance = abs(distance)
+        print(distance, accel_distance, deaccel_distance)
 
+        self.distance = abs(distance)
+        self.max_speed = abs(speed)
         self.start_speed = abs(start_speed)
         self.accel_distance = abs(accel_distance)
         self.deaccel_distance = abs(deaccel_distance)
+
+        self.current_distance = 0
+        self.speed = self.start_speed
 
     def start(self) -> None:
         self.controller.reset_drive(0)
 
     def check(self) -> bool:
-        self.controller.run_drive_left(self.speed),
+        self.current_distance = abs(self.controller.angle_drive_left())
+
+        if self.current_distance < self.accel_distance:
+            c = (self.max_speed - self.start_speed) / f(self.accel_distance)
+            self.speed = c * f(self.current_distance) + self.start_speed
+        elif self.current_distance < self.distance - self.deaccel_distance:
+            self.speed = self.max_speed
+        else:
+            c = (self.max_speed - self.start_speed) / f(self.deaccel_distance)
+            self.speed = c * f(self.distance - self.current_distance) + self.start_speed
+
+        self.controller.run_drive_left(self.speed)
         self.controller.run_drive_right(self.speed)
 
-        return self.controller.angle_drive_left() >= self.distance
+        return self.current_distance >= self.distance
 
     def stop(self) -> None:
         self.controller.brake_drive()
@@ -225,10 +248,10 @@ class Tasks:
         deaccel_distance: int = -1,
     ) -> DriveForward:
         if accel_distance < 0:
-            accel_distance = distance * 0.3
+            accel_distance = distance * 0.2
 
         if deaccel_distance < 0:
-            deaccel_distance = distance * 0.3
+            deaccel_distance = distance * 0.2
 
         return DriveForward(
             self.controller,
