@@ -5,6 +5,8 @@ DATA_DIRECTORY = "frontend/generated"
 
 
 def main() -> None:
+    print("Generating data...")
+    
     methods = [
         method
         for method in dir(Tasks)
@@ -42,6 +44,8 @@ def main() -> None:
         data.write(f"TASKS={methods}\n")
         data.write(f"PARAMS={params}\n")
         data.write(f"TASK_PARAMS={method_params}\n")
+        
+    print("Done!\n")
 
 
 if __name__ == "__main__":

@@ -8,6 +8,8 @@ OUTPUT_DIRECTORY = "output"
 
 
 def main() -> None:
+    print("Compiling runs...")
+    
     lexer = Lexer()
     compiler = Compiler()
 
@@ -39,6 +41,8 @@ def main() -> None:
 
     with open(f"{OUTPUT_DIRECTORY}/runs.py", "w+") as output:
         output.write(file_buffer)
+        
+    print("Done!\n")
 
 
 def list_runs(names: list[str]) -> str:
