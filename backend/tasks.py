@@ -231,6 +231,27 @@ class TurnRight(Task):
         self.controller.brake_drive_left()
 
 
+class TurnRightOnSpot(Task):
+    def __init__(self, controller, speed: int, angle: int) -> None:
+        super().__init__()
+        self.controller = controller
+        self.speed = abs(speed)
+        self.target = float(abs(angle))
+        self.start_target = self.controller.get_gyro_angle()
+
+    def start(self) -> None:
+        self.controller.reset_gyro()
+
+    def check(self) -> bool:
+        gyro_angle = self.controller.get_gyro_angle() - self.start_target
+        self.controller.run_drive_left(self.speed)
+        self.controller.run_drive_right(-self.speed)
+        return gyro_angle >= self.target
+
+    def stop(self) -> None:
+        self.controller.brake_drive_left()
+
+
 class Tasks:
     def __init__(self, robot, controller) -> None:
         self.robot = robot
@@ -280,3 +301,6 @@ class Tasks:
 
     def turn_right(self, speed: int, angle: int) -> TurnRight:
         return TurnRight(self.controller, speed=speed, angle=angle)
+
+    def turn_right_on_spot(self, speed: int, angle: int) -> TurnRightOnSpot:
+        return TurnRightOnSpot(self.controller, speed=speed, angle=angle)
