@@ -78,12 +78,24 @@ class Menu(Task):
 
 
 class DriveForward(Task):
-    def __init__(self, controller, speed: int, distance: int) -> None:
+    def __init__(
+        self,
+        controller,
+        speed: int,
+        distance: int,
+        start_speed: int,
+        accel_distance: int,
+        deaccel_distance: int,
+    ) -> None:
         super().__init__()
         self.controller = controller
 
         self.speed = abs(speed)
         self.distance = abs(distance)
+
+        self.start_speed = abs(start_speed)
+        self.accel_distance = abs(accel_distance)
+        self.deaccel_distance = abs(deaccel_distance)
 
     def start(self) -> None:
         self.controller.reset_drive(0)
@@ -204,10 +216,34 @@ class Tasks:
     def menu(self) -> Menu:
         return Menu(self.robot, self.controller)
 
-    def drive_forward(self, speed: int, distance: int) -> DriveForward:
-        return DriveForward(self.controller, speed=speed, distance=distance)
+    def drive_forward(
+        self,
+        speed: int,
+        distance: int,
+        start_speed: int = 10,
+        accel_distance: int = -1,
+        deaccel_distance: int = -1,
+    ) -> DriveForward:
+        if accel_distance < 0:
+            accel_distance = distance * 0.3
 
-    def drive_backward(self, speed: int, distance: int) -> DriveBackward:
+        if deaccel_distance < 0:
+            deaccel_distance = distance * 0.3
+
+        return DriveForward(
+            self.controller,
+            speed=speed,
+            distance=distance,
+            start_speed=start_speed,
+            accel_distance=accel_distance,
+            deaccel_distance=deaccel_distance,
+        )
+
+    def drive_backward(
+        self,
+        speed: int,
+        distance: int,
+    ) -> DriveBackward:
         return DriveBackward(self.controller, speed=speed, distance=distance)
 
     def module_left(self, speed: int, distance: int) -> ModuleLeft:
