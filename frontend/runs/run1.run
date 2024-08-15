@@ -1,6 +1,6 @@
 color RED
 
 {
-    turn_left (speed=90 angle=50)
-    turn_right (angle=90 speed=50)
+    turn_left (speed=20 angle=90)
+    turn_right (angle=90 speed=20)
 }

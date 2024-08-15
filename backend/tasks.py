@@ -163,11 +163,11 @@ class TurnLeft(Task):
 
     def check(self) -> bool:
         gyro_angle = self.controller.get_gyro_angle() - self.start_target
-        self.controller.run_drive_left(self.speed)
+        self.controller.run_drive_right(self.speed)
         return gyro_angle <= self.target
 
     def stop(self) -> None:
-        self.controller.brake_drive_left()
+        self.controller.brake_drive_right()
 
 
 class TurnRight(Task):
@@ -180,11 +180,12 @@ class TurnRight(Task):
 
     def check(self) -> bool:
         gyro_angle = self.controller.get_gyro_angle() - self.start_target
-        self.controller.run_drive_right(self.speed)
+        self.controller.run_drive_left(self.speed)
+        print(gyro_angle, self.target, gyro_angle >= self.target)
         return gyro_angle >= self.target
 
     def stop(self) -> None:
-        self.controller.brake_drive_right()
+        self.controller.brake_drive_left()
 
 
 class Tasks:
