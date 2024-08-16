@@ -2,7 +2,7 @@ from pybricks.parameters import Side, Button
 
 from controller import Controller
 from runtime import Runtime, Chain
-from tasks import Tasks, Menu
+from tasks import Tasks, IN_DEVELOPMENT
 
 
 class Robot:
@@ -13,6 +13,8 @@ class Robot:
 
         self.running = False
         self.loading = False
+        self.development = IN_DEVELOPMENT
+
         self.runs = []
 
     def get_running(self) -> bool:
@@ -20,12 +22,18 @@ class Robot:
 
     def set_running(self, state: bool) -> None:
         self.running = state
-        
+
     def get_loading(self) -> bool:
         return self.loading
 
     def set_loading(self, state: bool) -> None:
         self.loading = state
+
+    def get_development(self) -> bool:
+        return self.development
+
+    def set_development(self, state: bool) -> None:
+        self.development = state
 
     def main(self) -> None:
         self.load_runs()
@@ -33,19 +41,17 @@ class Robot:
 
     def load_runs(self) -> None:
         self.set_loading(True)
-        
+
         from runs import __runs
 
         for run in __runs:
             run.create_chain(self)
-            
+
         self.set_loading(False)
 
     def setup(self) -> None:
         self.controller.hub.display.orientation(Side.TOP)
-        self.controller.hub.system.set_stop_button(
-            (Button.LEFT, Button.RIGHT)
-        )
+        self.controller.hub.system.set_stop_button((Button.LEFT, Button.RIGHT))
 
         self.controller.reset_gyro_angle(0)
         self.controller.reset_motors(0)
