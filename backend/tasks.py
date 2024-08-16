@@ -2,6 +2,16 @@ from pybricks.parameters import Button, Color
 
 from umath import sqrt
 
+## Control how much of distance from a driving block is used as accel/deaccel distance as default
+# 1 means all distance (100%), 0 none (0%)
+# accel will be prefered over deaccel
+DEFAULT_ACCEL_DISTANCE_MULTIPLIER = 0.2
+DEFAULT_DEACCEL_DISTANCE_MULTIPLIER = 0.2
+
+
+## Enables run reload in robot menu
+IN_DEVELOPMENT = True
+
 
 ## Helper function for accel/deaccel
 # Can be adjusted as needed
@@ -41,7 +51,7 @@ class Menu(Task):
         self.run_index = 0
 
     def check(self) -> bool:
-        if not self.controller.hub.imu.ready():
+        if not self.controller.hub.imu.ready() or self.robot.get_loading():
             self.controller.hub.light.on(Color.RED)
         else:
             if self.robot.running:
@@ -98,8 +108,6 @@ class DriveForward(Task):
         super().__init__()
         self.controller = controller
 
-        print(distance, accel_distance, deaccel_distance)
-
         self.distance = abs(distance)
         self.max_speed = abs(speed)
         self.start_speed = abs(start_speed)
@@ -134,20 +142,51 @@ class DriveForward(Task):
 
 
 class DriveBackward(Task):
-    def __init__(self, controller, speed: int, distance: int) -> None:
+    def __init__(
+        self,
+        controller,
+        speed: int,
+        distance: int,
+        start_speed: int,
+        accel_distance: int,
+        deaccel_distance: int,
+    ) -> None:
         super().__init__()
         self.controller = controller
-        self.speed = -abs(speed)
+
         self.distance = abs(distance)
+        self.max_speed = abs(speed)
+        self.start_speed = abs(start_speed)
+        self.accel_distance = abs(accel_distance)
+        self.deaccel_distance = abs(deaccel_distance)
+
+        self.current_distance = 0
+        self.speed = self.start_speed
 
     def start(self) -> None:
         self.controller.reset_drive(0)
 
     def check(self) -> bool:
-        self.controller.run_drive_left(self.speed)
-        self.controller.run_drive_right(self.speed)
+        self.current_distance = abs(self.controller.angle_drive_left())
 
-        return self.controller.angle_drive_left() >= self.distance
+        if self.current_distance < self.accel_distance:
+            c = (self.max_speed - self.start_speed) / f(self.accel_distance)
+            self.speed = c * f(self.current_distance) + self.start_speed
+        elif self.current_distance < self.distance - self.deaccel_distance:
+            self.speed = self.max_speed
+        else:
+            try:
+                c = (self.max_speed - self.start_speed) / f(self.deaccel_distance)
+                self.speed = (
+                    c * f(self.distance - self.current_distance) + self.start_speed
+                )
+            except:
+                self.speed = self.start_speed
+
+        self.controller.run_drive_left(-self.speed)
+        self.controller.run_drive_right(-self.speed)
+
+        return self.current_distance >= self.distance
 
     def stop(self) -> None:
         self.controller.brake_drive()
@@ -290,10 +329,10 @@ class Tasks:
         deaccel_distance: int = -1,
     ) -> DriveForward:
         if accel_distance < 0:
-            accel_distance = distance * 0.2
+            accel_distance = distance * DEFAULT_ACCEL_DISTANCE_MULTIPLIER
 
         if deaccel_distance < 0:
-            deaccel_distance = distance * 0.2
+            deaccel_distance = distance * DEFAULT_DEACCEL_DISTANCE_MULTIPLIER
 
         return DriveForward(
             self.controller,
@@ -308,8 +347,24 @@ class Tasks:
         self,
         speed: int,
         distance: int,
+        start_speed: int = 10,
+        accel_distance: int = -1,
+        deaccel_distance: int = -1,
     ) -> DriveBackward:
-        return DriveBackward(self.controller, speed=speed, distance=distance)
+        if accel_distance < 0:
+            accel_distance = distance * DEFAULT_ACCEL_DISTANCE_MULTIPLIER
+
+        if deaccel_distance < 0:
+            deaccel_distance = distance * DEFAULT_DEACCEL_DISTANCE_MULTIPLIER
+
+        return DriveBackward(
+            self.controller,
+            speed=speed,
+            distance=distance,
+            start_speed=start_speed,
+            accel_distance=accel_distance,
+            deaccel_distance=deaccel_distance,
+        )
 
     def module_left(self, speed: int, distance: int) -> ModuleLeft:
         return ModuleLeft(self.controller, speed=speed, distance=distance)
@@ -317,14 +372,66 @@ class Tasks:
     def module_right(self, speed: int, distance: int) -> ModuleRight:
         return ModuleRight(self.controller, speed=speed, distance=distance)
 
-    def turn_left(self, speed: int, angle: int) -> TurnLeft:
+    def turn_left(
+        self,
+        speed: int,
+        angle: int,
+        start_speed: int = 10,
+        accel_distance: int = -1,
+        deaccel_distance: int = -1,
+    ) -> TurnLeft:
+        if accel_distance < 0:
+            accel_distance = angle * DEFAULT_ACCEL_DISTANCE_MULTIPLIER
+
+        if deaccel_distance < 0:
+            deaccel_distance = angle * DEFAULT_DEACCEL_DISTANCE_MULTIPLIER
+
         return TurnLeft(self.controller, speed=speed, angle=angle)
 
-    def turn_left_on_spot(self, speed: int, angle: int) -> TurnLeftOnSpot:
+    def turn_left_on_spot(
+        self,
+        speed: int,
+        angle: int,
+        start_speed: int = 10,
+        accel_distance: int = -1,
+        deaccel_distance: int = -1,
+    ) -> TurnLeftOnSpot:
+        if accel_distance < 0:
+            accel_distance = angle * DEFAULT_ACCEL_DISTANCE_MULTIPLIER
+
+        if deaccel_distance < 0:
+            deaccel_distance = angle * DEFAULT_DEACCEL_DISTANCE_MULTIPLIER
+
         return TurnLeftOnSpot(self.controller, speed=speed, angle=angle)
 
-    def turn_right(self, speed: int, angle: int) -> TurnRight:
+    def turn_right(
+        self,
+        speed: int,
+        angle: int,
+        start_speed: int = 10,
+        accel_distance: int = -1,
+        deaccel_distance: int = -1,
+    ) -> TurnRight:
+        if accel_distance < 0:
+            accel_distance = angle * DEFAULT_ACCEL_DISTANCE_MULTIPLIER
+
+        if deaccel_distance < 0:
+            deaccel_distance = angle * DEFAULT_DEACCEL_DISTANCE_MULTIPLIER
+
         return TurnRight(self.controller, speed=speed, angle=angle)
 
-    def turn_right_on_spot(self, speed: int, angle: int) -> TurnRightOnSpot:
+    def turn_right_on_spot(
+        self,
+        speed: int,
+        angle: int,
+        start_speed: int = 10,
+        accel_distance: int = -1,
+        deaccel_distance: int = -1,
+    ) -> TurnRightOnSpot:
+        if accel_distance < 0:
+            accel_distance = angle * DEFAULT_ACCEL_DISTANCE_MULTIPLIER
+
+        if deaccel_distance < 0:
+            deaccel_distance = angle * DEFAULT_DEACCEL_DISTANCE_MULTIPLIER
+
         return TurnRightOnSpot(self.controller, speed=speed, angle=angle)

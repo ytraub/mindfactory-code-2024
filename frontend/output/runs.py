@@ -9,8 +9,7 @@ class Run1:
 		self.run_name = 'run1'
 		self.run_color = 'RED'
 	def create_chain(self, robot: Robot):			robot.chain([
-		robot.tasks.turn_right_on_spot(speed=20,angle=90),
-		robot.tasks.turn_left_on_spot(speed=20,angle=90),])
+		robot.tasks.drive_backward(distance=500,speed=60),])
 
 
 
