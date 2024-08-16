@@ -1,5 +1,6 @@
 class Chain:
-    def __init__(self, start_task) -> None:
+    def __init__(self, start_task, label = "") -> None:
+        self.label = label
         self.start_task = start_task
 
 
