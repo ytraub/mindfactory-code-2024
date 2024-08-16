@@ -5,8 +5,8 @@ from umath import sqrt
 ## Control how much of distance from a driving block is used as accel/deaccel distance as default
 # 1 means all distance (100%), 0 none (0%)
 # accel will be prefered over deaccel
-DEFAULT_ACCEL_DISTANCE_MULTIPLIER = 0.2
-DEFAULT_DEACCEL_DISTANCE_MULTIPLIER = 0.2
+DEFAULT_ACCEL_DISTANCE_MULTIPLIER = 0.4
+DEFAULT_DEACCEL_DISTANCE_MULTIPLIER = 0.4
 
 
 ## Enables run reload in robot menu
