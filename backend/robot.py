@@ -2,7 +2,7 @@ from pybricks.parameters import Side, Button
 
 from controller import Controller
 from runtime import Runtime, Chain
-from tasks import Tasks, LoadRuns, IN_DEVELOPMENT
+from tasks import Tasks, LoadRuns
 
 
 class Robot:
@@ -13,7 +13,6 @@ class Robot:
 
         self.running = False
         self.loading = False
-        self.in_development = IN_DEVELOPMENT
 
         self.runs = []
 
@@ -29,18 +28,11 @@ class Robot:
     def set_loading(self, state: bool) -> None:
         self.loading = state
 
-    def get_in_development(self) -> bool:
-        return self.in_development
-
-    def set_in_development(self, state: bool) -> None:
-        self.in_development = state
-
     def main(self) -> None:
         self.load_runs()
         self.setup()
 
     def load_runs(self) -> None:
-        print("Loading runs...")
         self.set_loading(True)
         self.runs.clear()
 
@@ -49,11 +41,7 @@ class Robot:
         for run in __runs:
             run.create_chain(self)
 
-        if self.get_in_development:
-            self.chain([LoadRuns(self)], "r")
-
         self.set_loading(False)
-        print("Done!\n")
 
     def setup(self) -> None:
         self.controller.hub.display.orientation(Side.TOP)
@@ -94,7 +82,7 @@ class Robot:
         self.controller.brake_motors()
         self.controller.reset_motors(0)
 
-    def chain(self, tasks: list[any | list[any]], label = "") -> Chain:
+    def chain(self, tasks: list[any | list[any]]) -> Chain:
         prev_task: any | None = None
 
         for task in reversed(tasks):
@@ -107,4 +95,4 @@ class Robot:
 
             prev_task = task
 
-        self.runs.append(Chain(prev_task, label=label))
+        self.runs.append(Chain(prev_task))

@@ -9,10 +9,6 @@ DEFAULT_ACCEL_DISTANCE_MULTIPLIER = 0.4
 DEFAULT_DEACCEL_DISTANCE_MULTIPLIER = 0.4
 
 
-## Enables run reload in robot menu
-IN_DEVELOPMENT = False
-
-
 ## Helper function for accel/deaccel
 # Can be adjusted as needed
 def f(x):
@@ -69,10 +65,7 @@ class Menu(Task):
             else:
                 self.controller.hub.light.on(Color.GREEN)
 
-        if IN_DEVELOPMENT and self.robot.runs[self.run_index].label:
-            self.controller.hub.display.char(self.robot.runs[self.run_index].label)
-        else:
-            self.controller.hub.display.char(str(self.run_index + 1))
+        self.controller.hub.display.char(str(self.run_index + 1))
 
         buttons = self.controller.get_buttons()
         if len(buttons) == 1:
