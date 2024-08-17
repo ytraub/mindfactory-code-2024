@@ -2,7 +2,7 @@ from pybricks.parameters import Side, Button
 
 from controller import Controller
 from runtime import Runtime, Chain
-from tasks import Tasks, LoadRuns
+from tasks import Tasks
 
 
 class Robot:

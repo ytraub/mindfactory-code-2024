@@ -2,7 +2,9 @@ color RED
 
 {
     turn_left_on_spot(angle=90 speed=40)
-    //drive_backward(distance=500 speed=60)
-    //turn_right_on_spot(speed=20 angle=90)
-    //turn_left_on_spot(speed=20 angle=90)
+    turn_right_on_spot(angle=90 speed=40)
+    turn_left_on_spot(angle=90 speed=40)
+    turn_right_on_spot(angle=90 speed=40)
+    turn_left_on_spot(angle=90 speed=40)
+    turn_right_on_spot(angle=90 speed=40)
 }
