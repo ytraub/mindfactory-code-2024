@@ -172,7 +172,6 @@ class DriveForward(Task):
         return self.current_distance >= self.distance
 
     def stop(self) -> None:
-        print(self.target - self.controller.get_gyro_angle())
         self.controller.brake_drive()
 
 
