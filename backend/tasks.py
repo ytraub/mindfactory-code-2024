@@ -38,16 +38,6 @@ class Task:
         return self.next_tasks
 
 
-class LoadRuns(Task):
-    def __init__(self, robot) -> None:
-        super().__init__()
-        self.robot = robot
-
-    def check(self):
-        self.robot.load_runs()
-        return True
-
-
 class Menu(Task):
     def __init__(self, robot, controller) -> None:
         super().__init__()
