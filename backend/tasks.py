@@ -8,9 +8,14 @@ from umath import sqrt
 DEFAULT_ACCEL_DISTANCE_MULTIPLIER = 0.4
 DEFAULT_DEACCEL_DISTANCE_MULTIPLIER = 0.4
 
+## Defaults for pid multipliers
+# Adjust as needed
+DEFAULT_KP = 0.35
+DEFAULT_KI = 0
+DEFAULT_KD = 0
 
 ## Helper function for accel/deaccel
-# Can be adjusted as needed
+# Adjust as needed
 def f(x):
     return sqrt(x)
 
