@@ -1,3 +1,4 @@
+clear
 python generate.py
 
 cd frontend

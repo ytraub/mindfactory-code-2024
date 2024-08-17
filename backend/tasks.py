@@ -8,11 +8,18 @@ from umath import sqrt
 DEFAULT_ACCEL_DISTANCE_MULTIPLIER = 0.4
 DEFAULT_DEACCEL_DISTANCE_MULTIPLIER = 0.4
 
+
+## Control how fast the robot will start driving with accel on default
+# Setting it to 0 will cause the robot to not drive at all
+DEFAULT_START_SPEED = 10
+
+
 ## Defaults for pid multipliers
 # Adjust as needed
-DEFAULT_KP = 0.35
+DEFAULT_KP = 1
 DEFAULT_KI = 0
 DEFAULT_KD = 0
+
 
 ## Helper function for accel/deaccel
 # Adjust as needed
@@ -105,6 +112,10 @@ class DriveForward(Task):
         start_speed: int,
         accel_distance: int,
         deaccel_distance: int,
+        kp: int,
+        ki: int,
+        kd: int,
+        gyro_target: int,
     ) -> None:
         super().__init__()
         self.controller = controller
@@ -114,12 +125,23 @@ class DriveForward(Task):
         self.start_speed = abs(start_speed)
         self.accel_distance = abs(accel_distance)
         self.deaccel_distance = abs(deaccel_distance)
+        self.target = abs(gyro_target)
 
-        self.current_distance = 0
+        self.kp = abs(kp)
+        self.ki = abs(ki)
+        self.kd = abs(kd)
+
         self.speed = self.start_speed
+        self.current_distance = 0
+
+        self.integral = 0
+        self.derivative = 0
+        self.error = 0
+        self.last_error = 0
 
     def start(self) -> None:
         self.controller.reset_drive(0)
+        self.controller.reset_gyro()
 
     def check(self) -> bool:
         self.current_distance = abs(self.controller.angle_drive_left())
@@ -133,12 +155,24 @@ class DriveForward(Task):
             c = (self.max_speed - self.start_speed) / f(self.deaccel_distance)
             self.speed = c * f(self.distance - self.current_distance) + self.start_speed
 
-        self.controller.run_drive_left(self.speed)
-        self.controller.run_drive_right(self.speed)
+        self.error = self.target - self.controller.get_gyro_angle()
+        self.integral = self.integral + self.error
+        self.derivative = self.error - self.last_error
 
+        correction = (
+            (self.kp * self.error)
+            + (self.ki * self.integral)
+            + (self.kd * self.derivative)
+        )
+
+        self.controller.run_drive_left(self.speed + correction)
+        self.controller.run_drive_right(self.speed - correction)
+
+        self.last_error = self.error
         return self.current_distance >= self.distance
 
     def stop(self) -> None:
+        print(self.target - self.controller.get_gyro_angle())
         self.controller.brake_drive()
 
 
@@ -336,9 +370,9 @@ class TurnRight(Task):
         controller,
         speed: int,
         angle: int,
-        start_speed: int = 10,
-        accel_distance: int = -1,
-        deaccel_distance: int = -1,
+        start_speed: int,
+        accel_distance: int,
+        deaccel_distance: int,
     ) -> None:
         super().__init__()
         self.controller = controller
@@ -385,9 +419,9 @@ class TurnRightOnSpot(Task):
         controller,
         speed: int,
         angle: int,
-        start_speed: int = 10,
-        accel_distance: int = -1,
-        deaccel_distance: int = -1,
+        start_speed: int,
+        accel_distance: int,
+        deaccel_distance: int,
     ) -> None:
         super().__init__()
         self.controller = controller
@@ -426,7 +460,6 @@ class TurnRightOnSpot(Task):
         return self.gyro_angle >= self.target
 
     def stop(self) -> None:
-        print(self.controller.get_gyro_raw_angle())
         self.controller.brake_drive_left()
         self.controller.brake_drive_right()
 
@@ -443,9 +476,12 @@ class Tasks:
         self,
         speed: int,
         distance: int,
-        start_speed: int = 10,
+        start_speed: int = DEFAULT_START_SPEED,
         accel_distance: int = -1,
         deaccel_distance: int = -1,
+        kp: int = DEFAULT_KP,
+        ki: int = DEFAULT_KI,
+        kd: int = DEFAULT_KD,
     ) -> DriveForward:
         if accel_distance < 0:
             accel_distance = distance * DEFAULT_ACCEL_DISTANCE_MULTIPLIER
@@ -460,13 +496,17 @@ class Tasks:
             start_speed=start_speed,
             accel_distance=accel_distance,
             deaccel_distance=deaccel_distance,
+            kp=kp,
+            ki=ki,
+            kd=kd,
+            gyro_target=0,
         )
 
     def drive_backward(
         self,
         speed: int,
         distance: int,
-        start_speed: int = 10,
+        start_speed: int = DEFAULT_START_SPEED,
         accel_distance: int = -1,
         deaccel_distance: int = -1,
     ) -> DriveBackward:
@@ -495,7 +535,7 @@ class Tasks:
         self,
         speed: int,
         angle: int,
-        start_speed: int = 10,
+        start_speed: int = DEFAULT_START_SPEED,
         accel_distance: int = -1,
         deaccel_distance: int = -1,
     ) -> TurnLeft:
@@ -518,7 +558,7 @@ class Tasks:
         self,
         speed: int,
         angle: int,
-        start_speed: int = 10,
+        start_speed: int = DEFAULT_START_SPEED,
         accel_distance: int = -1,
         deaccel_distance: int = -1,
     ) -> TurnLeftOnSpot:
@@ -541,7 +581,7 @@ class Tasks:
         self,
         speed: int,
         angle: int,
-        start_speed: int = 10,
+        start_speed: int = DEFAULT_START_SPEED,
         accel_distance: int = -1,
         deaccel_distance: int = -1,
     ) -> TurnRight:
@@ -564,7 +604,7 @@ class Tasks:
         self,
         speed: int,
         angle: int,
-        start_speed: int = 10,
+        start_speed: int = DEFAULT_START_SPEED,
         accel_distance: int = -1,
         deaccel_distance: int = -1,
     ) -> TurnRightOnSpot:
