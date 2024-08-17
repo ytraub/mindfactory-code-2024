@@ -362,9 +362,7 @@ class TurnRight(Task):
         else:
             try:
                 c = (self.max_speed - self.start_speed) / f(abs(self.deaccel_distance))
-                self.speed = (
-                    c * f(abs(self.target) - abs(self.gyro_angle)) + self.start_speed
-                )
+                self.speed = c * f(self.distance - self.gyro_angle) + self.start_speed
             except:
                 self.speed = self.start_speed
 
@@ -413,9 +411,7 @@ class TurnRightOnSpot(Task):
         else:
             try:
                 c = (self.max_speed - self.start_speed) / f(abs(self.deaccel_distance))
-                self.speed = (
-                    c * f(abs(self.target) - abs(self.gyro_angle)) + self.start_speed
-                )
+                self.speed = c * f(self.distance - self.gyro_angle) + self.start_speed
             except:
                 self.speed = self.start_speed
 
@@ -425,6 +421,7 @@ class TurnRightOnSpot(Task):
         return self.gyro_angle >= self.target
 
     def stop(self) -> None:
+        print(self.controller.get_gyro_raw_angle())
         self.controller.brake_drive_left()
         self.controller.brake_drive_right()
 
