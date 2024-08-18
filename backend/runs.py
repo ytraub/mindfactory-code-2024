@@ -25,5 +25,13 @@ class Run2:
 		robot.tasks.turn_right(angle=90,speed=40),])
 
 
+class Run3:
+	def __init__(self):
+		self.run_name = 'run3'
+		self.run_color = 'RED'
+	def create_chain(self, robot: Robot):			robot.chain([
+		robot.tasks.drive_backward(speed=40,distance=1000),])
 
-__runs = [Run1(),Run2(),]
+
+
+__runs = [Run1(),Run2(),Run3(),]

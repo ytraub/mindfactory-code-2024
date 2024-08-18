@@ -184,6 +184,10 @@ class DriveBackward(Task):
         start_speed: int,
         accel_distance: int,
         deaccel_distance: int,
+        kp: int,
+        ki: int,
+        kd: int,
+        gyro_target: int,
     ) -> None:
         super().__init__()
         self.controller = controller
@@ -193,12 +197,23 @@ class DriveBackward(Task):
         self.start_speed = abs(start_speed)
         self.accel_distance = abs(accel_distance)
         self.deaccel_distance = abs(deaccel_distance)
+        self.target = abs(gyro_target)
+
+        self.kp = abs(kp)
+        self.ki = abs(ki)
+        self.kd = abs(kd)
 
         self.current_distance = 0
         self.speed = self.start_speed
 
+        self.integral = 0
+        self.derivative = 0
+        self.error = 0
+        self.last_error = 0
+
     def start(self) -> None:
         self.controller.reset_drive(0)
+        self.controller.reset_gyro()
 
     def check(self) -> bool:
         self.current_distance = abs(self.controller.angle_drive_left())
@@ -217,8 +232,18 @@ class DriveBackward(Task):
             except:
                 self.speed = self.start_speed
 
-        self.controller.run_drive_left(-self.speed)
-        self.controller.run_drive_right(-self.speed)
+        self.error = self.target - self.controller.get_gyro_angle()
+        self.integral = self.integral + self.error
+        self.derivative = self.error - self.last_error
+
+        correction = (
+            (self.kp * self.error)
+            + (self.ki * self.integral)
+            + (self.kd * self.derivative)
+        )
+
+        self.controller.run_drive_left(-(self.speed - correction))
+        self.controller.run_drive_right(-(self.speed + correction))
 
         return self.current_distance >= self.distance
 
@@ -508,6 +533,9 @@ class Tasks:
         start_speed: int = DEFAULT_START_SPEED,
         accel_distance: int = -1,
         deaccel_distance: int = -1,
+        kp: int = DEFAULT_KP,
+        ki: int = DEFAULT_KI,
+        kd: int = DEFAULT_KD,
     ) -> DriveBackward:
         if accel_distance < 0:
             accel_distance = distance * DEFAULT_ACCEL_DISTANCE_MULTIPLIER
@@ -522,6 +550,10 @@ class Tasks:
             start_speed=start_speed,
             accel_distance=accel_distance,
             deaccel_distance=deaccel_distance,
+            kp=kp,
+            ki=ki,
+            kd=kd,
+            gyro_target=0,
         )
 
     def module_left(self, speed: int, distance: int) -> ModuleLeft:
