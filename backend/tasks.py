@@ -153,7 +153,7 @@ class DriveForward(Task):
             self.speed = self.max_speed
         else:
             c = (self.max_speed - self.start_speed) / f(self.deaccel_distance)
-            self.speed = c * f(self.distance - self.current_distance) + self.start_speed
+            self.speed = c * f(abs(self.distance - self.current_distance)) + self.start_speed
 
         self.error = self.target - self.controller.get_gyro_angle()
         self.integral = self.integral + self.error
