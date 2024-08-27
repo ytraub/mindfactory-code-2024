@@ -4,6 +4,15 @@ This is a generated file. Don't change anything manually.
 
 from robot import Robot
 
+class Run1:
+	def __init__(self):
+		self.run_name = 'run1'
+		self.run_color = 'RED'
+	def create_chain(self, robot: Robot):			robot.chain([
+		robot.tasks.drive_forward(speed=40,distance=1000),
+		robot.tasks.drive_forward_gyro(speed=40,distance=1000),])
+
+
 class Run2:
 	def __init__(self):
 		self.run_name = 'run2'
@@ -25,13 +34,5 @@ class Run3:
 		robot.tasks.drive_backward(speed=40,distance=1000),])
 
 
-class Run1:
-	def __init__(self):
-		self.run_name = 'run1'
-		self.run_color = 'RED'
-	def create_chain(self, robot: Robot):			robot.chain([
-		robot.tasks.drive_forward(speed=40,distance=1000),])
 
-
-
-__runs = [Run2(),Run3(),Run1(),]
+__runs = [Run1(),Run2(),Run3(),]

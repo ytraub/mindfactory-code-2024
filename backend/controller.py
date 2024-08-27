@@ -2,6 +2,8 @@ from pybricks.hubs import PrimeHub
 from pybricks.pupdevices import Motor, ColorSensor
 from pybricks.parameters import Port, Direction, Button
 
+import utils
+
 SPEED_MULTIPLIER = 10
 
 
@@ -128,3 +130,6 @@ class Controller:
 
     def get_buttons(self) -> set[Button]:
         return self.hub.buttons.pressed()
+    
+    def create_timer(self) -> utils.Timer:
+        return utils.Timer()
