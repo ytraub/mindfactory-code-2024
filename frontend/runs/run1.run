@@ -1,5 +1,5 @@
 color RED
 
 {
-    drive_forward(speed=40 distance=1000)
+    drive_forward_time(speed=40 time=1000)
 }

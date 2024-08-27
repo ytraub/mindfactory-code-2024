@@ -1,6 +1,7 @@
 from pybricks.parameters import Button, Color
-
 from umath import sqrt
+
+import utils
 
 ## Control how much of distance from a driving block is used as accel/deaccel distance as default
 # 1 means all distance (100%), 0 none (0%)
@@ -170,6 +171,63 @@ class DriveForward(Task):
 
         self.last_error = self.error
         return self.current_distance >= self.distance
+
+    def stop(self) -> None:
+        self.controller.brake_drive()
+
+
+class DriveForwardTime(Task):
+    def __init__(
+        self,
+        controller,
+        speed: int,
+        time: int,
+        kp: int,
+        ki: int,
+        kd: int,
+        gyro_target: int,
+    ) -> None:
+        super().__init__()
+        self.controller = controller
+
+        self.time = abs(time)
+        self.speed = abs(speed)
+        self.target = abs(gyro_target)
+
+        self.kp = abs(kp)
+        self.ki = abs(ki)
+        self.kd = abs(kd)
+
+        self.speed = self.start_speed
+        self.current_distance = 0
+
+        self.integral = 0
+        self.derivative = 0
+        self.error = 0
+        self.last_error = 0
+
+        self.timer = utils.Timer()
+
+    def start(self) -> None:
+        self.controller.reset_gyro()
+        self.timer.start()
+
+    def check(self) -> bool:
+        self.error = self.target - self.controller.get_gyro_angle()
+        self.integral = self.integral + self.error
+        self.derivative = self.error - self.last_error
+
+        correction = (
+            (self.kp * self.error)
+            + (self.ki * self.integral)
+            + (self.kd * self.derivative)
+        )
+
+        self.controller.run_drive_left(self.speed + correction)
+        self.controller.run_drive_right(self.speed - correction)
+
+        self.last_error = self.error
+        return self.timer.finished(self.time)
 
     def stop(self) -> None:
         self.controller.brake_drive()
@@ -520,6 +578,25 @@ class Tasks:
             start_speed=start_speed,
             accel_distance=accel_distance,
             deaccel_distance=deaccel_distance,
+            kp=kp,
+            ki=ki,
+            kd=kd,
+            gyro_target=0,
+        )
+
+    def drive_forward_time(
+        self,
+        speed: int,
+        time: int,
+        kp: int = DEFAULT_KP,
+        ki: int = DEFAULT_KI,
+        kd: int = DEFAULT_KD,
+    ) -> DriveForward:
+
+        return DriveForwardTime(
+            self.controller,
+            speed=speed,
+            time=time,
             kp=kp,
             ki=ki,
             kd=kd,
