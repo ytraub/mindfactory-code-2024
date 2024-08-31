@@ -16,7 +16,7 @@ def main() -> None:
     file_buffer = '"""\nThis is a generated file. Don\'t change anything manually.\n"""\n\nfrom robot import Robot\n\n'
     run_names = []
 
-    for filename in os.listdir(RUN_DIRECTORY):
+    for filename in sorted(os.listdir(RUN_DIRECTORY)):
         if not filename.endswith(".run"):
             continue
 
