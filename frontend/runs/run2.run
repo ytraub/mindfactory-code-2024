@@ -1,4 +1,4 @@
-color RED
+color BLUE
 
 {
     turn_left_on_spot(angle=90 speed=40)

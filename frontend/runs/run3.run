@@ -1,4 +1,4 @@
-color RED
+color GREEN
 
 {
     drive_backward(speed=40 distance=1000)

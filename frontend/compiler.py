@@ -17,6 +17,7 @@ class Compiler:
         self.current_token: Token = None
         self.previous_token: Token = None
         self.run_color: str = ""
+        self.colors: list[str] = []
         self.output_buffer: str = ""
 
     def compile(
@@ -61,7 +62,12 @@ class Compiler:
         if self.check_current_keyword("color"):
             if self.check_type(self.peek(), TokenType.COLOR):
                 self.advance()
+
+                if self.current_token.lexeme in self.colors:
+                    return self.error_current(f"Duplicate use of color: {self.current_token.lexeme}")
+
                 self.run_color = self.current_token.lexeme
+                self.colors.append(self.current_token.lexeme)
                 self.advance()
             else:
                 return self.error_current(
