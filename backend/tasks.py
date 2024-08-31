@@ -498,7 +498,6 @@ class TurnLeft(Task):
 
         self.speed = start_speed
         self.gyro_angle = self.controller.get_gyro_angle() - self.start_target
-        print(self.gyro_angle, self.target)
 
     def start(self) -> None:
         self.controller.reset_gyro()
@@ -654,7 +653,6 @@ class TurnRightOnSpot(Task):
     def start(self) -> None:
         self.controller.reset_gyro()
         self.start_target = self.controller.get_gyro_angle()
-        print(self.start_target)
 
     def check(self) -> bool:
         self.gyro_angle = self.controller.get_gyro_angle() - self.start_target
@@ -679,6 +677,7 @@ class TurnRightOnSpot(Task):
     def stop(self) -> None:
         self.controller.brake_drive_left()
         self.controller.brake_drive_right()
+        
 
 
 class Tasks:

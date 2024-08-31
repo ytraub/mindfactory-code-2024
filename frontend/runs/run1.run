@@ -1,4 +1,6 @@
 color BLUE
 
-turn_left(angle=360 speed=40)
-
+turn_left(angle=90 speed=40)
+turn_right(angle=180 speed=40)
+turn_left_on_spot(angle=270 speed=40)
+turn_right_on_spot(angle=360 speed=40)
