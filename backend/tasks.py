@@ -498,9 +498,11 @@ class TurnLeft(Task):
 
         self.speed = start_speed
         self.gyro_angle = self.controller.get_gyro_angle() - self.start_target
+        print(self.gyro_angle, self.target)
 
     def start(self) -> None:
         self.controller.reset_gyro()
+        self.start_target = self.controller.get_gyro_angle()
 
     def check(self) -> bool:
         self.gyro_angle = self.controller.get_gyro_angle() - self.start_target
@@ -508,7 +510,7 @@ class TurnLeft(Task):
         if abs(self.gyro_angle) < self.accel_distance:
             c = (self.max_speed - self.start_speed) / f(self.accel_distance)
             self.speed = c * f(self.gyro_angle) + self.start_speed
-        elif abs(self.gyro_angle) < (self.target) - self.deaccel_distance:
+        elif abs(self.gyro_angle) < abs(self.target) - self.deaccel_distance:
             self.speed = self.max_speed
         else:
             try:
@@ -550,6 +552,7 @@ class TurnLeftOnSpot(Task):
 
     def start(self) -> None:
         self.controller.reset_gyro()
+        self.start_target = self.controller.get_gyro_angle()
 
     def check(self) -> bool:
         self.gyro_angle = self.controller.get_gyro_angle() - self.start_target
@@ -600,6 +603,7 @@ class TurnRight(Task):
 
     def start(self) -> None:
         self.controller.reset_gyro()
+        self.start_target = self.controller.get_gyro_angle()
 
     def check(self) -> bool:
         self.gyro_angle = self.controller.get_gyro_angle() - self.start_target
@@ -649,6 +653,8 @@ class TurnRightOnSpot(Task):
 
     def start(self) -> None:
         self.controller.reset_gyro()
+        self.start_target = self.controller.get_gyro_angle()
+        print(self.start_target)
 
     def check(self) -> bool:
         self.gyro_angle = self.controller.get_gyro_angle() - self.start_target

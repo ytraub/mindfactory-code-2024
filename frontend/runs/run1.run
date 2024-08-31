@@ -1,6 +1,4 @@
-color RED
+color BLUE
 
-{
-    drive_forward(speed=40 distance=1000)
-    drive_forward_gyro(speed=40 distance=1000)
-}
+turn_left(angle=360 speed=40)
+
