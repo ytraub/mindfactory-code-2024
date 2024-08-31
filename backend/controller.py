@@ -126,6 +126,11 @@ class Controller:
     def reset_gyro_angle(self, angle: int) -> None:
         self.hub.imu.reset_heading(angle)
 
+    ###### < Color > ######
+
+    def get_run_color(self):
+        return self.ground_color_c.color()
+
     ###### < Util > ######
 
     def get_buttons(self) -> set[Button]:
