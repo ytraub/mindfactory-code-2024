@@ -66,7 +66,11 @@ class Menu(Task):
             else:
                 self.controller.hub.light.on(Color.GREEN)
 
-        self.controller.hub.display.char(str(self.run_index + 1))
+
+        if self.run_index == 0:
+            self.controller.hub.display.char("#")
+        else:    
+            self.controller.hub.display.char(str(self.run_index))
 
         buttons = self.controller.get_buttons()
         if len(buttons) == 1:
@@ -101,6 +105,28 @@ class Menu(Task):
         else:
             self.run_index -= 1
 
+class StartRunWithColor(Task):
+    def __init__(self, robot, controller) -> None:
+        super().__init__()
+        self.robot = robot
+        self.controller = controller
+
+    def start(self):
+        module_color = self.controller.get_run_color()
+        run_index = None
+
+        for i in range(len(self.robot.runs) - 1):
+            if self.robot.runs[i].run_color == str(module_color):
+                run_index = i
+
+        if run_index == None:
+            print(f"No run found for color: {str(module_color)}")
+            return
+        
+        self.robot.execute_run(run_index)
+
+    def check(self) -> bool:
+        return True
 
 class DriveForwardGyro(Task):
     def __init__(
@@ -656,6 +682,9 @@ class Tasks:
 
     def menu(self) -> Menu:
         return Menu(self.robot, self.controller)
+    
+    def start_run_with_color(self) -> StartRunWithColor:
+        return StartRunWithColor(self.robot, self.controller)
 
     def drive_forward_gyro(
         self,

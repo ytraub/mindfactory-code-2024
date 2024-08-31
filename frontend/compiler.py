@@ -35,7 +35,7 @@ class Compiler:
             return None, error
 
         if self.run_color:
-            self.write_buffer(f"\t\tself.run_color = '{self.run_color}'")
+            self.write_buffer(f"\t\tself.run_color = 'Color.{self.run_color}'")
         else:
             return None, self.error_current("Unexpected: No valid run color found")
 
@@ -47,7 +47,7 @@ class Compiler:
         if error:
             return None, error
 
-        self.write_buffer("])\n\n\n")
+        self.write_buffer("], self.run_color)\n\n\n")
         return self.output_buffer, None
 
     def reset(self) -> None:

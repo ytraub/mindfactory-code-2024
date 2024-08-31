@@ -7,31 +7,31 @@ from robot import Robot
 class Run1:
 	def __init__(self):
 		self.run_name = 'run1'
-		self.run_color = 'RED'
+		self.run_color = 'Color.RED'
 	def create_chain(self, robot: Robot):			robot.chain([
 		robot.tasks.drive_forward(speed=40,distance=1000),
-		robot.tasks.drive_forward_gyro(speed=40,distance=1000),])
+		robot.tasks.drive_forward_gyro(speed=40,distance=1000),], self.run_color)
 
 
 class Run2:
 	def __init__(self):
 		self.run_name = 'run2'
-		self.run_color = 'BLUE'
+		self.run_color = 'Color.BLUE'
 	def create_chain(self, robot: Robot):			robot.chain([
 		robot.tasks.turn_left_on_spot(angle=90,speed=40),
 		robot.tasks.turn_right_on_spot(angle=90,speed=40),
 		robot.tasks.turn_left_on_spot(angle=90,speed=40),
 		robot.tasks.turn_right_on_spot(angle=90,speed=40),
 		robot.tasks.turn_left_on_spot(angle=90,speed=40),
-		robot.tasks.turn_right_on_spot(angle=90,speed=40),])
+		robot.tasks.turn_right_on_spot(angle=90,speed=40),], self.run_color)
 
 
 class Run3:
 	def __init__(self):
 		self.run_name = 'run3'
-		self.run_color = 'GREEN'
+		self.run_color = 'Color.GREEN'
 	def create_chain(self, robot: Robot):			robot.chain([
-		robot.tasks.drive_backward(speed=40,distance=1000),])
+		robot.tasks.drive_backward(speed=40,distance=1000),], self.run_color)
 
 
 

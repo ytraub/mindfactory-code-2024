@@ -36,6 +36,8 @@ class Robot:
         self.set_loading(True)
         self.runs.clear()
 
+        self.chain([self.tasks.start_run_with_color()], "")
+
         from runs import __runs
 
         for run in __runs:
@@ -56,7 +58,15 @@ class Robot:
     def execute_run(self, index: int) -> None:
         self.start_run()
 
-        try:
+        if index <= len(self.runs) - 1:
+                run_chain = self.runs[index]
+                self.runtime.add_tasks(run_chain.start_task)
+        else:
+                print(
+                    f"Run: {index + 1} (index {index}) is not available. There are only {len(self.runs)} runs."
+                )
+
+        """try:
             if index <= len(self.runs) - 1:
                 run_chain = self.runs[index]
                 self.runtime.add_tasks(run_chain.start_task)
@@ -65,7 +75,7 @@ class Robot:
                     f"Run: {index + 1} (index {index}) is not available. There are only {len(self.runs)} runs."
                 )
         except Exception as err:
-            print(f"An error occured while running: {err}")
+            print(f"An error occured while running: {err}")"""
 
     def interrupt_run(self) -> None:
         self.runtime.tasks.clear()
@@ -82,7 +92,7 @@ class Robot:
         self.controller.brake_motors()
         self.controller.reset_motors(0)
 
-    def chain(self, tasks: list[any | list[any]]) -> Chain:
+    def chain(self, tasks: list[any | list[any]], run_color: any) -> Chain:
         prev_task: any | None = None
 
         for task in reversed(tasks):
@@ -95,4 +105,4 @@ class Robot:
 
             prev_task = task
 
-        self.runs.append(Chain(prev_task))
+        self.runs.append(Chain(prev_task, run_color))

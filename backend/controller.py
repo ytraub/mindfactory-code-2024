@@ -129,7 +129,7 @@ class Controller:
     ###### < Color > ######
 
     def get_run_color(self):
-        return self.ground_color_c.color()
+        return self.module_color_d.color()
 
     ###### < Util > ######
 
