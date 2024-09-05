@@ -12,9 +12,9 @@ class Run1:
 		robot.tasks.module_left_time_cw(time=200,speed=100),
 		robot.tasks.drive_forward_gyro(speed=40,distance=200),
 		robot.tasks.turn_left_on_spot(angle=50,speed=30),
-		robot.tasks.drive_forward_gyro(speed=40,distance=200),
-		robot.tasks.module_left_ccw(distance=300,speed=80),
-		robot.tasks.drive_forward_time_gyro(time=500,speed=50),], self.run_color)
+		robot.tasks.drive_forward_gyro(speed=40,distance=340),
+		robot.tasks.module_left_ccw(distance=300,speed=40),
+		robot.tasks.drive_forward_time_gyro(time=800,speed=50),], self.run_color)
 
 
 class Run2:

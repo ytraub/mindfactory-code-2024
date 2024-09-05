@@ -538,7 +538,7 @@ class ModuleLeftCCW(Task):
     def check(self) -> bool:
         self.controller.run_module_left(self.speed)
 
-        return self.controller.angle_module_left() >= self.distance
+        return abs(self.controller.angle_module_left()) >= self.distance
 
     def stop(self) -> None:
         self.controller.brake_module_left()
@@ -584,7 +584,7 @@ class ModuleRightCCW(Task):
     def check(self) -> bool:
         self.controller.run_module_right(self.speed)
 
-        return self.controller.angle_module_right() >= self.distance
+        return abs(self.controller.angle_module_right()) >= self.distance
 
     def stop(self) -> None:
         self.controller.brake_module_right()
