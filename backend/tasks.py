@@ -275,9 +275,6 @@ class DriveForwardTimeGyro(Task):
         self.ki = abs(ki)
         self.kd = abs(kd)
 
-        self.speed = self.speed
-        self.current_distance = 0
-
         self.integral = 0
         self.derivative = 0
         self.error = 0
@@ -438,7 +435,7 @@ class DriveBackward(Task):
         self.controller.brake_drive()
 
 
-class ModuleLeft(Task):
+class ModuleLeftCW(Task):
     def __init__(self, controller, speed: int, distance: int) -> None:
         super().__init__()
         self.controller = controller
@@ -457,7 +454,33 @@ class ModuleLeft(Task):
         self.controller.brake_module_left()
 
 
-class ModuleRight(Task):
+class ModuleLeftTimeCW(Task):
+    def __init__(
+        self,
+        controller,
+        speed: int,
+        time: int,
+    ) -> None:
+        super().__init__()
+        self.controller = controller
+
+        self.time = abs(time)
+        self.speed = abs(speed)
+
+        self.timer = self.controller.create_timer()
+
+    def start(self) -> None:
+        self.timer.start()
+
+    def check(self) -> bool:
+        self.controller.run_module_left(self.speed)
+
+        return self.timer.finished(self.time)
+
+    def stop(self) -> None:
+        self.controller.brake_module_left()
+
+class ModuleRightCW(Task):
     def __init__(self, controller, speed: int, distance: int) -> None:
         super().__init__()
         self.controller = controller
@@ -471,6 +494,124 @@ class ModuleRight(Task):
         self.controller.run_module_right(self.speed)
 
         return self.controller.angle_module_right() >= self.distance
+
+    def stop(self) -> None:
+        self.controller.brake_module_right()
+
+
+class ModuleRightTimeCW(Task):
+    def __init__(
+        self,
+        controller,
+        speed: int,
+        time: int,
+    ) -> None:
+        super().__init__()
+        self.controller = controller
+
+        self.time = abs(time)
+        self.speed = abs(speed)
+
+        self.timer = self.controller.create_timer()
+
+    def start(self) -> None:
+        self.timer.start()
+
+    def check(self) -> bool:
+        self.controller.run_module_right(self.speed)
+
+        return self.timer.finished(self.time)
+
+    def stop(self) -> None:
+        self.controller.brake_module_right()
+
+class ModuleLeftCCW(Task):
+    def __init__(self, controller, speed: int, distance: int) -> None:
+        super().__init__()
+        self.controller = controller
+        self.speed = -abs(speed)
+        self.distance = abs(distance)
+
+    def start(self) -> None:
+        self.controller.reset_module_left(0)
+
+    def check(self) -> bool:
+        self.controller.run_module_left(self.speed)
+
+        return self.controller.angle_module_left() >= self.distance
+
+    def stop(self) -> None:
+        self.controller.brake_module_left()
+
+
+class ModuleLeftTimeCCW(Task):
+    def __init__(
+        self,
+        controller,
+        speed: int,
+        time: int,
+    ) -> None:
+        super().__init__()
+        self.controller = controller
+
+        self.time = abs(time)
+        self.speed = -abs(speed)
+
+        self.timer = self.controller.create_timer()
+
+    def start(self) -> None:
+        self.timer.start()
+
+    def check(self) -> bool:
+        self.controller.run_module_left(self.speed)
+
+        return self.timer.finished(self.time)
+
+    def stop(self) -> None:
+        self.controller.brake_module_left()
+
+
+class ModuleRightCCW(Task):
+    def __init__(self, controller, speed: int, distance: int) -> None:
+        super().__init__()
+        self.controller = controller
+        self.speed = -abs(speed)
+        self.distance = abs(distance)
+
+    def start(self) -> None:
+        self.controller.reset_module_right(0)
+
+    def check(self) -> bool:
+        self.controller.run_module_right(self.speed)
+
+        return self.controller.angle_module_right() >= self.distance
+
+    def stop(self) -> None:
+        self.controller.brake_module_right()
+
+
+class ModuleRightTimeCCW(Task):
+    def __init__(
+        self,
+        controller,
+        speed: int,
+        time: int,
+    ) -> None:
+        super().__init__()
+        self.controller = controller
+
+        self.time = abs(time)
+        self.speed = -abs(speed)
+
+        self.timer = self.controller.create_timer()
+
+    def start(self) -> None:
+        self.timer.start()
+
+    def check(self) -> bool:
+        self.controller.run_module_right(self.speed)
+
+        return self.timer.finished(self.time)
 
     def stop(self) -> None:
         self.controller.brake_module_right()
@@ -816,11 +957,66 @@ class Tasks:
             deaccel_distance=deaccel_distance,
         )
 
-    def module_left(self, speed: int, distance: int) -> ModuleLeft:
-        return ModuleLeft(self.controller, speed=speed, distance=distance)
+    def module_left_cw(self, speed: int, distance: int) -> ModuleLeftCW:
+        return ModuleLeftCW(self.controller, speed=speed, distance=distance)
+    
+    def module_left_time_cw(
+        self,
+        speed: int,
+        time: int,
+    ) -> ModuleLeftTimeCW:
 
-    def module_right(self, speed: int, distance: int) -> ModuleRight:
-        return ModuleRight(self.controller, speed=speed, distance=distance)
+        return ModuleLeftTimeCW(
+            self.controller,
+            speed=speed,
+            time=time,
+        )
+
+    def module_right_cw(self, speed: int, distance: int) -> ModuleRightCW:
+        return ModuleRightCW(self.controller, speed=speed, distance=distance)
+
+    def module_right_time_cw(
+        self,
+        speed: int,
+        time: int,
+    ) -> ModuleRightTimeCW:
+
+        return ModuleRightTimeCW(
+            self.controller,
+            speed=speed,
+            time=time,
+        )
+
+    def module_left_ccw(self, speed: int, distance: int) -> ModuleLeftCCW:
+        return ModuleLeftCCW(self.controller, speed=speed, distance=distance)
+    
+    def module_left_time_ccw(
+        self,
+        speed: int,
+        time: int,
+    ) -> ModuleLeftTimeCCW:
+
+        return ModuleLeftTimeCCW(
+            self.controller,
+            speed=speed,
+            time=time,
+        )
+
+    def module_right_ccw(self, speed: int, distance: int) -> ModuleRightCCW:
+        return ModuleRightCCW(self.controller, speed=speed, distance=distance)
+
+    def module_right_time_ccw(
+        self,
+        speed: int,
+        time: int,
+    ) -> ModuleRightTimeCCW:
+
+        return ModuleRightTimeCCW(
+            self.controller,
+            speed=speed,
+            time=time,
+        )
+
 
     def turn_left(
         self,
