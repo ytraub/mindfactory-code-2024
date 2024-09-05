@@ -10,11 +10,19 @@ class Run1:
 		self.run_color = 'Color.BLUE'
 	def create_chain(self, robot: Robot):			robot.chain([
 		robot.tasks.module_left_time_cw(time=200,speed=100),
-		robot.tasks.drive_forward_gyro(speed=40,distance=200),
-		robot.tasks.turn_left_on_spot(angle=50,speed=30),
-		robot.tasks.drive_forward_gyro(speed=40,distance=340),
-		robot.tasks.module_left_ccw(distance=300,speed=40),
-		robot.tasks.drive_forward_time_gyro(time=800,speed=50),], self.run_color)
+		robot.tasks.drive_forward_gyro(distance=160,speed=20),
+		robot.tasks.turn_left_on_spot(angle=45,speed=30),
+		robot.tasks.drive_forward_gyro(distance=350,speed=40),
+		robot.tasks.module_left_ccw(distance=180,speed=20),
+		robot.tasks.drive_forward_gyro(distance=350,speed=40),
+		robot.tasks.drive_forward_time_gyro(time=500,speed=20),
+		robot.tasks.drive_backward(distance=320,speed=30),
+		robot.tasks.turn_right_on_spot(angle=45,speed=30),
+		robot.tasks.module_left_cw(distance=80,speed=20),
+		robot.tasks.drive_forward_gyro(distance=480,speed=40),
+		robot.tasks.module_left_ccw(distance=20,speed=20),
+		robot.tasks.drive_forward_gyro(distance=150,speed=40),
+		robot.tasks.module_left_time_cw(time=600,speed=100),], self.run_color)
 
 
 class Run2:
