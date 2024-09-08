@@ -59,23 +59,12 @@ class Robot:
         self.start_run()
 
         if index <= len(self.runs) - 1:
-                run_chain = self.runs[index]
-                self.runtime.add_tasks(run_chain.start_task)
+            run_chain = self.runs[index]
+            self.runtime.add_tasks(run_chain.start_task)
         else:
-                print(
-                    f"Run: {index + 1} (index {index}) is not available. There are only {len(self.runs)} runs."
-                )
-
-        """try:
-            if index <= len(self.runs) - 1:
-                run_chain = self.runs[index]
-                self.runtime.add_tasks(run_chain.start_task)
-            else:
-                print(
-                    f"Run: {index + 1} (index {index}) is not available. There are only {len(self.runs)} runs."
-                )
-        except Exception as err:
-            print(f"An error occured while running: {err}")"""
+            print(
+                f"Run: {index + 1} (index {index}) is not available. There are only {len(self.runs)} runs."
+            )
 
     def interrupt_run(self) -> None:
         self.runtime.tasks.clear()
