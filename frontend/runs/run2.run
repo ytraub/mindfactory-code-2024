@@ -1,5 +1,7 @@
 color RED
 
-{
-    turn_right(angle=360 speed=40)
+with tasksplit {
+    module_left_cw(distance=500 speed=20)
+    drive_forward_gyro(speed=20 distance=500)
 }
+

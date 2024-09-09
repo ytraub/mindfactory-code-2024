@@ -1,7 +1,7 @@
 import os
 
 from lexer import Lexer
-from compiler import Compiler
+#from compiler import Compiler
 
 RUN_DIRECTORY = "runs"
 OUTPUT_DIRECTORY = "output"
@@ -11,7 +11,7 @@ def main() -> None:
     print("Compiling runs...")
     
     lexer = Lexer()
-    compiler = Compiler()
+    #compiler = Compiler()
 
     file_buffer = '"""\nThis is a generated file. Don\'t change anything manually.\n"""\n\nfrom robot import Robot\n\n'
     run_names = []
@@ -27,15 +27,17 @@ def main() -> None:
             if error:
                 log_error("Lexing", filename, error)
                 return
+            
+            print(tokens)
 
-            run_name = filename.removesuffix(".run")
+            """ run_name = filename.removesuffix(".run")
             (output, error) = compiler.compile(tokens, run_name)
             if error:
                 log_error("Parsing", filename, error)
                 return
 
             file_buffer += output
-            run_names.append(run_name.title())
+            run_names.append(run_name.title()) """
 
     file_buffer += list_runs(run_names)
 
