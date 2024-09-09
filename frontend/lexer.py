@@ -131,7 +131,7 @@ class Lexer:
     def is_text(self, char: str) -> bool:
         return char.isalpha() or char == "_"
 
-    def error(self, msg: str) -> list[Token] | str:
+    def error(self, msg: str) -> str:
         return f"[Line {self.line_count}] {msg}"
 
     def make_token(self, token_type: TokenType, lexeme: str | int) -> None:
