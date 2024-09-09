@@ -1,7 +1,19 @@
 color RED
 
-with tasksplit {
+tasksplit {
     module_left_cw(distance=500 speed=20)
-    drive_forward_gyro(speed=20 distance=500)
+    drive_forward_gyro(speed=20 distance=500) {
+
+    }
 }
+
+{
+    tasksplit {
+        
+        module_left_cw(distance=500 speed=20)
+    }
+        module_left_cw(distance=500 speed=20)
+}
+
+        module_left_cw(distance=500 speed=20)
 

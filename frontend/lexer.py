@@ -3,7 +3,6 @@ from enum import Enum
 from generated.data import TASKS, PARAMS
 
 KEYWORDS = [
-    "with",
     "tasksplit",
     "color",
 ]

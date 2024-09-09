@@ -17,7 +17,7 @@ class AstPrinter:
             for child in node.body:
                 self.print_ast(child, indent + 2)
         elif isinstance(node, Task):
-            print(f"{prefix}Task with params: {node.params}")
+            print(f"{prefix}Task {node.type}: {node.params}")
         elif isinstance(node, Color):
             print(f"{prefix}Color: {node.color}")
         else:
