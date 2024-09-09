@@ -1,7 +1,8 @@
 import os
 
 from lexer import Lexer
-#from compiler import Compiler
+from parser import Parser
+from debug import AstPrinter
 
 RUN_DIRECTORY = "runs"
 OUTPUT_DIRECTORY = "output"
@@ -9,9 +10,10 @@ OUTPUT_DIRECTORY = "output"
 
 def main() -> None:
     print("Compiling runs...")
-    
+
     lexer = Lexer()
-    #compiler = Compiler()
+    parser = Parser()
+    printer = AstPrinter()
 
     file_buffer = '"""\nThis is a generated file. Don\'t change anything manually.\n"""\n\nfrom robot import Robot\n\n'
     run_names = []
@@ -20,15 +22,21 @@ def main() -> None:
         if not filename.endswith(".run"):
             continue
 
-        with open(f"{RUN_DIRECTORY}/{filename}", "r") as source:
-            lexer.reset()
-            (tokens, error) = lexer.scan_source(source.read())
+        run_name = filename.removesuffix(".run").title()
+        run_names.append(run_name)
 
-            if error:
-                log_error("Lexing", filename, error)
+        with open(f"{RUN_DIRECTORY}/{filename}", "r") as source:
+            lexer_result = lexer.scan_source(source.read())
+            if isinstance(lexer_result, str):
+                log_error("Lexing", filename, lexer_result)
                 return
-            
-            print(tokens)
+
+            parser_result = parser.parse(lexer_result)
+            if isinstance(parser_result, str):
+                log_error("Lexing", filename, parser_result)
+                return
+
+            printer.print_ast(parser_result)
 
             """ run_name = filename.removesuffix(".run")
             (output, error) = compiler.compile(tokens, run_name)
@@ -43,7 +51,7 @@ def main() -> None:
 
     with open(f"{OUTPUT_DIRECTORY}/runs.py", "w+") as output:
         output.write(file_buffer)
-        
+
     print("Done!\n")
 
 

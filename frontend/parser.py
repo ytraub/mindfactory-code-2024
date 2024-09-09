@@ -1,3 +1,4 @@
+from typing import Union
 from lexer import Token, TokenType
 
 
@@ -69,9 +70,9 @@ class Parser:
         self.current_token = self.tokens[self.index]
 
     def is_at_end(self) -> bool:
-        self.match_current_token_type(TokenType.EOF)
+        return self.match_current_token_type(TokenType.EOF)
 
-    def parse(self, tokens: list[Token]) -> Program:
+    def parse(self, tokens: list[Token]) -> Program | str:
         self.reset(tokens)
         body: list[AstNode] = []
 
@@ -84,4 +85,4 @@ class Parser:
 
             self.advance()
 
-        return Program([])
+        return Program(body)

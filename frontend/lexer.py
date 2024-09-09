@@ -1,4 +1,5 @@
 from enum import Enum
+
 from generated.data import TASKS, PARAMS
 
 KEYWORDS = [
@@ -32,7 +33,7 @@ class Token:
         self.line = line
 
     def __repr__(self) -> str:
-        return f"[Token type:{self.token_type} lexeme:'{self.lexeme}' line:{self.line}]"
+        return f"[Token type={self.token_type} lexeme='{self.lexeme}' line={self.line}]"
 
 
 class Lexer:
@@ -42,7 +43,8 @@ class Lexer:
         self.line_count: int = 1
         self.buffer: str = ""
 
-    def scan_source(self, source: str) -> tuple[list[Token], str]:
+    def scan_source(self, source: str) -> list[Token] | str:
+        self.reset()
         self.tokens = []
 
         source_iter = iter([*source])
@@ -111,7 +113,7 @@ class Lexer:
                         f"Unrecognized character found in source: '{char}'"
                     )
 
-        return (self.tokens, "")
+        return self.tokens
 
     def reset(self) -> None:
         self.line_count: int = 1
@@ -129,8 +131,8 @@ class Lexer:
     def is_text(self, char: str) -> bool:
         return char.isalpha() or char == "_"
 
-    def error(self, msg: str) -> tuple[list[Token], str]:
-        return ([], f"[Line {self.line_count}] {msg}")
+    def error(self, msg: str) -> list[Token] | str:
+        return f"[Line {self.line_count}] {msg}"
 
     def make_token(self, token_type: TokenType, lexeme: str | int) -> None:
         self.tokens.append(Token(token_type, lexeme, self.line_count))
