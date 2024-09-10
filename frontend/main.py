@@ -2,6 +2,7 @@ import os
 
 from lexer import Lexer
 from parser import Parser
+from generator import Generator
 from debug import AstPrinter
 
 RUN_DIRECTORY = "runs"
@@ -10,6 +11,7 @@ DEBUG = True
 
 lexer = Lexer()
 parser = Parser()
+generator = Generator()
 ast_printer = AstPrinter()
 
 def compile_file(filename: str) -> None:
@@ -28,6 +30,8 @@ def compile_file(filename: str) -> None:
 
         if DEBUG:
             ast_printer.print_ast(parser_result)
+
+        generator_result = generator.generate(parser_result)
 
 def main() -> None:
     print("Compiling runs...")
