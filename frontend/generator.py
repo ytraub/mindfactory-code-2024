@@ -1,6 +1,18 @@
 from parser import Program, AstNode, Color, Task, Block, Tasksplit
 
 
+class Run:
+    def __init__(self) -> None:
+        self.fields: list[str] = []
+        self.tasks: list[list[str]] = []
+
+    def add_field(self, chars: str) -> None:
+        self.fields.append(chars)
+
+    def add_tasks(self, chars: list[str]) -> None:
+        self.tasks.append(chars)
+
+
 class Writer:
     def __init__(self) -> None:
         self.buffer: str = ""
@@ -8,29 +20,25 @@ class Writer:
     def get_buffer(self) -> str:
         return self.buffer
 
-    def write(self, chars: str) -> None:
+    def clear_buffer(self) -> str:
+        buffer = self.buffer
+        self.buffer = ""
+
+        return buffer
+
+    def write_buffer(self, chars: str) -> None:
         self.buffer = f"{self.buffer}{chars}"
-
-    def write_line(self, chars: str) -> None:
-        self.buffer = f"{self.buffer}{chars}\n\r"
-
-
-class Run:
-    def __init__(self) -> None:
-        self.color: str | None = None
-        self.tasks: list[str] = []
-        self.params: list[dict[str, int]] = []
 
 
 class Generator:
     def __init__(self) -> None:
-        self.writer: Writer | None = None
-        self.program: Program | None = None
+        self.writer: Writer = Writer()
+        self.run = Run | None = None
         self.current_node: AstNode | None = None
-        self.index: int = 0
 
     def reset(self, program: Program) -> None:
-        self.writer = Writer()
+        self.writer.clear_buffer()
+        self.run = Run()
         self.current_node = program
 
     def check_current_node(self, type: AstNode) -> bool:
@@ -38,7 +46,7 @@ class Generator:
 
     def color(self) -> None | str:
         if self.check_current_node(Color):
-            self.writer.write_line(f"self.color = {self.current_node.color}")
+            self.run.add_field(f"self.color = {self.current_node.color}")
         else:
             return "Expected color decleration on top of file"
 
@@ -48,19 +56,20 @@ class Generator:
             self.statement()
 
     def tasksplit(self) -> None | str:
-        pass
+        self.current_node = self.current_node.block
 
     def task(self) -> None | str:
         type = self.current_node.type
         params = self.current_node.params
 
-        self.writer.write(f"{type}(")
+        self.writer.write_buffer(f"{type}(")
 
         for key in params:
             value = params[key]
             self.writer.write(f"{key}={value},")
-
-        self.writer.write_line(")")
+            
+        self.writer.write_buffer(")")
+        self.run.add_tasks([self.writer.clear_buffer()])
 
     def statement(self) -> None | str:
         if self.check_current_node(Task):
@@ -75,7 +84,7 @@ class Generator:
         if self.check_current_node(Color):
             self.color()
 
-    def generate(self, program: Program) -> str:
+    def generate(self, program: Program) -> Run | str:
         self.reset(program)
         self.block()
 
