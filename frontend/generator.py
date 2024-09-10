@@ -46,14 +46,14 @@ class Generator:
         return isinstance(self.current_node, type)
 
     def color(self) -> None:
-        self.run.add_field(f"self.color = '{self.current_node.color}'")
+        self.run.add_field(f"self.run_color = '{self.current_node.color}'")
 
     def block(self) -> None:
         for node in self.current_node.body:
             self.current_node = node
             self.statement()
 
-    def run_name(self, run_name: str) -> None:
+    def name(self, run_name: str) -> None:
         self.run.add_field(f"self.run_name = '{run_name}'")
         self.run.run_name = run_name.title()
 
@@ -94,7 +94,7 @@ class Generator:
 
     def generate(self, run_name: str, program: Program) -> Run:
         self.reset(program)
-        self.run_name(run_name)
+        self.name(run_name)
         self.block()
 
         return self.run
