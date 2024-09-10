@@ -72,7 +72,7 @@ class Parser:
         while not self.is_at_end():
             node = self.parse_statement()
             if isinstance(node, str):
-                return node  # Error message
+                return node
             if node:
                 body.append(node)
 
@@ -96,17 +96,21 @@ class Parser:
 
     def parse_color(self) -> Color | str:
         self.advance()
+        
         if self.match(TokenType.COLOR):
             color_node = Color(self.current_token.lexeme)
             self.advance()
             return color_node
+        
         return self.error_at_current("Expected color expression after 'color' keyword")
 
     def parse_block(self) -> Block | str:
         self.advance()
         body = self.parse_block_body()
+        
         if isinstance(body, str):
-            return body  # Error occurred
+            return body
+        
         return Block(body)
 
     def parse_tasksplit(self) -> Tasksplit | str:
@@ -115,18 +119,23 @@ class Parser:
             return self.error_at_current(
                 "Expected '{' to open a block after 'tasksplit'"
             )
+            
         self.advance()
         body = self.parse_block_body()
+        
         if isinstance(body, str):
-            return body  # Error occurred
+            return body
+        
         return Tasksplit(Block(body))
 
     def parse_task(self) -> Task | str:
         type = self.current_token.lexeme
         self.advance()
         params = self.parse_task_params()
+        
         if isinstance(params, str):
             return params
+        
         return Task(type, params)
 
     def parse_block_body(self) -> list[AstNode] | str:
@@ -134,12 +143,14 @@ class Parser:
         while not self.is_at_end() and not self.match(TokenType.RIGHT_BRACE):
             node = self.parse_statement()
             if isinstance(node, str):
-                return node  # Error message
+                return node
             if node:
                 body.append(node)
+                
         if self.is_at_end():
             return self.error_at_current("Expected '}' to close block or tasksplit")
-        self.advance()  # Consume the closing '}'
+        
+        self.advance()
         return body
 
     def parse_task_params(self) -> dict[str, int] | str:
@@ -157,12 +168,14 @@ class Parser:
 
                 if not self.match(TokenType.EQUALS):
                     return self.error_at_current("Expected '=' after parameter key")
+                
                 self.advance()
 
                 if self.match(TokenType.NUMBER):
                     params[key] = int(self.current_token.lexeme)
                 else:
                     return self.error_at_current("Expected a number after '='")
+                
             else:
                 return self.error_at_current("Expected a parameter identifier")
 

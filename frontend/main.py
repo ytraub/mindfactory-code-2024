@@ -2,7 +2,8 @@ import os
 
 from lexer import Lexer
 from parser import Parser
-from generator import Generator
+from generator import Generator, Run
+from writer import Writer
 from debug import AstPrinter
 
 RUN_DIRECTORY = "runs"
@@ -12,7 +13,10 @@ DEBUG = False
 lexer = Lexer()
 parser = Parser()
 generator = Generator()
+writer = Writer()
 ast_printer = AstPrinter()
+
+runs: list[Run] = []
 
 
 def compile_file(filename: str) -> None:
@@ -35,18 +39,20 @@ def compile_file(filename: str) -> None:
             ast_printer.print_ast(parser_result)
 
         generator_result = generator.generate(run_name, parser_result)
+        runs.append(generator_result)
 
 
 def main() -> None:
     print("Compiling runs...")
-
-    file_buffer = '"""\nThis is a generated file. Don\'t change anything manually.\n"""\n\nfrom robot import Robot\n\n'
 
     for filename in sorted(os.listdir(RUN_DIRECTORY)):
         if not filename.endswith(".run"):
             continue
 
         compile_file(filename)
+
+    writer_result = writer.write(runs)
+    print(writer_result)
 
     print("Done!\n")
 
