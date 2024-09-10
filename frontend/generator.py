@@ -31,14 +31,7 @@ class Generator:
 
     def reset(self, program: Program) -> None:
         self.writer = Writer()
-        self.body = program.body
-        self.current_node = self.body.pop(0)
-
-    def advance(self) -> None:
-        if len(self.body):
-            self.current_node = self.body.pop(0)
-        else:
-            self.current_node = None
+        self.current_node = program
 
     def check_current_node(self, type: AstNode) -> bool:
         return isinstance(self.current_node, type)
@@ -50,9 +43,9 @@ class Generator:
             return "Expected color decleration on top of file"
 
     def block(self) -> None | str:
-        if self.check_current_node(Block):
-            for node in self.current_node.body:
-                pass
+        for node in self.current_node.body:
+            self.current_node = node
+            self.statement()
 
     def tasksplit(self) -> None | str:
         pass
@@ -79,18 +72,11 @@ class Generator:
         if self.check_current_node(Tasksplit):
             self.tasksplit()
 
+        if self.check_current_node(Color):
+            self.color()
+
     def generate(self, program: Program) -> str:
         self.reset(program)
-
-        error = self.color()
-        if error:
-            return error
-
-        while self.current_node:
-            error = self.statement()
-            if error:
-                return error
-
-            self.advance()
+        self.block()
 
         print(self.writer.get_buffer())
