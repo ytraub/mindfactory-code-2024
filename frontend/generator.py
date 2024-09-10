@@ -4,13 +4,17 @@ from parser import Program, AstNode, Color, Task, Block, Tasksplit
 class Run:
     def __init__(self) -> None:
         self.fields: list[str] = []
-        self.tasks: list[list[str]] = []
+        self.tasks: list[str] = []
+        self.tasksplits: dict[int, int] = {}
 
     def add_field(self, chars: str) -> None:
         self.fields.append(chars)
 
     def add_tasks(self, chars: list[str]) -> None:
         self.tasks.append(chars)
+
+    def add_tasksplit(self, start: int, end: int) -> None:
+        self.tasksplits[start] = end
 
 
 class Writer:
@@ -33,7 +37,7 @@ class Writer:
 class Generator:
     def __init__(self) -> None:
         self.writer: Writer = Writer()
-        self.run = Run | None = None
+        self.run: Run | None = None
         self.current_node: AstNode | None = None
 
     def reset(self, program: Program) -> None:
@@ -56,7 +60,13 @@ class Generator:
             self.statement()
 
     def tasksplit(self) -> None | str:
+        start = len(self.run.tasks)
+
         self.current_node = self.current_node.block
+        self.block()
+
+        end = len(self.run.tasks)
+        self.run.add_tasksplit(start, end)
 
     def task(self) -> None | str:
         type = self.current_node.type
@@ -66,8 +76,8 @@ class Generator:
 
         for key in params:
             value = params[key]
-            self.writer.write(f"{key}={value},")
-            
+            self.writer.write_buffer(f"{key}={value},")
+
         self.writer.write_buffer(")")
         self.run.add_tasks([self.writer.clear_buffer()])
 
@@ -88,4 +98,4 @@ class Generator:
         self.reset(program)
         self.block()
 
-        print(self.writer.get_buffer())
+        print(self.run.tasksplits, self.run.tasks)
