@@ -16,7 +16,7 @@ ast_printer = AstPrinter()
 
 
 def compile_file(filename: str) -> None:
-    run_name = filename.removesuffix(".run").title()
+    run_name = filename.removesuffix(".run")
 
     with open(f"{RUN_DIRECTORY}/{filename}", "r") as file:
         source = file.read()
@@ -35,7 +35,6 @@ def compile_file(filename: str) -> None:
             ast_printer.print_ast(parser_result)
 
         generator_result = generator.generate(run_name, parser_result)
-        
 
 
 def main() -> None:

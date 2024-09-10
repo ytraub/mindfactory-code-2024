@@ -3,9 +3,13 @@ from parser import Program, AstNode, Color, Task, Block, Tasksplit
 
 class Run:
     def __init__(self) -> None:
+        self.run_name: str | None = None
         self.fields: list[str] = []
         self.tasks: list[str] = []
         self.tasksplits: dict[int, int] = {}
+
+    def set_run_name(self, run_name: str) -> None:
+        self.run_name = run_name
 
     def add_field(self, chars: str) -> None:
         self.fields.append(chars)
@@ -36,6 +40,10 @@ class Generator:
         for node in self.current_node.body:
             self.current_node = node
             self.statement()
+
+    def run_name(self, run_name: str) -> None:
+        self.run.add_field(f"self.run_name = {run_name}")
+        self.run.run_name = run_name
 
     def tasksplit(self) -> None:
         start = len(self.run.tasks)
@@ -72,9 +80,9 @@ class Generator:
         if self.check_current_node(Color):
             self.color()
 
-    def generate(self, name: str, program: Program) -> Run:
+    def generate(self, run_name: str, program: Program) -> Run:
         self.reset(program)
-        self.run.add_field(f"self.run = {name}")
+        self.run_name(run_name)
         self.block()
 
         return self.run
