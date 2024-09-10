@@ -7,7 +7,7 @@ from debug import AstPrinter
 
 RUN_DIRECTORY = "runs"
 OUTPUT_DIRECTORY = "output"
-DEBUG = True
+DEBUG = False
 
 lexer = Lexer()
 parser = Parser()
@@ -17,7 +17,9 @@ ast_printer = AstPrinter()
 def compile_file(filename: str) -> None:
     run_name = filename.removesuffix(".run").title()
 
-    with open(f"{RUN_DIRECTORY}/{filename}", "r").read() as source:
+    with open(f"{RUN_DIRECTORY}/{filename}", "r") as file:
+        source = file.read()
+
         lexer_result = lexer.scan(source)
         if isinstance(lexer_result, str):
             log_error("Lexing", filename, lexer_result)
@@ -32,6 +34,7 @@ def compile_file(filename: str) -> None:
             ast_printer.print_ast(parser_result)
 
         generator_result = generator.generate(parser_result)
+        print(generator_result)
 
 def main() -> None:
     print("Compiling runs...")
