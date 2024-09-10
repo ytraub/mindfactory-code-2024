@@ -29,18 +29,15 @@ class Generator:
     def check_current_node(self, type: AstNode) -> bool:
         return isinstance(self.current_node, type)
 
-    def color(self) -> None | str:
-        if self.check_current_node(Color):
-            self.run.add_field(f"self.color = {self.current_node.color}")
-        else:
-            return "Expected color decleration on top of file"
+    def color(self) -> None:
+        self.run.add_field(f"self.color = {self.current_node.color}")
 
-    def block(self) -> None | str:
+    def block(self) -> None:
         for node in self.current_node.body:
             self.current_node = node
             self.statement()
 
-    def tasksplit(self) -> None | str:
+    def tasksplit(self) -> None:
         start = len(self.run.tasks)
 
         self.current_node = self.current_node.block
@@ -49,7 +46,7 @@ class Generator:
         end = len(self.run.tasks)
         self.run.add_tasksplit(start, end)
 
-    def task(self) -> None | str:
+    def task(self) -> None:
         type = self.current_node.type
         params = self.current_node.params
 
@@ -62,7 +59,7 @@ class Generator:
         buffer += ")"
         self.run.add_tasks(buffer)
 
-    def statement(self) -> None | str:
+    def statement(self) -> None:
         if self.check_current_node(Task):
             self.task()
 
@@ -75,7 +72,7 @@ class Generator:
         if self.check_current_node(Color):
             self.color()
 
-    def generate(self, program: Program) -> Run | str:
+    def generate(self, program: Program) -> Run:
         self.reset(program)
         self.block()
 
