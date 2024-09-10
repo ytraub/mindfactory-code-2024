@@ -43,7 +43,7 @@ class Generator:
 
     def run_name(self, run_name: str) -> None:
         self.run.add_field(f"self.run_name = {run_name}")
-        self.run.run_name = run_name
+        self.run.run_name = run_name.title()
 
     def tasksplit(self) -> None:
         start = len(self.run.tasks)
