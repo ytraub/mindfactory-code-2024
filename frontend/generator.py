@@ -17,31 +17,12 @@ class Run:
         self.tasksplits[start] = end
 
 
-class Writer:
-    def __init__(self) -> None:
-        self.buffer: str = ""
-
-    def get_buffer(self) -> str:
-        return self.buffer
-
-    def clear_buffer(self) -> str:
-        buffer = self.buffer
-        self.buffer = ""
-
-        return buffer
-
-    def write_buffer(self, chars: str) -> None:
-        self.buffer = f"{self.buffer}{chars}"
-
-
 class Generator:
     def __init__(self) -> None:
-        self.writer: Writer = Writer()
         self.run: Run | None = None
         self.current_node: AstNode | None = None
 
     def reset(self, program: Program) -> None:
-        self.writer.clear_buffer()
         self.run = Run()
         self.current_node = program
 
@@ -72,14 +53,14 @@ class Generator:
         type = self.current_node.type
         params = self.current_node.params
 
-        self.writer.write_buffer(f"{type}(")
+        buffer = f"{type}("
 
         for key in params:
             value = params[key]
-            self.writer.write_buffer(f"{key}={value},")
+            buffer += f"{key}={value},"
 
-        self.writer.write_buffer(")")
-        self.run.add_tasks([self.writer.clear_buffer()])
+        buffer += ")"
+        self.run.add_tasks(buffer)
 
     def statement(self) -> None | str:
         if self.check_current_node(Task):

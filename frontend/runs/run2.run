@@ -5,6 +5,9 @@ module_left_cw(distance=500 speed=20)
 tasksplit {
     module_left_cw(distance=100 speed=20)
     module_left_cw(distance=500 speed=20)
+    {
+        module_left_cw(distance=500 speed=20)
+    }
     module_left_cw(distance=500 speed=20)
 }
 
