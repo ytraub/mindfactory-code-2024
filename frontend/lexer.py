@@ -42,7 +42,7 @@ class Lexer:
         self.line_count: int = 1
         self.buffer: str = ""
 
-    def scan_source(self, source: str) -> list[Token] | str:
+    def scan(self, source: str) -> list[Token] | str:
         self.reset()
         self.tokens = []
 
