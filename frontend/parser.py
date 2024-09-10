@@ -25,9 +25,9 @@ class Block(AstNode):
 
 
 class Tasksplit(AstNode):
-    def __init__(self, body: list[AstNode]) -> None:
+    def __init__(self, block: Block) -> None:
         super().__init__("tasksplit")
-        self.body = body
+        self.block = block
 
 
 class Task(AstNode):
@@ -119,7 +119,7 @@ class Parser:
         body = self.parse_block_body()
         if isinstance(body, str):
             return body  # Error occurred
-        return Tasksplit(body)
+        return Tasksplit(Block(body))
 
     def parse_task(self) -> Task | str:
         type = self.current_token.lexeme
