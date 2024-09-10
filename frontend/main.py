@@ -14,6 +14,7 @@ parser = Parser()
 generator = Generator()
 ast_printer = AstPrinter()
 
+
 def compile_file(filename: str) -> None:
     run_name = filename.removesuffix(".run").title()
 
@@ -33,8 +34,9 @@ def compile_file(filename: str) -> None:
         if DEBUG:
             ast_printer.print_ast(parser_result)
 
-        generator_result = generator.generate(parser_result)
-        print(generator_result)
+        generator_result = generator.generate(run_name, parser_result)
+        
+
 
 def main() -> None:
     print("Compiling runs...")

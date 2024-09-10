@@ -72,8 +72,9 @@ class Generator:
         if self.check_current_node(Color):
             self.color()
 
-    def generate(self, program: Program) -> Run:
+    def generate(self, name: str, program: Program) -> Run:
         self.reset(program)
+        self.run.add_field(f"self.run = {name}")
         self.block()
 
-        print(self.run.tasksplits, self.run.tasks)
+        return self.run
