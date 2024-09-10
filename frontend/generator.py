@@ -11,6 +11,18 @@ class Run:
     def set_run_name(self, run_name: str) -> None:
         self.run_name = run_name
 
+    def get_run_name(self) -> str:
+        return self.run_name
+
+    def get_fields(self) -> list[str]:
+        return self.fields
+
+    def get_tasks(self) -> list[str]:
+        return self.tasks
+
+    def get_tasksplits(self) -> dict[int, int]:
+        return self.tasksplits
+
     def add_field(self, chars: str) -> None:
         self.fields.append(chars)
 
@@ -34,7 +46,7 @@ class Generator:
         return isinstance(self.current_node, type)
 
     def color(self) -> None:
-        self.run.add_field(f"self.color = {self.current_node.color}")
+        self.run.add_field(f"self.color = '{self.current_node.color}'")
 
     def block(self) -> None:
         for node in self.current_node.body:
@@ -42,7 +54,7 @@ class Generator:
             self.statement()
 
     def run_name(self, run_name: str) -> None:
-        self.run.add_field(f"self.run_name = {run_name}")
+        self.run.add_field(f"self.run_name = '{run_name}'")
         self.run.run_name = run_name.title()
 
     def tasksplit(self) -> None:
