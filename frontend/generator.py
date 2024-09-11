@@ -65,16 +65,14 @@ class Generator:
 
         self.run.add_block(self.clear_current_block())
 
+
     def name(self, run_name: str) -> None:
         self.run.add_field(f"self.run_name = '{run_name}'")
         self.run.run_name = run_name.title()
 
     def tasksplit(self) -> None:
         self.current_node = self.current_node.block
-
-        if self.current_block:
-            self.run.add_block(self.clear_current_block())
-            
+        self.run.add_block(self.clear_current_block())
         self.run.add_tasksplit(len(self.run.get_blocks()))
         self.block()
 
@@ -109,6 +107,7 @@ class Generator:
         self.reset(program)
         self.name(run_name)
         self.block()
+
 
         print(self.run.get_blocks(), self.run.get_tasksplits())
 
