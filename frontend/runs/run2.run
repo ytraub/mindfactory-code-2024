@@ -1,11 +1,15 @@
 color RED
 
-module_left_cw(distance=500 speed=20)
 
 tasksplit {
     module_left_cw(distance=1 speed=20)
 }
 
+tasksplit {
+    module_left_cw(distance=1 speed=20)
+}
+
+module_left_cw(distance=3 speed=20)
 module_left_cw(distance=3 speed=20)
 
 

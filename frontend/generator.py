@@ -5,8 +5,8 @@ class Run:
     def __init__(self) -> None:
         self.run_name: str | None = None
         self.fields: list[str] = []
-        self.tasks: list[str] = []
-        self.tasksplits: dict[int, int] = {}
+        self.blocks: list[list[str]] = []
+        self.tasksplits: list[int] = []
 
     def set_run_name(self, run_name: str) -> None:
         self.run_name = run_name
@@ -17,30 +17,32 @@ class Run:
     def get_fields(self) -> list[str]:
         return self.fields
 
-    def get_tasks(self) -> list[str]:
-        return self.tasks
+    def get_blocks(self) -> list[str]:
+        return self.blocks
 
-    def get_tasksplits(self) -> dict[int, int]:
+    def get_tasksplits(self) -> list[int]:
         return self.tasksplits
 
     def add_field(self, chars: str) -> None:
         self.fields.append(chars)
 
-    def add_tasks(self, chars: list[str]) -> None:
-        self.tasks.append(chars)
+    def add_block(self, chars: list[str]) -> None:
+        self.blocks.append(chars)
 
-    def add_tasksplit(self, start: int, end: int) -> None:
-        self.tasksplits[start] = end
+    def add_tasksplit(self, index: int) -> None:
+        self.tasksplits.append(index)
 
 
 class Generator:
     def __init__(self) -> None:
         self.run: Run | None = None
         self.current_node: AstNode | None = None
+        self.current_block: list[str] = []
 
     def reset(self, program: Program) -> None:
         self.run = Run()
         self.current_node = program
+        self.current_block = []
 
     def check_current_node(self, type: AstNode) -> bool:
         return isinstance(self.current_node, type)
@@ -48,23 +50,34 @@ class Generator:
     def color(self) -> None:
         self.run.add_field(f"self.run_color = '{self.current_node.color}'")
 
+    def add_current_block(self, task: str) -> None:
+        self.current_block.append(task)
+
+    def clear_current_block(self) -> list[str]:
+        block = self.current_block
+        self.current_block = []
+        return block
+
     def block(self) -> None:
         for node in self.current_node.body:
             self.current_node = node
             self.statement()
+
+        self.run.add_block(self.clear_current_block())
 
     def name(self, run_name: str) -> None:
         self.run.add_field(f"self.run_name = '{run_name}'")
         self.run.run_name = run_name.title()
 
     def tasksplit(self) -> None:
-        start = len(self.run.tasks)
-
         self.current_node = self.current_node.block
+
+        if self.current_block:
+            self.run.add_block(self.clear_current_block())
+            
+        self.run.add_tasksplit(len(self.run.get_blocks()))
         self.block()
 
-        end = len(self.run.tasks)
-        self.run.add_tasksplit(start, end)
 
     def task(self) -> None:
         type = self.current_node.type
@@ -77,7 +90,7 @@ class Generator:
             buffer += f"{key}={value},"
 
         buffer += ")"
-        self.run.add_tasks(buffer)
+        self.add_current_block(buffer)
 
     def statement(self) -> None:
         if self.check_current_node(Task):
@@ -96,5 +109,7 @@ class Generator:
         self.reset(program)
         self.name(run_name)
         self.block()
+
+        print(self.run.get_blocks(), self.run.get_tasksplits())
 
         return self.run
