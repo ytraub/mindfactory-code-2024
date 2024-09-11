@@ -15,13 +15,14 @@ class Writer:
     def create_chain(self, blocks: list[list[str]], tasksplits: list[int]) -> str:
         buffer = []
 
+        print(blocks)
+
         for i, block in enumerate(blocks):
             if i in tasksplits:
                 sequence = 0
                 while i + sequence in tasksplits:
                     sequence += 1
 
-                print(block,  blocks[i + sequence])
 
             else:
                 buffer.append(block)

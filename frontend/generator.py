@@ -72,7 +72,10 @@ class Generator:
 
     def tasksplit(self) -> None:
         self.current_node = self.current_node.block
-        self.run.add_block(self.clear_current_block())
+
+        if self.current_block:
+            self.run.add_block(self.clear_current_block())
+            
         self.run.add_tasksplit(len(self.run.get_blocks()))
         self.block()
 
