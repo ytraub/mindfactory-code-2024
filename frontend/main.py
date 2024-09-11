@@ -51,8 +51,8 @@ def main() -> None:
 
         compile_file(filename)
 
-    #writer_result = writer.write(runs)
-    #print(writer_result)
+    writer_result = writer.write(runs)
+    print(writer_result)
 
     print("Done!\n")
 

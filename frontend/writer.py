@@ -12,30 +12,20 @@ class Writer:
     def class_definition(self, name: str, fields: list[str]) -> str:
         return f"class {name}:\n\r\tdef __init__(self):\n\r\t\t{"\n\r\t\t".join(fields)}"
     
-    def create_chain(self, tasks: list[str], tasksplits: dict[int, int]) -> str:
-        buffer: list[str] = []
-        
-        previous_end = 0
-        
-        for i, task in enumerate(tasks):
-            tasksplit_start = i
-            tasksplit_end = tasksplits.get(tasksplit_start)
-            
-            if tasksplit_end:
-                offset = tasksplit_end - tasksplit_start
-                tasksplit_tasks = tasks[tasksplit_start:tasksplit_end]
-                
-                for j, task in enumerate(tasksplit_tasks):
-                    if len(tasks) > tasksplit_end + j:
-                        buffer.append(f"[{task}, {tasks[i + j + offset]}]")
-                        
-                previous_end = tasksplit_end + offset
-                
+    def create_chain(self, blocks: list[list[str]], tasksplits: list[int]) -> str:
+        buffer = []
+
+        for i, block in enumerate(blocks):
+            if i in tasksplits:
+                sequence = 0
+                while i + sequence in tasksplits:
+                    sequence += 1
+
+                print(block,  blocks[i + sequence])
+
             else:
-                if i < previous_end:
-                    continue
-                
-                buffer.append(task)
+                buffer.append(block)
+        
             
         return f"\r\tdef create_chain(self, robot):\n\r\t\trobot.chain([{"\n\r\t\t".join(buffer)}], self.run_color)"
 
@@ -50,6 +40,6 @@ class Writer:
         
         for run in runs:
             self.write_line_buffer(self.class_definition(run.get_run_name(), run.get_fields()))
-            self.write_line_buffer(self.create_chain(run.get_tasks(), run.get_tasksplits()))
+            self.write_line_buffer(self.create_chain(run.get_blocks(), run.get_tasksplits()))
 
         return self.buffer
