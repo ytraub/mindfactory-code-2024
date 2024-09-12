@@ -8,6 +8,7 @@ from debug import AstPrinter
 
 RUN_DIRECTORY = "runs"
 OUTPUT_DIRECTORY = "output"
+OUPUT_FILE = "runs.py"
 DEBUG = False
 
 lexer = Lexer()
@@ -42,6 +43,11 @@ def compile_file(filename: str) -> None:
         runs.append(generator_result)
 
 
+def write_output(output: str) -> None:
+    with open(f"{OUTPUT_DIRECTORY}/{OUPUT_FILE}", "w+") as file:
+        file.write(output)
+
+
 def main() -> None:
     print("Compiling runs...")
 
@@ -52,7 +58,7 @@ def main() -> None:
         compile_file(filename)
 
     writer_result = writer.write(runs)
-    print(writer_result)
+    write_output(writer_result)
 
     print("Done!\n")
 
