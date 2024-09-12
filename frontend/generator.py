@@ -48,7 +48,7 @@ class Generator:
         return isinstance(self.current_node, type)
 
     def color(self) -> None:
-        self.run.add_field(f"self.run_color = '{self.current_node.color}'")
+        self.run.add_field(f"self.run_color = 'Color.{self.current_node.color}'")
 
     def add_current_block(self, task: str) -> None:
         self.current_block.append(task)

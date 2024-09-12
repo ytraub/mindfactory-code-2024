@@ -18,7 +18,7 @@ tasksplit {
     trigger_event (index=1)
 }
 
-drive_forward(distance=1000 speed=100 accel_distance=0)
+drive_forward_gyro(distance=1000 speed=40 accel_distance=0)
 
 wait_event(index=1)
 
