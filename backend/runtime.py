@@ -52,7 +52,8 @@ class Runtime:
                 next_tasks = task.get_next_tasks()
                 if next_tasks:
                     self.add_tasks(next_tasks)
-                else:
+                    
+                if len(self.tasks) == 1:
                     robot.end_run()
             else:
                 self.tasks.append(task)

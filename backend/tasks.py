@@ -58,7 +58,7 @@ class Menu(Task):
         if not self.controller.hub.imu.ready() or self.robot.get_loading():
             self.controller.hub.light.on(Color.RED)
         else:
-            if self.robot.running:
+            if self.robot.get_running():
                 self.controller.hub.light.on(Color.BLUE)
             else:
                 self.controller.hub.light.on(Color.GREEN)
@@ -477,6 +477,7 @@ class ModuleLeftTimeCW(Task):
     def stop(self) -> None:
         self.controller.brake_module_left()
 
+
 class ModuleRightCW(Task):
     def __init__(self, controller, speed: int, distance: int) -> None:
         super().__init__()
@@ -521,6 +522,7 @@ class ModuleRightTimeCW(Task):
 
     def stop(self) -> None:
         self.controller.brake_module_right()
+
 
 class ModuleLeftCCW(Task):
     def __init__(self, controller, speed: int, distance: int) -> None:
