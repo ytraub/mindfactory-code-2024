@@ -2,7 +2,7 @@ from pybricks.parameters import Side, Button
 
 from controller import Controller
 from runtime import Runtime, Chain
-from tasks import Tasks
+from tasks import Tasks, Task
 
 
 class Robot:
@@ -36,11 +36,11 @@ class Robot:
         self.set_loading(True)
         self.runs.clear()
 
-        self.chain([self.tasks.start_run_with_color()], "")
+        self.chain([[self.tasks.start_run_with_color()]], [], "")
 
-        from runs import __runs
+        from runs import __runs__
 
-        for run in __runs:
+        for run in __runs__:
             run.create_chain(self)
 
         self.set_loading(False)
@@ -81,17 +81,36 @@ class Robot:
         self.controller.brake_motors()
         self.controller.reset_motors(0)
 
-    def chain(self, tasks: list[any | list[any]], run_color: any) -> Chain:
-        prev_task: any | None = None
+    def chain(
+        self, tasks: list[list[Task]], tasksplits: list[int], run_color: str
+    ) -> Chain:
+        prev_task: Task | None = None
 
-        for task in reversed(tasks):
-            if prev_task:
-                if type(task) == list:
-                    for _task in task:
-                        _task.add_next_tasks(prev_task)
-                else:
-                    task.add_next_tasks(prev_task)
+        for i, block in enumerate(tasks):
+            """ if i in tasksplits:
+                # in tasksplit
+                sequence = 0
+                while i + sequence in tasksplits:
+                    sequence += 1
 
-            prev_task = task
+                start_tasks = []
+                for j in range(sequence + 1):
+                    a = tasks[j]
+                    b: Task | None = None
+                    for c in a:
+                        if b:
+                            b.set_next_tasks(c)
+                        
+                        b = c
+                        
+                    start_tasks.append(a[0])
+                    
+                prev_task.set_next_tasks(start_tasks) """
+
+            for task in block:
+                if prev_task:
+                    prev_task.set_next_tasks(task)
+
+                prev_task = task
 
         self.runs.append(Chain(prev_task, run_color))

@@ -1,7 +1,13 @@
 class Chain:
-    def __init__(self, start_task, run_color) -> None:
+    def __init__(self, start_task: any, run_color: str) -> None:
         self.start_task = start_task
         self.run_color = run_color
+
+    def get_run_color(self) -> str:
+        return self.run_color
+
+    def get_start_task(self) -> any:
+        return self.start_task
 
 
 class Runtime:

@@ -28,7 +28,7 @@ def f(x):
 
 class Task:
     def __init__(self) -> None:
-        self.next_tasks = []
+        self.next_tasks: Task | list[Task] | None = None
 
     def start(self) -> None:
         pass
@@ -39,11 +39,8 @@ class Task:
     def stop(self) -> None:
         pass
 
-    def add_next_tasks(self, tasks) -> None:
-        if type(tasks) == list:
-            self.next_tasks.extend(tasks)
-        else:
-            self.next_tasks.append(tasks)
+    def set_next_tasks(self, tasks) -> None:
+        self.next_tasks = tasks
 
     def get_next_tasks(self) -> None:
         return self.next_tasks
