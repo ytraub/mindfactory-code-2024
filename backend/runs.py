@@ -7,7 +7,8 @@
 	def create_chain(self, robot):
 		robot.chain([robot.tasks.drive_backward(distance=100,speed=100,),
 		robot.tasks.set_event(index=1,),
-		[robot.tasks.module_left_cw(distance=2000,speed=100,),robot.tasks.module_right_cw(distance=2000,speed=100,),robot.tasks.trigger_event(index=1,)],
+		[robot.tasks.module_right_cw(distance=5000,speed=100,),robot.tasks.module_right_cw(distance=1000,speed=100,),robot.tasks.trigger_event(index=1,)],
+		[robot.tasks.module_left_cw(distance=2000,speed=100,),robot.tasks.module_left_ccw(distance=2000,speed=100,),robot.tasks.trigger_event(index=1,)],
 		robot.tasks.drive_forward(distance=1000,speed=100,accel_distance=0,),
 		robot.tasks.wait_event(index=1,),
 		robot.tasks.turn_left(angle=90,speed=50,),], self.run_color)

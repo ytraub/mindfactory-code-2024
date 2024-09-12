@@ -5,8 +5,15 @@ drive_backward(distance=100 speed=100)
 set_event (index=1)
 
 tasksplit {
+    module_right_cw(distance=5000 speed=100)
+    module_right_cw(distance=1000 speed=100)
+
+    trigger_event (index=1)
+}
+
+tasksplit {
     module_left_cw(distance=2000 speed=100)
-    module_right_cw(distance=2000 speed=100)
+    module_left_ccw(distance=2000 speed=100)
 
     trigger_event (index=1)
 }
