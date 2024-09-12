@@ -65,7 +65,6 @@ class Generator:
 
         self.run.add_block(self.clear_current_block())
 
-
     def name(self, run_name: str) -> None:
         self.run.add_field(f"self.run_name = '{run_name}'")
         self.run.run_name = run_name.title()
@@ -75,16 +74,15 @@ class Generator:
 
         if self.current_block:
             self.run.add_block(self.clear_current_block())
-            
+
         self.run.add_tasksplit(len(self.run.get_blocks()))
         self.block()
-
 
     def task(self) -> None:
         type = self.current_node.type
         params = self.current_node.params
 
-        buffer = f"{type}("
+        buffer = f"robot.tasks.{type}("
 
         for key in params:
             value = params[key]
@@ -110,8 +108,5 @@ class Generator:
         self.reset(program)
         self.name(run_name)
         self.block()
-
-
-        print(self.run.get_blocks(), self.run.get_tasksplits())
 
         return self.run
