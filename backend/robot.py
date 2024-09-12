@@ -36,7 +36,7 @@ class Robot:
         self.set_loading(True)
         self.runs.clear()
 
-        self.chain([[self.tasks.start_run_with_color()]], [], "")
+        #self.chain([self.tasks.start_run_with_color()], "")
 
         from runs import __runs__
 
@@ -81,36 +81,41 @@ class Robot:
         self.controller.brake_motors()
         self.controller.reset_motors(0)
 
-    def chain(
-        self, tasks: list[list[Task]], tasksplits: list[int], run_color: str
-    ) -> Chain:
-        prev_task: Task | None = None
+    def chain(self, tasks: list[Task | list[Task]], run_color: str) -> None:
+        start_task: Task | None = None
+        previous_task: Task | None = None
+        tasksplit_start_tasks: list[Task] = []
 
-        for i, block in enumerate(tasks):
-            """ if i in tasksplits:
-                # in tasksplit
-                sequence = 0
-                while i + sequence in tasksplits:
-                    sequence += 1
+        for task in tasks:
+            if isinstance(task, list):
+                tasksplit_start_task: Task | None = None
+                tasksplit_previous_task: Task | None = None
+                
+                for tasksplit_task in task:
+                    if not tasksplit_start_task:
+                        tasksplit_start_task = tasksplit_task
 
-                start_tasks = []
-                for j in range(sequence + 1):
-                    a = tasks[j]
-                    b: Task | None = None
-                    for c in a:
-                        if b:
-                            b.set_next_tasks(c)
-                        
-                        b = c
-                        
-                    start_tasks.append(a[0])
-                    
-                prev_task.set_next_tasks(start_tasks) """
+                    if tasksplit_previous_task:
+                        tasksplit_previous_task.set_next_tasks(tasksplit_task)
 
-            for task in block:
-                if prev_task:
-                    prev_task.set_next_tasks(task)
+                    tasksplit_previous_task = tasksplit_task
 
-                prev_task = task
+                tasksplit_start_tasks.append(tasksplit_start_task)
+            else:
+                if not start_task:
+                    start_task = task
 
-        self.runs.append(Chain(prev_task, run_color))
+                if previous_task:
+                    if tasksplit_start_tasks:
+                        previous_task.set_next_tasks([task] + tasksplit_start_tasks)
+                        tasksplit_start_tasks.clear()
+                    else:
+                        previous_task.set_next_tasks(task)
+
+                previous_task = task
+                
+        chain = Chain(start_task, run_color)
+        print(chain)
+        self.runs.append(Chain(start_task, run_color))
+
+

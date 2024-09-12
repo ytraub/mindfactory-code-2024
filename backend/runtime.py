@@ -8,6 +8,27 @@ class Chain:
 
     def get_start_task(self) -> any:
         return self.start_task
+    
+    def __str__(self) -> str:
+        tasks_str = self._traverse_tasks(self.start_task)
+        return f"Chain(run_color={self.run_color}, tasks=[{tasks_str}])"
+
+    def _traverse_tasks(self, task) -> str:
+        result = str(task)
+        next_tasks = task.get_next_tasks()
+
+        if isinstance(next_tasks, list):
+            result += " -> [Tasksplit"
+            for next_task in next_tasks:
+                result += " {"
+                result += f" -> {self._traverse_tasks(next_task)}"
+                result += " }"
+                
+            result += "]"
+        elif next_tasks:
+            result += f" -> {self._traverse_tasks(next_tasks)}"
+
+        return result
 
 
 class Runtime:
