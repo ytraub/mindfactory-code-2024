@@ -8,7 +8,7 @@ class Chain:
 
     def get_start_task(self) -> any:
         return self.start_task
-    
+
     def __str__(self) -> str:
         tasks_str = self._traverse_tasks(self.start_task)
         return f"Chain(run_color={self.run_color}, tasks=[{tasks_str}])"
@@ -23,7 +23,7 @@ class Chain:
                 result += " {"
                 result += f" -> {self._traverse_tasks(next_task)}"
                 result += " }"
-                
+
             result += "]"
         elif next_tasks:
             result += f" -> {self._traverse_tasks(next_tasks)}"
@@ -34,12 +34,23 @@ class Chain:
 class Runtime:
     def __init__(self) -> None:
         self.tasks = []
+        self.untriggered_events: list[str] = []
 
     def get_tasks(self) -> list[any]:
         return self.tasks
 
     def set_tasks(self, state: list[any]) -> None:
         self.tasks = state
+
+    def add_untriggered_events(self, event_name: str) -> None:
+        self.untriggered_events.append(event_name)
+
+    def trigger_event(self, event_name: str) -> None:
+        if self.check_untriggered_event(event_name):
+            self.untriggered_events.remove(event_name)
+
+    def check_untriggered_event(self, event_name: str) -> bool:
+        return event_name in self.untriggered_events
 
     def start(self, robot) -> None:
         while self.tasks:
@@ -52,7 +63,7 @@ class Runtime:
                 next_tasks = task.get_next_tasks()
                 if next_tasks:
                     self.add_tasks(next_tasks)
-                    
+
                 if len(self.tasks) == 1:
                     robot.end_run()
             else:

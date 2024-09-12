@@ -63,10 +63,9 @@ class Menu(Task):
             else:
                 self.controller.hub.light.on(Color.GREEN)
 
-
         if self.run_index == 0:
             self.controller.hub.display.char("#")
-        else:    
+        else:
             self.controller.hub.display.char(str(self.run_index))
 
         buttons = self.controller.get_buttons()
@@ -102,6 +101,7 @@ class Menu(Task):
         else:
             self.run_index -= 1
 
+
 class StartRunWithColor(Task):
     def __init__(self, robot, controller) -> None:
         super().__init__()
@@ -119,11 +119,39 @@ class StartRunWithColor(Task):
         if run_index == None:
             print(f"No run found for color: {str(module_color)}")
             return
-        
+
         self.robot.execute_run(run_index)
 
+
+class SetEvent(Task):
+    def __init__(self, robot, event_index: str) -> None:
+        super().__init__()
+        self.runtime = robot.runtime
+        self.event_index = event_index
+
+    def start(self) -> None:
+        self.runtime.add_untriggered_events(self.event_index)
+
+
+class TriggerEvent(Task):
+    def __init__(self, robot, event_index: str) -> None:
+        super().__init__()
+        self.runtime = robot.runtime
+        self.event_index = event_index
+
+    def start(self) -> None:
+        self.runtime.trigger_event(self.event_index)
+
+
+class WaitEvent(Task):
+    def __init__(self, robot, event_index: str) -> None:
+        super().__init__()
+        self.runtime = robot.runtime
+        self.event_index = event_index
+
     def check(self) -> bool:
-        return True
+        return not self.runtime.check_untriggered_event(self.event_index)
+
 
 class DriveForwardGyro(Task):
     def __init__(
@@ -817,7 +845,6 @@ class TurnRightOnSpot(Task):
     def stop(self) -> None:
         self.controller.brake_drive_left()
         self.controller.brake_drive_right()
-        
 
 
 class Tasks:
@@ -827,9 +854,18 @@ class Tasks:
 
     def menu(self) -> Menu:
         return Menu(self.robot, self.controller)
-    
+
     def start_run_with_color(self) -> StartRunWithColor:
         return StartRunWithColor(self.robot, self.controller)
+
+    def set_event(self, index: str) -> SetEvent:
+        return SetEvent(self.robot, event_index=index)
+
+    def trigger_event(self, index: str) -> TriggerEvent:
+        return TriggerEvent(self.robot, event_index=index)
+
+    def wait_event(self, index: str) -> WaitEvent:
+        return WaitEvent(self.robot, event_index=index)
 
     def drive_forward_gyro(
         self,
@@ -958,7 +994,7 @@ class Tasks:
 
     def module_left_cw(self, speed: int, distance: int) -> ModuleLeftCW:
         return ModuleLeftCW(self.controller, speed=speed, distance=distance)
-    
+
     def module_left_time_cw(
         self,
         speed: int,
@@ -988,7 +1024,7 @@ class Tasks:
 
     def module_left_ccw(self, speed: int, distance: int) -> ModuleLeftCCW:
         return ModuleLeftCCW(self.controller, speed=speed, distance=distance)
-    
+
     def module_left_time_ccw(
         self,
         speed: int,
@@ -1015,7 +1051,6 @@ class Tasks:
             speed=speed,
             time=time,
         )
-
 
     def turn_left(
         self,
