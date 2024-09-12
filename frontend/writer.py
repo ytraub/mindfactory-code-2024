@@ -12,23 +12,8 @@ class Writer:
     def class_definition(self, name: str, fields: list[str]) -> str:
         return f"class {name}:\n\r\tdef __init__(self):\n\r\t\t{"\n\r\t\t".join(fields)}"
     
-    def create_chain(self, blocks: list[list[str]], tasksplits: list[int]) -> str:
-        buffer = []
-
-        print(blocks)
-
-        for i, block in enumerate(blocks):
-            if i in tasksplits:
-                sequence = 0
-                while i + sequence in tasksplits:
-                    sequence += 1
-
-
-            else:
-                buffer.append(block)
-        
-            
-        return f"\r\tdef create_chain(self, robot):\n\r\t\trobot.chain([{"\n\r\t\t".join(buffer)}], self.run_color)"
+    def create_chain(self, blocks: list[list[str]], tasksplits: list[int]) -> str:  
+        return f"\r\tdef create_chain(self, robot):\n\r\t\trobot.chain([], self.run_color)"
 
     def write_buffer(self, buffer: str) -> None:
         self.buffer = f"{self.buffer}{buffer}"
