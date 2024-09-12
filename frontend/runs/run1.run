@@ -3,7 +3,12 @@ color BLUE
 drive_backward(distance=100 speed=100)
 
 tasksplit {
-    module_left_cw(distance=500 speed=100)
+    module_left_cw(distance=20000 speed=100)
+}
+
+tasksplit {
+    module_right_cw(distance=20000 speed=100)
 }
 
 drive_forward(distance=1000 speed=100 accel_distance=0)
+turn_left(angle=90 speed=50)

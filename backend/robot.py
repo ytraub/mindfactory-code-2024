@@ -36,7 +36,7 @@ class Robot:
         self.set_loading(True)
         self.runs.clear()
 
-        #self.chain([self.tasks.start_run_with_color()], "")
+        self.chain([self.tasks.start_run_with_color()], "")
 
         from runs import __runs__
 
@@ -90,7 +90,7 @@ class Robot:
             if isinstance(task, list):
                 tasksplit_start_task: Task | None = None
                 tasksplit_previous_task: Task | None = None
-                
+
                 for tasksplit_task in task:
                     if not tasksplit_start_task:
                         tasksplit_start_task = tasksplit_task
@@ -113,9 +113,5 @@ class Robot:
                         previous_task.set_next_tasks(task)
 
                 previous_task = task
-                
-        chain = Chain(start_task, run_color)
-        print(chain)
+
         self.runs.append(Chain(start_task, run_color))
-
-

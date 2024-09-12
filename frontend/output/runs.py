@@ -6,8 +6,10 @@
 		self.run_color = 'BLUE'
 	def create_chain(self, robot):
 		robot.chain([robot.tasks.drive_backward(distance=100,speed=100,),
-		[robot.tasks.module_left_cw(distance=500,speed=100,)],
-		robot.tasks.drive_forward(distance=1000,speed=100,accel_distance=0,),], self.run_color)
+		[robot.tasks.module_left_cw(distance=20000,speed=100,)],
+		[robot.tasks.module_right_cw(distance=20000,speed=100,)],
+		robot.tasks.drive_forward(distance=1000,speed=100,accel_distance=0,),
+		robot.tasks.turn_left(angle=90,speed=50,),], self.run_color)
 class Run2:
 	def __init__(self):
 		self.run_name = 'run2'
