@@ -14,10 +14,14 @@ class Writer:
     
     def create_chain(self, blocks: list[list[str]], tasksplits: list[int]) -> str:
         buffer = []
-        for block in blocks:
-            buffer.append(f"[{",".join(block)}],")
+        for i, block in enumerate(blocks):
+            if i in tasksplits:
+                buffer.append(f"[{",".join(block)}],")
+            else:
+                for task in block:
+                    buffer.append(task + ",")
          
-        return f"\r\tdef create_chain(self, robot):\n\r\t\trobot.chain([{"\n\r\t\t".join(buffer)}], {str(tasksplits)}, self.run_color)"
+        return f"\r\tdef create_chain(self, robot):\n\r\t\trobot.chain([{"\n\r\t\t".join(buffer)}], self.run_color)"
 
     def class_exports(self, names: list[str]) -> str:
         buffer = []
