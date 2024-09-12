@@ -17,4 +17,5 @@
 		[robot.tasks.module_left_cw(distance=1,speed=20,)],
 		[robot.tasks.module_left_cw(distance=1,speed=20,),robot.tasks.module_left_cw(distance=1,speed=20,)],
 		[robot.tasks.module_left_cw(distance=3,speed=20,),robot.tasks.module_left_cw(distance=3,speed=20,)],], [1, 2], self.run_color)
+__runs__ = [Run1(),Run2()]
 

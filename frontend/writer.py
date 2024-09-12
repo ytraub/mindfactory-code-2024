@@ -19,6 +19,13 @@ class Writer:
          
         return f"\r\tdef create_chain(self, robot):\n\r\t\trobot.chain([{"\n\r\t\t".join(buffer)}], {str(tasksplits)}, self.run_color)"
 
+    def class_exports(self, names: list[str]) -> str:
+        buffer = []
+        for name in names:
+            buffer.append(f"{name}()")
+        
+        return f"__runs__ = [{",".join(buffer)}]"
+
     def write_buffer(self, buffer: str) -> None:
         self.buffer = f"{self.buffer}{buffer}"
 
@@ -26,10 +33,15 @@ class Writer:
         self.buffer = f"{self.buffer}{buffer}\n\r"
 
     def write(self, runs: list[Run]) -> str:
+        run_names = []
         self.write_line_buffer(self.header())
         
         for run in runs:
+            run_names.append(run.get_run_name())
+            
             self.write_line_buffer(self.class_definition(run.get_run_name(), run.get_fields()))
             self.write_line_buffer(self.create_chain(run.get_blocks(), run.get_tasksplits()))
+            
+        self.write_line_buffer(self.class_exports(run_names))
 
         return self.buffer
