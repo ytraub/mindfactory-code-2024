@@ -53,6 +53,7 @@ class Menu(Task):
         self.controller = controller
 
         self.run_index = 0
+        print(robot.controller.hub.battery.voltage())
 
     def check(self) -> bool:
         if not self.controller.hub.imu.ready() or self.robot.get_loading():
@@ -846,6 +847,25 @@ class TurnRightOnSpot(Task):
         self.controller.brake_drive_left()
         self.controller.brake_drive_right()
 
+class WaitMs(Task):
+    def __init__(
+        self,
+        controller,
+        time: int,
+    ) -> None:
+        super().__init__()
+        self.controller = controller
+
+        self.time = abs(time)
+
+        self.timer = self.controller.create_timer()
+
+    def start(self) -> None:
+        self.timer.start()
+
+    def check(self) -> bool:
+        return self.timer.finished(self.time)
+
 
 class Tasks:
     def __init__(self, robot, controller) -> None:
@@ -1142,4 +1162,13 @@ class Tasks:
             start_speed=start_speed,
             accel_distance=accel_distance,
             deaccel_distance=deaccel_distance,
+        )
+
+    def wait_ms(
+        self,
+        time: int,
+    ) -> WaitMs:
+        return WaitMs(
+            self.controller,
+            time=time,
         )
