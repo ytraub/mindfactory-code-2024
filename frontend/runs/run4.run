@@ -1,0 +1,21 @@
+color YELLOW
+
+set_event(index=1)
+tasksplit{
+    module_right_ccw(distance=200 speed=30)
+}
+
+drive_forward_gyro(distance=400 speed=30)
+turn_right(angle=90 speed=30)
+drive_forward_gyro(distance=580 speed=40)
+turn_left(angle=50 speed=30)
+drive_forward_gyro(distance=200 speed=20)
+set_event(index=2)
+tasksplit{
+    module_right_cw(distance=1200 speed=100)
+    trigger_event(index=2)
+}
+drive_forward_gyro(distance=80 speed=20)
+drive_forward_time_gyro(time=400 speed=20)
+drive_backward(distance=30 speed=30)
+wait_event(index=2)

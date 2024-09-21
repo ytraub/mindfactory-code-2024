@@ -13,7 +13,7 @@ tasksplit {
 
 drive_forward_gyro(distance=800 speed=40)
 drive_forward_time_gyro(time=200 speed=20)
-wait_event(index=1)
+wait_event (index=1)
 wait_ms(time=200)
 
 set_event (index=2)
@@ -30,14 +30,43 @@ turn_right_on_spot(angle=45 speed=10)
 set_event (index=3)
 tasksplit {
     module_left_cw(distance=500 speed=60)
-    wait_ms(time=200)
-    module_left_cw(distance=1350 speed=100)
+    wait_ms(time=400)
+    module_left_cw(distance=1300 speed=100)
     trigger_event (index=3)
 }
 
-drive_forward_gyro(distance=630 speed=50)
-drive_forward_gyro(distance=80 speed=10)
+drive_forward_gyro(distance=600 speed=50)
+drive_forward_gyro(distance=100 speed=10)
 wait_event(index=3)
-// tasksplit {}
-// module_left_ccw(distance=300 speed=80)
-// drive_forward_gyro(distance=100 speed=10)
+
+module_left_ccw(distance=400 speed=100)
+drive_forward_gyro(distance=50 speed=10)
+wait_ms (time=200)
+
+set_event (index=4)
+tasksplit {
+    module_left_ccw(distance=850 speed=100)
+    trigger_event (index=4)
+}
+turn_left(angle=90 speed=20)
+
+set_event (index=5)
+tasksplit {
+    wait_ms(time=100)
+    module_left_cw(distance=100 speed=80)
+    wait_ms(time=2000)
+    module_left_ccw(distance=500 speed=80)
+    trigger_event (index=5)
+}
+drive_forward_gyro(distance=450 speed=50)
+turn_right(angle=20 speed=15)
+drive_forward_gyro(distance=250 speed=30)
+turn_left(angle=20 speed=15)
+drive_forward_gyro(distance=250 speed=30)
+wait_event (index=5)
+
+module_right_ccw(distance=1500 speed=100)
+
+drive_forward_gyro(distance=500 speed=30)
+
+module_right_cw(distance=1500 speed=100)

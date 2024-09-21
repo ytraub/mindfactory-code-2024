@@ -19,6 +19,10 @@ DEFAULT_KP = 1
 DEFAULT_KI = 0.002
 DEFAULT_KD = 0.1
 
+# before alex and casi changes
+# DEFAULT_KP = 1
+# DEFAULT_KI = 0.002
+# DEFAULT_KD = 0.1
 
 ## Helper function for accel/deaccel
 # Adjust as needed
@@ -113,9 +117,12 @@ class StartRunWithColor(Task):
         module_color = self.controller.get_run_color()
         run_index = None
 
-        for i in range(len(self.robot.runs) - 1):
-            if self.robot.runs[i].run_color == str(module_color):
-                run_index = i
+        for i, run in enumerate(self.robot.runs):
+            if not str(run.run_color) == str(module_color):
+                continue
+
+            run_index = i
+            break
 
         if run_index == None:
             print(f"No run found for color: {str(module_color)}")

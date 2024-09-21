@@ -7,7 +7,7 @@ KEYWORDS = [
     "color",
 ]
 
-COLORS = ["RED", "YELLOW", "GREEN", "BLUE"]
+COLORS = ["RED", "YELLOW", "GREEN", "BLUE", "WHITE"]
 
 
 class TokenType(Enum):

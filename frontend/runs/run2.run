@@ -1,3 +1,5 @@
 color RED
 
-module_left_ccw(distance=500 speed=50)
+drive_forward_gyro(distance=2000 speed=80)
+drive_forward_gyro(distance=1000 speed=30)
+drive_backward(distance=2500 speed=50)
