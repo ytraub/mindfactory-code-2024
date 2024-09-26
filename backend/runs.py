@@ -45,9 +45,15 @@
 		self.run_name = 'run2'
 		self.run_color = 'Color.RED'
 	def create_chain(self, robot):
-		robot.chain([robot.tasks.drive_forward_gyro(distance=2000,speed=80,),
-		robot.tasks.drive_forward_gyro(distance=1000,speed=30,),
-		robot.tasks.drive_backward(distance=2500,speed=50,),], self.run_color)
+		robot.chain([robot.tasks.drive_forward_gyro(distance=1000,speed=40,),
+		robot.tasks.drive_forward_time_gyro(time=120,speed=40,),
+		robot.tasks.wait_ms(time=100,),
+		robot.tasks.module_left_ccw(distance=140,speed=20,),
+		robot.tasks.wait_ms(time=100,),
+		robot.tasks.module_left_cw(distance=120,speed=10,),
+		robot.tasks.drive_backward_gyro(distance=40,speed=20,),
+		robot.tasks.module_right_ccw(distance=140,speed=20,),
+		robot.tasks.drive_backward_gyro(distance=1000,speed=60,),], self.run_color)
 class Run4:
 	def __init__(self):
 		self.run_name = 'run4'

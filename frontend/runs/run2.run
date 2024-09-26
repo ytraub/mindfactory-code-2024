@@ -1,5 +1,13 @@
 color RED
 
-drive_forward_gyro(distance=2000 speed=80)
-drive_forward_gyro(distance=1000 speed=30)
-drive_backward(distance=2500 speed=50)
+drive_forward_gyro(distance=1000 speed=40)
+drive_forward_time_gyro(time=120 speed=40)
+
+wait_ms(time=100)
+module_left_ccw(distance=140 speed=20)
+wait_ms(time=100)
+module_left_cw(distance=120 speed=10)
+
+drive_backward_gyro(distance=40 speed=20)
+module_right_ccw(distance=140 speed=20)
+drive_backward_gyro(distance=1000 speed=60)
