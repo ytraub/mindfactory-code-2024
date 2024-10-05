@@ -1,21 +1,16 @@
 color YELLOW
 
-set_event(index=1)
-tasksplit{
-    module_right_ccw(distance=200 speed=30)
-}
+drive_forward_gyro(distance=1040 speed=60)
+turn_left(angle=48 speed=30)
+drive_forward_gyro(distance=120 speed=20)
+module_right_cw(distance=1100 speed=100)
+wait_ms(time=200)
+module_right_ccw(distance=800 speed=60)
+drive_forward_gyro(distance=60 speed=20)
+module_right_cw(distance=800 speed=60)
+module_left_ccw(distance=850 speed=60)
+module_right_ccw(distance=800 speed=60)
 
-drive_forward_gyro(distance=400 speed=30)
-turn_right(angle=90 speed=30)
-drive_forward_gyro(distance=580 speed=40)
-turn_left(angle=50 speed=30)
-drive_forward_gyro(distance=200 speed=20)
-set_event(index=2)
-tasksplit{
-    module_right_cw(distance=1200 speed=100)
-    trigger_event(index=2)
-}
-drive_forward_gyro(distance=80 speed=20)
-drive_forward_time_gyro(time=400 speed=20)
-drive_backward(distance=30 speed=30)
-wait_event(index=2)
+drive_backward_gyro(distance=120 speed=20)
+turn_right_on_spot(angle=35 speed=30)
+drive_backward_gyro(distance=1200 speed=80)

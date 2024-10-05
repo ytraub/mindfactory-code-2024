@@ -26,7 +26,7 @@ drive_backward(distance=420 speed=30)
 wait_event(index=2)
 turn_right_on_spot(angle=45 speed=10)
 
-
+// Drive to probe
 set_event (index=3)
 tasksplit {
     module_left_cw(distance=500 speed=60)
@@ -39,34 +39,68 @@ drive_forward_gyro(distance=600 speed=50)
 drive_forward_gyro(distance=100 speed=10)
 wait_event(index=3)
 
+// Get probe
 module_left_ccw(distance=400 speed=100)
 drive_forward_gyro(distance=50 speed=10)
 wait_ms (time=200)
 
-set_event (index=4)
 tasksplit {
-    module_left_ccw(distance=850 speed=100)
-    trigger_event (index=4)
+    module_left_ccw(distance=1400 speed=100)
 }
+
+// Turn to side of red base
 turn_left(angle=90 speed=20)
+module_left_cw(distance=500 speed=100)
 
 set_event (index=5)
 tasksplit {
     wait_ms(time=100)
     module_left_cw(distance=100 speed=80)
     wait_ms(time=2000)
-    module_left_ccw(distance=500 speed=80)
+    module_left_ccw(distance=550 speed=80)
     trigger_event (index=5)
 }
+
+// Adjust path by slight right curve
 drive_forward_gyro(distance=450 speed=50)
 turn_right(angle=20 speed=15)
 drive_forward_gyro(distance=250 speed=30)
 turn_left(angle=20 speed=15)
 drive_forward_gyro(distance=250 speed=30)
+
 wait_event (index=5)
 
+// Do anglerfisch and probe nr. 2
 module_right_ccw(distance=1500 speed=100)
+drive_forward_gyro(distance=90 speed=30)
+module_left_cw(distance=400 speed=100)
 
-drive_forward_gyro(distance=500 speed=30)
+tasksplit {
+    module_left_cw(distance=300 speed=80)
+}
 
-module_right_cw(distance=1500 speed=100)
+drive_forward_gyro(distance=480 speed=30)
+
+set_event (index=6)
+tasksplit {
+    module_right_cw(distance=1500 speed=100)
+    trigger_event (index=6)
+}
+
+module_left_ccw(distance=260 speed=100)
+wait_event (index=6)
+
+// Drive in direction of base
+turn_left(angle=10 speed=30)
+wait_ms(time=200)
+
+drive_forward_gyro(distance=250 speed=30)
+turn_left(angle=10 speed=30)
+wait_ms(time=200)
+
+drive_forward_gyro(distance=140 speed=30)
+turn_left(angle=30 speed=30)
+wait_ms(time=200)
+
+
+drive_forward_gyro(distance=900 speed=60)
