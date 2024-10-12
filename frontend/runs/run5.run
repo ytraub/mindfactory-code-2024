@@ -1,0 +1,3 @@
+color BLACK
+
+drive_forward_gyro(speed=60 distance=1000)

@@ -87,6 +87,12 @@
 		robot.tasks.drive_backward_gyro(distance=120,speed=20,),
 		robot.tasks.turn_right_on_spot(angle=35,speed=30,),
 		robot.tasks.drive_backward_gyro(distance=1200,speed=80,),], self.run_color)
+class Run5:
+	def __init__(self):
+		self.run_name = 'run5'
+		self.run_color = 'Color.BLACK'
+	def create_chain(self, robot):
+		robot.chain([robot.tasks.drive_forward_gyro(speed=60,distance=1000,),], self.run_color)
 class Run7:
 	def __init__(self):
 		self.run_name = 'run7'
@@ -101,5 +107,5 @@
 		robot.tasks.drive_forward_gyro(distance=850,speed=50,),
 		[robot.tasks.module_right_cw(distance=600,speed=30,)],
 		robot.tasks.module_left_cw(distance=80,speed=30,),], self.run_color)
-__runs__ = [Run1(),Run2(),Run4(),Run7()]
+__runs__ = [Run1(),Run2(),Run4(),Run5(),Run7()]
 
