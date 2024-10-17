@@ -1,0 +1,4 @@
+color B
+
+wait_global_timer(index=0 time=10000)
+drive_forward(speed=20 distance=500)

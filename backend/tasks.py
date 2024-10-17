@@ -25,10 +25,16 @@ DEFAULT_KD = 0.1
 # DEFAULT_KD = 0.1
 
 
-## Helper function for accel/deaccel
+## Helpers
+# Error printing
+def print_runtime_error(*args) -> None:
+    print("[RUNTIME ERROR]: ", args)
+
+# Helper function for accel/deaccel
 # Adjust as needed
 def f(x):
     return sqrt(abs(x))
+
 
 
 class Task:
@@ -908,10 +914,30 @@ class WaitGlobalTimer(Task):
 
         self.time = time
 
-        self.timer = self.robot.timers[str(index)]
+        if self.robot.timers.get(str(index)):
+            self.timer = self.robot.timers[str(index)]
+        else:
+            print("[RUNTIME ERROR]: ")
 
     def check(self) -> None:
-        return self.timer.reached(self.time)
+        if self.timer:
+            return self.timer.reached(self.time)
+    
+class StopGlobalTimer(Task):
+    def __init__(
+        self,
+        robot,
+        index: int,
+    ) -> None:
+        super().__init__()
+        self.robot = robot
+
+        if self.robot.timers.get(str(index)):
+            self.robot.timers[str(index)].stop()
+            del self.robot.timers[str(index)]
+
+    def check(self) -> None:
+        return True
 
 
 class Tasks:

@@ -6,14 +6,14 @@ class Timer:
         self.stop_watch = StopWatch()
         self.last_tick = None
 
-    def start(self):
+    def start(self) -> None:
         self.last_tick = self.stop_watch.time()
+        
+    def stop(self) -> None:
+        self.stop_watch.pause()
 
     def reached(self, time: int) -> bool:
-        now = self.stop_watch.time()
-        diff = abs(self.last_tick - now)
-        
-        return diff >= time
+        return self.stop_watch.time() >= time
 
     def finished(self, duration: int) -> bool:
         now = self.stop_watch.time()
