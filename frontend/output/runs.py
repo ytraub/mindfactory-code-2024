@@ -12,6 +12,7 @@
 		self.run_color = 'Color.B'
 	def create_chain(self, robot):
 		robot.chain([robot.tasks.wait_global_timer(index=0,time=10000,),
+		robot.tasks.stop_global_timer(index=0,),
 		robot.tasks.drive_forward(speed=20,distance=500,),], self.run_color)
 class Run1:
 	def __init__(self):

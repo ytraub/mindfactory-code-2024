@@ -11,8 +11,10 @@ class Timer:
         
     def stop(self) -> None:
         self.stop_watch.pause()
+        pass
 
     def reached(self, time: int) -> bool:
+        print(self.stop_watch.time())
         return self.stop_watch.time() >= time
 
     def finished(self, duration: int) -> bool:

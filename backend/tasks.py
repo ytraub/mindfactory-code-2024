@@ -28,13 +28,13 @@ DEFAULT_KD = 0.1
 ## Helpers
 # Error printing
 def print_runtime_error(*args) -> None:
-    print("[RUNTIME ERROR]: ", args)
+    print("[RUNTIME ERROR]: ", *args)
+
 
 # Helper function for accel/deaccel
 # Adjust as needed
 def f(x):
     return sqrt(abs(x))
-
 
 
 class Task:
@@ -892,11 +892,14 @@ class CreateGlobalTimer(Task):
         super().__init__()
         self.controller = controller
         self.robot = robot
+        
+        self.index = index
 
+    def start(self) -> None:
         timer = self.controller.create_timer()
         timer.start()
-
-        self.robot.timers[str(index)] = timer
+        
+        self.robot.timers[str(self.index)] = timer
 
     def check(self) -> None:
         return True
@@ -912,19 +915,24 @@ class WaitGlobalTimer(Task):
         super().__init__()
         self.robot = robot
 
+        self.index = index
         self.time = time
-
-        if self.robot.timers.get(str(index)):
-            self.timer = self.robot.timers[str(index)]
+        self.timer = None
+            
+    def start(self) -> None:
+        if self.robot.timers.get(str(self.index)):
+            self.timer = self.robot.timers[str(self.index)]
         else:
-            print_runtime_error(f"No timer with index: {index} found")
+            self.timer = None
+            print_runtime_error(f"No timer with index: {self.index} found")
 
     def check(self) -> None:
         if self.timer:
             return self.timer.reached(self.time)
-        
+
         return False
-    
+
+
 class StopGlobalTimer(Task):
     def __init__(
         self,
@@ -933,12 +941,14 @@ class StopGlobalTimer(Task):
     ) -> None:
         super().__init__()
         self.robot = robot
+        self.index = index
 
-        if self.robot.timers.get(str(index)):
-            self.robot.timers[str(index)].stop()
-            del self.robot.timers[str(index)]
+    def start(self) -> None:
+        if self.robot.timers.get(str(self.index)):
+            self.robot.timers[str(self.index)].stop()
+            self.robot.timers[str(self.index)] = None
         else:
-            print_runtime_error(f"No timer with index: {index} found")
+            print_runtime_error(f"No timer with index: {self.index} found")
 
     def check(self) -> None:
         return True
@@ -1255,3 +1265,6 @@ class Tasks:
 
     def wait_global_timer(self, index: int, time: int) -> WaitGlobalTimer:
         return WaitGlobalTimer(self.robot, index=index, time=time)
+
+    def stop_global_timer(self, index: int) -> StopGlobalTimer:
+        return StopGlobalTimer(self.robot, index=index)
