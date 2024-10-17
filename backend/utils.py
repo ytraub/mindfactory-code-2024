@@ -9,6 +9,12 @@ class Timer:
     def start(self):
         self.last_tick = self.stop_watch.time()
 
+    def reached(self, time: int) -> bool:
+        now = self.stop_watch.time()
+        diff = abs(self.last_tick - now)
+        
+        return diff >= time
+
     def finished(self, duration: int) -> bool:
         now = self.stop_watch.time()
         diff = abs(self.last_tick - now)

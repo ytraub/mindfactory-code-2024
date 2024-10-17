@@ -24,6 +24,7 @@ DEFAULT_KD = 0.1
 # DEFAULT_KI = 0.002
 # DEFAULT_KD = 0.1
 
+
 ## Helper function for accel/deaccel
 # Adjust as needed
 def f(x):
@@ -854,6 +855,7 @@ class TurnRightOnSpot(Task):
         self.controller.brake_drive_left()
         self.controller.brake_drive_right()
 
+
 class WaitMs(Task):
     def __init__(
         self,
@@ -872,6 +874,44 @@ class WaitMs(Task):
 
     def check(self) -> bool:
         return self.timer.finished(self.time)
+
+
+class CreateGlobalTimer(Task):
+    def __init__(
+        self,
+        robot,
+        controller,
+        index: int,
+    ) -> None:
+        super().__init__()
+        self.controller = controller
+        self.robot = robot
+
+        timer = self.controller.create_timer()
+        timer.start()
+
+        self.robot.timers[str(index)] = timer
+
+    def check(self) -> None:
+        return True
+
+
+class WaitGlobalTimer(Task):
+    def __init__(
+        self,
+        robot,
+        index: int,
+        time: int,
+    ) -> None:
+        super().__init__()
+        self.robot = robot
+
+        self.time = time
+
+        self.timer = self.robot.timers[str(index)]
+
+    def check(self) -> None:
+        return self.timer.reached(self.time)
 
 
 class Tasks:
@@ -1179,3 +1219,9 @@ class Tasks:
             self.controller,
             time=time,
         )
+
+    def create_global_timer(self, index: int) -> CreateGlobalTimer:
+        return CreateGlobalTimer(self.robot, self.controller, index=index)
+
+    def wait_global_timer(self, index: int, time: int) -> WaitGlobalTimer:
+        return WaitGlobalTimer(self.robot, index=index, time=time)

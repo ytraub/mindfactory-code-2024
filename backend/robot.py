@@ -15,6 +15,7 @@ class Robot:
         self.loading = False
 
         self.runs = []
+        self.timers = {}
 
     def get_running(self) -> bool:
         return self.running
