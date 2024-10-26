@@ -1,19 +1,5 @@
 """This is a generated file. Don't change anything manually."""
 
-class A:
-	def __init__(self):
-		self.run_name = 'a'
-		self.run_color = 'Color.A'
-	def create_chain(self, robot):
-		robot.chain([robot.tasks.create_global_timer(index=0,),], self.run_color)
-class B:
-	def __init__(self):
-		self.run_name = 'b'
-		self.run_color = 'Color.B'
-	def create_chain(self, robot):
-		robot.chain([robot.tasks.wait_global_timer(index=0,time=10000,),
-		robot.tasks.stop_global_timer(index=0,),
-		robot.tasks.drive_forward(speed=20,distance=500,),], self.run_color)
 class Run1:
 	def __init__(self):
 		self.run_name = 'run1'
@@ -107,6 +93,12 @@
 		self.run_color = 'Color.BLACK'
 	def create_chain(self, robot):
 		robot.chain([robot.tasks.drive_forward_gyro(speed=60,distance=1000,),], self.run_color)
+class Run6:
+	def __init__(self):
+		self.run_name = 'run6'
+		self.run_color = 'Color.MAGENTA'
+	def create_chain(self, robot):
+		robot.chain([robot.tasks.module_left_ccw(distance=500,speed=30,),], self.run_color)
 class Run7:
 	def __init__(self):
 		self.run_name = 'run7'
@@ -121,5 +113,5 @@
 		robot.tasks.drive_forward_gyro(distance=850,speed=50,),
 		[robot.tasks.module_right_cw(distance=600,speed=30,)],
 		robot.tasks.module_left_cw(distance=80,speed=30,),], self.run_color)
-__runs__ = [A(),B(),Run1(),Run2(),Run4(),Run5(),Run7()]
+__runs__ = [Run1(),Run2(),Run4(),Run5(),Run6(),Run7()]
 
