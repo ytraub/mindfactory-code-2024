@@ -98,7 +98,7 @@
 		self.run_name = 'run6'
 		self.run_color = 'Color.MAGENTA'
 	def create_chain(self, robot):
-		robot.chain([robot.tasks.module_left_ccw(distance=500,speed=30,),], self.run_color)
+		robot.chain([robot.tasks.module_left_ccw(distance=200,speed=30,),], self.run_color)
 class Run7:
 	def __init__(self):
 		self.run_name = 'run7'
