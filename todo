@@ -1,2 +1,1 @@
-- make tasksplits tasksplits not multitasks
-- make interrupting runs work
+- fix tasksplit as first task in file

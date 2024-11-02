@@ -1,3 +1,15 @@
 color NONE
 
-drive_forward_gyro(speed=60 distance=1000)
+set_event (index=1)
+tasksplit {
+    module_left_cw(distance=2150 speed=100)
+    trigger_event (index=1)
+}
+
+drive_forward_gyro(distance=820 speed=40)
+wait_event (index=1)
+
+drive_forward_gyro(distance=1450 speed=40)
+
+wait_ms(time=5000)
+module_left_ccw(distance=2150 speed=100)
