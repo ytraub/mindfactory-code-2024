@@ -3,7 +3,7 @@ color MAGENTA
 drive_forward_gyro(distance=1610 speed=80)
 module_left_cw(distance=700 speed=100)
 
-drive_backward_gyro(distance=250 speed=50)
+drive_backward_gyro(distance=230 speed=50)
 turn_right_on_spot(angle=45 speed=10)
 drive_forward_gyro(distance=230 speed=50)
 drive_forward_gyro(distance=80 speed=10)
@@ -18,10 +18,10 @@ tasksplit {
     trigger_event (index=1)
 }
 
-drive_backward_gyro(distance=420 speed=50)
+drive_backward_gyro(distance=415 speed=50)
 turn_left_on_spot(angle=90 speed=15)
 
-drive_backward_gyro(distance=850 speed=50)
+drive_backward_gyro(distance=820 speed=50)
 module_right_ccw(distance=260 speed=60)
 
 
@@ -31,6 +31,8 @@ tasksplit {
     module_right_cw(distance=80 speed=40)
     trigger_event (index=2)
 }
-drive_forward_gyro(distance=120 speed=20)
+drive_forward_gyro(distance=30 speed=20)
 wait_event (index=2)
 module_right_cw(distance=450 speed=100)
+
+drive_backward_gyro(distance=500 speed=100)
