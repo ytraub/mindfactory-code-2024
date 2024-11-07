@@ -93,12 +93,16 @@
 		self.run_color = 'Color.NONE'
 	def create_chain(self, robot):
 		robot.chain([robot.tasks.set_event(index=1,),
-		[robot.tasks.module_left_cw(distance=2150,speed=100,),robot.tasks.trigger_event(index=1,)],
-		robot.tasks.drive_forward_gyro(distance=820,speed=40,),
+		[robot.tasks.module_left_cw(distance=900,speed=100,),robot.tasks.trigger_event(index=1,)],
+		robot.tasks.drive_forward_gyro(distance=990,speed=40,),
 		robot.tasks.wait_event(index=1,),
-		robot.tasks.drive_forward_gyro(distance=1450,speed=40,),
+		robot.tasks.module_left_cw(distance=1250,speed=100,),
+		robot.tasks.drive_forward_gyro(distance=1290,speed=30,),
+		robot.tasks.module_left_ccw(distance=1500,speed=100,),
+		robot.tasks.drive_backward_gyro(distance=230,speed=40,),
+		robot.tasks.module_right_ccw(distance=130,speed=50,),
 		robot.tasks.wait_ms(time=5000,),
-		robot.tasks.module_left_ccw(distance=2150,speed=100,),], self.run_color)
+		robot.tasks.module_left_ccw(distance=1000,speed=100,),], self.run_color)
 class Run6:
 	def __init__(self):
 		self.run_name = 'run6'
