@@ -1,0 +1,12 @@
+color WHITE
+
+set_event (index=1)
+tasksplit {
+    module_left_ccw(distance=600 speed=60)
+    wait_ms(time=2000)
+    module_left_cw(distance=600 speed=60)
+    trigger_event (index=1)
+}
+drive_backward(distance=300 speed=10)
+wait_event (index=1)
+drive_forward_gyro(distance=300 speed=30)
