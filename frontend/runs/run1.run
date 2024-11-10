@@ -1,5 +1,19 @@
 color BLUE
 
+set_event (index=1)
+tasksplit {
+    module_left_ccw(distance=400 speed=60)
+    wait_ms(time=500)
+    module_left_cw(distance=400 speed=60)
+    trigger_event (index=1)
+}
+drive_backward(distance=150 speed=10)
+wait_event (index=1)
+drive_backward(distance=80 speed=10)
+tasksplit {
+    module_left_ccw(distance=175 speed=60)
+}
+
 // Drive to unknown creature
 drive_forward_gyro(distance=130 speed=20)
 turn_left(angle=45 speed=30)
@@ -35,7 +49,7 @@ tasksplit {
     trigger_event (index=3)
 }
 
-drive_forward_gyro(distance=600 speed=50)
+drive_forward_gyro(distance=550 speed=50)
 drive_forward_gyro(distance=100 speed=10)
 wait_event(index=3)
 

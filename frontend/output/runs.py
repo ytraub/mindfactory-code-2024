@@ -5,7 +5,13 @@
 		self.run_name = 'run1'
 		self.run_color = 'Color.BLUE'
 	def create_chain(self, robot):
-		robot.chain([robot.tasks.drive_forward_gyro(distance=130,speed=20,),
+		robot.chain([robot.tasks.set_event(index=1,),
+		[robot.tasks.module_left_ccw(distance=400,speed=60,),robot.tasks.wait_ms(time=500,),robot.tasks.module_left_cw(distance=400,speed=60,),robot.tasks.trigger_event(index=1,)],
+		robot.tasks.drive_backward(distance=150,speed=10,),
+		robot.tasks.wait_event(index=1,),
+		robot.tasks.drive_backward(distance=80,speed=10,),
+		[robot.tasks.module_left_ccw(distance=175,speed=60,)],
+		robot.tasks.drive_forward_gyro(distance=130,speed=20,),
 		robot.tasks.turn_left(angle=45,speed=30,),
 		robot.tasks.set_event(index=1,),
 		[robot.tasks.wait_ms(time=1400,),robot.tasks.module_left_cw(distance=500,speed=90,),robot.tasks.trigger_event(index=1,)],
@@ -20,7 +26,7 @@
 		robot.tasks.turn_right_on_spot(angle=45,speed=10,),
 		robot.tasks.set_event(index=3,),
 		[robot.tasks.module_left_cw(distance=500,speed=60,),robot.tasks.wait_ms(time=400,),robot.tasks.module_left_cw(distance=1300,speed=100,),robot.tasks.trigger_event(index=3,)],
-		robot.tasks.drive_forward_gyro(distance=600,speed=50,),
+		robot.tasks.drive_forward_gyro(distance=550,speed=50,),
 		robot.tasks.drive_forward_gyro(distance=100,speed=10,),
 		robot.tasks.wait_event(index=3,),
 		robot.tasks.module_left_ccw(distance=400,speed=100,),
@@ -80,17 +86,17 @@
 		robot.tasks.turn_left(angle=7,speed=30,),
 		robot.tasks.module_right_cw(distance=110,speed=20,),
 		robot.tasks.drive_forward_time_gyro(time=2000,speed=20,),
-		robot.tasks.module_right_cw(distance=80,speed=50,),
+		robot.tasks.module_right_cw(distance=80,speed=60,),
 		robot.tasks.module_left_cw(distance=100,speed=20,),
 		robot.tasks.module_right_ccw(distance=80,speed=40,),
 		robot.tasks.drive_backward(distance=430,speed=40,),
 		robot.tasks.turn_right(angle=30,speed=20,),
 		robot.tasks.drive_backward(distance=200,speed=40,),
 		robot.tasks.turn_right_on_spot(angle=60,speed=30,),
-		robot.tasks.drive_forward_gyro(distance=400,speed=30,),
+		robot.tasks.drive_forward_gyro(distance=400,speed=20,),
 		robot.tasks.drive_backward(distance=350,speed=30,),
 		robot.tasks.turn_right_on_spot(angle=105,speed=20,),
-		robot.tasks.drive_forward_gyro(distance=600,speed=30,),], self.run_color)
+		robot.tasks.drive_forward_gyro(distance=600,speed=60,),], self.run_color)
 class Run4:
 	def __init__(self):
 		self.run_name = 'run4'
@@ -170,8 +176,11 @@
 		self.run_color = 'Color.WHITE'
 	def create_chain(self, robot):
 		robot.chain([robot.tasks.set_event(index=1,),
-		[robot.tasks.module_left_ccw(distance=600,speed=60,),robot.tasks.wait_ms(time=2000,),robot.tasks.module_left_cw(distance=600,speed=60,),robot.tasks.trigger_event(index=1,)],
-		robot.tasks.drive_backward(distance=300,speed=10,),
-		robot.tasks.wait_event(index=1,),], self.run_color)
+		[robot.tasks.module_left_ccw(distance=400,speed=60,),robot.tasks.wait_ms(time=500,),robot.tasks.module_left_cw(distance=400,speed=60,),robot.tasks.trigger_event(index=1,)],
+		robot.tasks.drive_backward(distance=150,speed=10,),
+		robot.tasks.wait_event(index=1,),
+		robot.tasks.drive_backward(distance=80,speed=10,),
+		[robot.tasks.module_left_ccw(distance=175,speed=60,)],
+		robot.tasks.drive_forward_gyro(distance=300,speed=30,),], self.run_color)
 __runs__ = [Run1(),Run2(),Run3(),Run4(),Run5(),Run6(),Run7(),Run8()]
 
