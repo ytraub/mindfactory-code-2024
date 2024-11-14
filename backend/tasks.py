@@ -57,6 +57,343 @@ class Task:
         return self.next_tasks
 
 
+class Drive(Task):
+    def __init__(
+        self,
+        controller,
+        forward: bool,
+        speed: int,
+        distance: int,
+        start_speed: int,
+        accel_distance: int,
+        deaccel_distance: int,
+    ) -> None:
+        super().__init__()
+        self.controller = controller
+        self.forward = forward
+
+        self.distance = abs(distance)
+        self.max_speed = abs(speed)
+        self.start_speed = abs(start_speed)
+        self.accel_distance = abs(accel_distance)
+        self.deaccel_distance = abs(deaccel_distance)
+
+        self.speed = self.start_speed
+        self.current_distance = 0
+
+        self.integral = 0
+        self.derivative = 0
+        self.error = 0
+        self.last_error = 0
+
+    def start(self) -> None:
+        self.controller.reset_drive(0)
+        self.controller.reset_gyro()
+
+    def check(self) -> bool:
+        self.current_distance = abs(self.controller.angle_drive_left())
+
+        if self.current_distance < self.accel_distance:
+            c = (self.max_speed - self.start_speed) / f(self.accel_distance)
+            self.speed = c * f(self.current_distance) + self.start_speed
+        elif self.current_distance < self.distance - self.deaccel_distance:
+            self.speed = self.max_speed
+        else:
+            c = (self.max_speed - self.start_speed) / f(self.deaccel_distance)
+            self.speed = c * f(self.distance - self.current_distance) + self.start_speed
+
+        if self.forward:
+            self.controller.run_drive_left(self.speed)
+            self.controller.run_drive_right(self.speed)
+        else:
+            self.controller.run_drive_left(-self.speed)
+            self.controller.run_drive_right(-self.speed)
+
+        self.last_error = self.error
+        return self.current_distance >= self.distance
+
+    def stop(self) -> None:
+        self.controller.brake_drive()
+
+
+class DriveGyro(Task):
+    def __init__(
+        self,
+        controller,
+        forward: bool,
+        speed: int,
+        distance: int,
+        start_speed: int,
+        accel_distance: int,
+        deaccel_distance: int,
+        kp: int,
+        ki: int,
+        kd: int,
+        gyro_target: int,
+    ) -> None:
+        super().__init__()
+        self.controller = controller
+
+        self.forward = forward
+
+        self.distance = abs(distance)
+        self.max_speed = abs(speed)
+        self.start_speed = abs(start_speed)
+        self.accel_distance = abs(accel_distance)
+        self.deaccel_distance = abs(deaccel_distance)
+        self.target = abs(gyro_target)
+
+        self.kp = abs(kp)
+        self.ki = abs(ki)
+        self.kd = abs(kd)
+
+        self.speed = self.start_speed
+        self.current_distance = 0
+
+        self.integral = 0
+        self.derivative = 0
+        self.error = 0
+        self.last_error = 0
+
+    def start(self) -> None:
+        self.controller.reset_drive(0)
+        self.controller.reset_gyro()
+
+    def check(self) -> bool:
+        self.current_distance = abs(self.controller.angle_drive_left())
+
+        if self.current_distance < self.accel_distance:
+            c = (self.max_speed - self.start_speed) / f(self.accel_distance)
+            self.speed = c * f(self.current_distance) + self.start_speed
+        elif self.current_distance < self.distance - self.deaccel_distance:
+            self.speed = self.max_speed
+        else:
+            c = (self.max_speed - self.start_speed) / f(self.deaccel_distance)
+            self.speed = c * f(self.distance - self.current_distance) + self.start_speed
+
+        self.error = self.target - self.controller.get_gyro_angle()
+        self.integral = self.integral + self.error
+        self.derivative = self.error - self.last_error
+
+        correction = (
+            (self.kp * self.error)
+            + (self.ki * self.integral)
+            + (self.kd * self.derivative)
+        )
+
+        if self.forward:
+            self.controller.run_drive_left(self.speed + correction)
+            self.controller.run_drive_right(self.speed - correction)
+        else:
+            self.controller.run_drive_left(-(self.speed - correction))
+            self.controller.run_drive_right(-(self.speed + correction))
+
+        self.last_error = self.error
+        return self.current_distance >= self.distance
+
+    def stop(self) -> None:
+        self.controller.brake_drive()
+
+
+class DriveTimeGyro(Task):
+    def __init__(
+        self,
+        controller,
+        forward: bool,
+        speed: int,
+        time: int,
+        kp: int,
+        ki: int,
+        kd: int,
+        gyro_target: int,
+    ) -> None:
+        super().__init__()
+        self.controller = controller
+        self.forward = forward
+
+        self.time = abs(time)
+        self.speed = abs(speed)
+        self.target = abs(gyro_target)
+
+        self.kp = abs(kp)
+        self.ki = abs(ki)
+        self.kd = abs(kd)
+
+        self.integral = 0
+        self.derivative = 0
+        self.error = 0
+        self.last_error = 0
+
+        self.timer = self.controller.create_timer()
+
+    def start(self) -> None:
+        self.controller.reset_gyro()
+        self.timer.start()
+
+    def check(self) -> bool:
+        self.error = self.target - self.controller.get_gyro_angle()
+        self.integral = self.integral + self.error
+        self.derivative = self.error - self.last_error
+
+        correction = (
+            (self.kp * self.error)
+            + (self.ki * self.integral)
+            + (self.kd * self.derivative)
+        )
+
+        if self.forward:
+            self.controller.run_drive_left(self.speed + correction)
+            self.controller.run_drive_right(self.speed - correction)
+        else:
+            self.controller.run_drive_left(-(self.speed - correction))
+            self.controller.run_drive_right(-(self.speed + correction))
+
+        self.last_error = self.error
+        return self.timer.finished(self.time)
+
+    def stop(self) -> None:
+        self.controller.brake_drive()
+
+
+class Module(Task):
+    def __init__(
+        self, controller, left: bool, cw: bool, speed: int, distance: int
+    ) -> None:
+        super().__init__()
+        self.controller = controller
+        self.left = left
+        self.cw = cw
+
+        self.distance = abs(distance)
+        if cw:
+            self.speed = abs(speed)
+        else:
+            self.speed = -abs(speed)
+
+    def start(self) -> None:
+        self.controller.reset_module_left(0)
+
+    def check(self) -> bool:
+        if self.left:
+            self.controller.run_module_left(self.speed)
+            return abs(self.controller.angle_module_left()) >= self.distance
+        else:
+            self.controller.run_module_right(self.speed)
+            return abs(self.controller.angle_module_right()) >= self.distance
+
+    def stop(self) -> None:
+        self.controller.brake_module_left()
+
+
+class ModuleTime(Task):
+    def __init__(
+        self,
+        controller,
+        left: bool,
+        cw: bool,
+        speed: int,
+        time: int,
+    ) -> None:
+        super().__init__()
+        self.controller = controller
+        self.left = left
+        self.cw = cw
+
+        self.time = abs(time)
+        if cw:
+            self.speed = abs(speed)
+        else:
+            self.speed = -abs(speed)
+
+        self.timer = self.controller.create_timer()
+
+    def start(self) -> None:
+        self.timer.start()
+
+    def check(self) -> bool:
+        if self.left:
+            self.controller.run_module_left(self.speed)
+        else:
+            self.controller.run_module_right(self.speed)
+
+        return self.timer.finished(self.time)
+
+    def stop(self) -> None:
+        self.controller.brake_module_left()
+
+
+class Turn(Task):
+    def __init__(
+        self,
+        controller,
+        left: bool,
+        on_spot: bool,
+        speed: int,
+        angle: int,
+        start_speed: int,
+        accel_distance: int,
+        deaccel_distance: int,
+    ) -> None:
+        super().__init__()
+        self.controller = controller
+        self.left = left
+        self.on_spot = on_spot
+
+        self.max_speed = abs(speed)
+        self.start_speed = abs(start_speed)
+        self.speed = start_speed
+
+        if left:
+            self.target = -float(abs(angle))
+        else:
+            self.target = float(abs(angle))
+
+        self.accel_distance = float(abs(accel_distance))
+        self.deaccel_distance = float(abs(deaccel_distance))
+
+        self.start_target = 0
+        self.gyro_angle = 0
+
+    def start(self) -> None:
+        self.controller.reset_gyro()
+        self.start_target = self.controller.get_gyro_angle()
+
+    def check(self) -> bool:
+        self.gyro_angle = self.controller.get_gyro_angle() - self.start_target
+
+        if abs(self.gyro_angle) < self.accel_distance:
+            c = (self.max_speed - self.start_speed) / f(self.accel_distance)
+            self.speed = c * f(self.gyro_angle) + self.start_speed
+        elif abs(self.gyro_angle) < abs(self.target) - self.deaccel_distance:
+            self.speed = self.max_speed
+        else:
+            try:
+                c = (self.max_speed - self.start_speed) / f(self.deaccel_distance)
+                self.speed = c * f(self.target - self.gyro_angle) + self.start_speed
+            except:
+                self.speed = self.start_speed
+                
+        if self.left:
+            if self.on_spot:
+                self.controller.run_drive_right(self.speed)
+                self.controller.run_drive_left(-self.speed)
+            else:
+                self.controller.run_drive_right(self.speed)
+                
+            return self.gyro_angle <= self.target
+        else:
+            if self.on_spot:
+                self.controller.run_drive_right(-self.speed)
+                self.controller.run_drive_left(self.speed)
+            else:
+                self.controller.run_drive_left(self.speed)
+                
+            return self.gyro_angle >= self.target
+
+    def stop(self) -> None:
+        self.controller.brake_drive()
+
+
 class Menu(Task):
     def __init__(self, robot, controller) -> None:
         super().__init__()
@@ -168,700 +505,6 @@ class WaitEvent(Task):
         return not self.runtime.check_untriggered_event(self.event_index)
 
 
-class DriveForwardGyro(Task):
-    def __init__(
-        self,
-        controller,
-        speed: int,
-        distance: int,
-        start_speed: int,
-        accel_distance: int,
-        deaccel_distance: int,
-        kp: int,
-        ki: int,
-        kd: int,
-        gyro_target: int,
-    ) -> None:
-        super().__init__()
-        self.controller = controller
-
-        self.distance = abs(distance)
-        self.max_speed = abs(speed)
-        self.start_speed = abs(start_speed)
-        self.accel_distance = abs(accel_distance)
-        self.deaccel_distance = abs(deaccel_distance)
-        self.target = abs(gyro_target)
-
-        self.kp = abs(kp)
-        self.ki = abs(ki)
-        self.kd = abs(kd)
-
-        self.speed = self.start_speed
-        self.current_distance = 0
-
-        self.integral = 0
-        self.derivative = 0
-        self.error = 0
-        self.last_error = 0
-
-    def start(self) -> None:
-        self.controller.reset_drive(0)
-        self.controller.reset_gyro()
-
-    def check(self) -> bool:
-        self.current_distance = abs(self.controller.angle_drive_left())
-
-        if self.current_distance < self.accel_distance:
-            c = (self.max_speed - self.start_speed) / f(self.accel_distance)
-            self.speed = c * f(self.current_distance) + self.start_speed
-        elif self.current_distance < self.distance - self.deaccel_distance:
-            self.speed = self.max_speed
-        else:
-            c = (self.max_speed - self.start_speed) / f(self.deaccel_distance)
-            self.speed = c * f(self.distance - self.current_distance) + self.start_speed
-
-        self.error = self.target - self.controller.get_gyro_angle()
-        self.integral = self.integral + self.error
-        self.derivative = self.error - self.last_error
-
-        correction = (
-            (self.kp * self.error)
-            + (self.ki * self.integral)
-            + (self.kd * self.derivative)
-        )
-
-        self.controller.run_drive_left(self.speed + correction)
-        self.controller.run_drive_right(self.speed - correction)
-
-        self.last_error = self.error
-        return self.current_distance >= self.distance
-
-    def stop(self) -> None:
-        self.controller.brake_drive()
-
-
-class DriveForward(Task):
-    def __init__(
-        self,
-        controller,
-        speed: int,
-        distance: int,
-        start_speed: int,
-        accel_distance: int,
-        deaccel_distance: int,
-    ) -> None:
-        super().__init__()
-        self.controller = controller
-
-        self.distance = abs(distance)
-        self.max_speed = abs(speed)
-        self.start_speed = abs(start_speed)
-        self.accel_distance = abs(accel_distance)
-        self.deaccel_distance = abs(deaccel_distance)
-
-        self.speed = self.start_speed
-        self.current_distance = 0
-
-        self.integral = 0
-        self.derivative = 0
-        self.error = 0
-        self.last_error = 0
-
-    def start(self) -> None:
-        self.controller.reset_drive(0)
-        self.controller.reset_gyro()
-
-    def check(self) -> bool:
-        self.current_distance = abs(self.controller.angle_drive_left())
-
-        if self.current_distance < self.accel_distance:
-            c = (self.max_speed - self.start_speed) / f(self.accel_distance)
-            self.speed = c * f(self.current_distance) + self.start_speed
-        elif self.current_distance < self.distance - self.deaccel_distance:
-            self.speed = self.max_speed
-        else:
-            c = (self.max_speed - self.start_speed) / f(self.deaccel_distance)
-            self.speed = c * f(self.distance - self.current_distance) + self.start_speed
-
-        self.controller.run_drive_left(self.speed)
-        self.controller.run_drive_right(self.speed)
-
-        self.last_error = self.error
-        return self.current_distance >= self.distance
-
-    def stop(self) -> None:
-        self.controller.brake_drive()
-
-
-class DriveForwardTimeGyro(Task):
-    def __init__(
-        self,
-        controller,
-        speed: int,
-        time: int,
-        kp: int,
-        ki: int,
-        kd: int,
-        gyro_target: int,
-    ) -> None:
-        super().__init__()
-        self.controller = controller
-
-        self.time = abs(time)
-        self.speed = abs(speed)
-        self.target = abs(gyro_target)
-
-        self.kp = abs(kp)
-        self.ki = abs(ki)
-        self.kd = abs(kd)
-
-        self.integral = 0
-        self.derivative = 0
-        self.error = 0
-        self.last_error = 0
-
-        self.timer = self.controller.create_timer()
-
-    def start(self) -> None:
-        self.controller.reset_gyro()
-        self.timer.start()
-
-    def check(self) -> bool:
-        self.error = self.target - self.controller.get_gyro_angle()
-        self.integral = self.integral + self.error
-        self.derivative = self.error - self.last_error
-
-        correction = (
-            (self.kp * self.error)
-            + (self.ki * self.integral)
-            + (self.kd * self.derivative)
-        )
-
-        self.controller.run_drive_left(self.speed + correction)
-        self.controller.run_drive_right(self.speed - correction)
-
-        self.last_error = self.error
-        return self.timer.finished(self.time)
-
-    def stop(self) -> None:
-        self.controller.brake_drive()
-
-
-class DriveBackwardGyro(Task):
-    def __init__(
-        self,
-        controller,
-        speed: int,
-        distance: int,
-        start_speed: int,
-        accel_distance: int,
-        deaccel_distance: int,
-        kp: int,
-        ki: int,
-        kd: int,
-        gyro_target: int,
-    ) -> None:
-        super().__init__()
-        self.controller = controller
-
-        self.distance = abs(distance)
-        self.max_speed = abs(speed)
-        self.start_speed = abs(start_speed)
-        self.accel_distance = abs(accel_distance)
-        self.deaccel_distance = abs(deaccel_distance)
-        self.target = abs(gyro_target)
-
-        self.kp = abs(kp)
-        self.ki = abs(ki)
-        self.kd = abs(kd)
-
-        self.current_distance = 0
-        self.speed = self.start_speed
-
-        self.integral = 0
-        self.derivative = 0
-        self.error = 0
-        self.last_error = 0
-
-    def start(self) -> None:
-        self.controller.reset_drive(0)
-        self.controller.reset_gyro()
-
-    def check(self) -> bool:
-        self.current_distance = abs(self.controller.angle_drive_left())
-
-        if self.current_distance < self.accel_distance:
-            c = (self.max_speed - self.start_speed) / f(self.accel_distance)
-            self.speed = c * f(self.current_distance) + self.start_speed
-        elif self.current_distance < self.distance - self.deaccel_distance:
-            self.speed = self.max_speed
-        else:
-            try:
-                c = (self.max_speed - self.start_speed) / f(self.deaccel_distance)
-                self.speed = (
-                    c * f(self.distance - self.current_distance) + self.start_speed
-                )
-            except:
-                self.speed = self.start_speed
-
-        self.error = self.target - self.controller.get_gyro_angle()
-        self.integral = self.integral + self.error
-        self.derivative = self.error - self.last_error
-
-        correction = (
-            (self.kp * self.error)
-            + (self.ki * self.integral)
-            + (self.kd * self.derivative)
-        )
-
-        self.controller.run_drive_left(-(self.speed - correction))
-        self.controller.run_drive_right(-(self.speed + correction))
-
-        return self.current_distance >= self.distance
-
-    def stop(self) -> None:
-        self.controller.brake_drive()
-
-
-class DriveBackward(Task):
-    def __init__(
-        self,
-        controller,
-        speed: int,
-        distance: int,
-        start_speed: int,
-        accel_distance: int,
-        deaccel_distance: int,
-    ) -> None:
-        super().__init__()
-        self.controller = controller
-
-        self.distance = abs(distance)
-        self.max_speed = abs(speed)
-        self.start_speed = abs(start_speed)
-        self.accel_distance = abs(accel_distance)
-        self.deaccel_distance = abs(deaccel_distance)
-
-        self.current_distance = 0
-        self.speed = self.start_speed
-
-    def start(self) -> None:
-        self.controller.reset_drive(0)
-        self.controller.reset_gyro()
-
-    def check(self) -> bool:
-        self.current_distance = abs(self.controller.angle_drive_left())
-
-        if self.current_distance < self.accel_distance:
-            c = (self.max_speed - self.start_speed) / f(self.accel_distance)
-            self.speed = c * f(self.current_distance) + self.start_speed
-        elif self.current_distance < self.distance - self.deaccel_distance:
-            self.speed = self.max_speed
-        else:
-            try:
-                c = (self.max_speed - self.start_speed) / f(self.deaccel_distance)
-                self.speed = (
-                    c * f(self.distance - self.current_distance) + self.start_speed
-                )
-            except:
-                self.speed = self.start_speed
-
-        self.controller.run_drive_left(-(self.speed))
-        self.controller.run_drive_right(-(self.speed))
-
-        return self.current_distance >= self.distance
-
-    def stop(self) -> None:
-        self.controller.brake_drive()
-
-
-class ModuleLeftCW(Task):
-    def __init__(self, controller, speed: int, distance: int) -> None:
-        super().__init__()
-        self.controller = controller
-        self.speed = abs(speed)
-        self.distance = abs(distance)
-
-    def start(self) -> None:
-        self.controller.reset_module_left(0)
-
-    def check(self) -> bool:
-        self.controller.run_module_left(self.speed)
-
-        return self.controller.angle_module_left() >= self.distance
-
-    def stop(self) -> None:
-        self.controller.brake_module_left()
-
-
-class ModuleLeftTimeCW(Task):
-    def __init__(
-        self,
-        controller,
-        speed: int,
-        time: int,
-    ) -> None:
-        super().__init__()
-        self.controller = controller
-
-        self.time = abs(time)
-        self.speed = abs(speed)
-
-        self.timer = self.controller.create_timer()
-
-    def start(self) -> None:
-        self.timer.start()
-
-    def check(self) -> bool:
-        self.controller.run_module_left(self.speed)
-
-        return self.timer.finished(self.time)
-
-    def stop(self) -> None:
-        self.controller.brake_module_left()
-
-
-class ModuleRightCW(Task):
-    def __init__(self, controller, speed: int, distance: int) -> None:
-        super().__init__()
-        self.controller = controller
-        self.speed = abs(speed)
-        self.distance = abs(distance)
-
-    def start(self) -> None:
-        self.controller.reset_module_right(0)
-
-    def check(self) -> bool:
-        self.controller.run_module_right(self.speed)
-
-        return self.controller.angle_module_right() >= self.distance
-
-    def stop(self) -> None:
-        self.controller.brake_module_right()
-
-
-class ModuleRightTimeCW(Task):
-    def __init__(
-        self,
-        controller,
-        speed: int,
-        time: int,
-    ) -> None:
-        super().__init__()
-        self.controller = controller
-
-        self.time = abs(time)
-        self.speed = abs(speed)
-
-        self.timer = self.controller.create_timer()
-
-    def start(self) -> None:
-        self.timer.start()
-
-    def check(self) -> bool:
-        self.controller.run_module_right(self.speed)
-
-        return self.timer.finished(self.time)
-
-    def stop(self) -> None:
-        self.controller.brake_module_right()
-
-
-class ModuleLeftCCW(Task):
-    def __init__(self, controller, speed: int, distance: int) -> None:
-        super().__init__()
-        self.controller = controller
-        self.speed = -abs(speed)
-        self.distance = abs(distance)
-
-    def start(self) -> None:
-        self.controller.reset_module_left(0)
-
-    def check(self) -> bool:
-        self.controller.run_module_left(self.speed)
-
-        return abs(self.controller.angle_module_left()) >= self.distance
-
-    def stop(self) -> None:
-        self.controller.brake_module_left()
-
-
-class ModuleLeftTimeCCW(Task):
-    def __init__(
-        self,
-        controller,
-        speed: int,
-        time: int,
-    ) -> None:
-        super().__init__()
-        self.controller = controller
-
-        self.time = abs(time)
-        self.speed = -abs(speed)
-
-        self.timer = self.controller.create_timer()
-
-    def start(self) -> None:
-        self.timer.start()
-
-    def check(self) -> bool:
-        self.controller.run_module_left(self.speed)
-
-        return self.timer.finished(self.time)
-
-    def stop(self) -> None:
-        self.controller.brake_module_left()
-
-
-class ModuleRightCCW(Task):
-    def __init__(self, controller, speed: int, distance: int) -> None:
-        super().__init__()
-        self.controller = controller
-        self.speed = -abs(speed)
-        self.distance = abs(distance)
-
-    def start(self) -> None:
-        self.controller.reset_module_right(0)
-
-    def check(self) -> bool:
-        self.controller.run_module_right(self.speed)
-
-        return abs(self.controller.angle_module_right()) >= self.distance
-
-    def stop(self) -> None:
-        self.controller.brake_module_right()
-
-
-class ModuleRightTimeCCW(Task):
-    def __init__(
-        self,
-        controller,
-        speed: int,
-        time: int,
-    ) -> None:
-        super().__init__()
-        self.controller = controller
-
-        self.time = abs(time)
-        self.speed = -abs(speed)
-
-        self.timer = self.controller.create_timer()
-
-    def start(self) -> None:
-        self.timer.start()
-
-    def check(self) -> bool:
-        self.controller.run_module_right(self.speed)
-
-        return self.timer.finished(self.time)
-
-    def stop(self) -> None:
-        self.controller.brake_module_right()
-
-
-class TurnLeft(Task):
-    def __init__(
-        self,
-        controller,
-        speed: int,
-        angle: int,
-        start_speed: int,
-        accel_distance: int,
-        deaccel_distance: int,
-    ) -> None:
-        super().__init__()
-        self.controller = controller
-        self.max_speed = abs(speed)
-        self.target = -float(abs(angle))
-        self.start_target = self.controller.get_gyro_angle()
-
-        self.start_speed = abs(start_speed)
-        self.accel_distance = float(abs(accel_distance))
-        self.deaccel_distance = float(abs(deaccel_distance))
-
-        self.speed = start_speed
-        self.gyro_angle = self.controller.get_gyro_angle() - self.start_target
-
-    def start(self) -> None:
-        self.controller.reset_gyro()
-        self.start_target = self.controller.get_gyro_angle()
-
-    def check(self) -> bool:
-        self.gyro_angle = self.controller.get_gyro_angle() - self.start_target
-
-        if abs(self.gyro_angle) < self.accel_distance:
-            c = (self.max_speed - self.start_speed) / f(self.accel_distance)
-            self.speed = c * f(self.gyro_angle) + self.start_speed
-        elif abs(self.gyro_angle) < abs(self.target) - self.deaccel_distance:
-            self.speed = self.max_speed
-        else:
-            try:
-                c = (self.max_speed - self.start_speed) / f(self.deaccel_distance)
-                self.speed = c * f(self.distance - self.gyro_angle) + self.start_speed
-            except:
-                self.speed = self.start_speed
-
-        self.controller.run_drive_right(self.speed)
-
-        return self.gyro_angle <= self.target
-
-    def stop(self) -> None:
-        self.controller.brake_drive_right()
-
-
-class TurnLeftOnSpot(Task):
-    def __init__(
-        self,
-        controller,
-        speed: int,
-        angle: int,
-        start_speed: int,
-        accel_distance: int,
-        deaccel_distance: int,
-    ) -> None:
-        super().__init__()
-        self.controller = controller
-        self.max_speed = abs(speed)
-        self.target = -float(abs(angle))
-        self.start_target = self.controller.get_gyro_angle()
-
-        self.start_speed = abs(start_speed)
-        self.accel_distance = float(abs(accel_distance))
-        self.deaccel_distance = float(abs(deaccel_distance))
-
-        self.speed = start_speed
-        self.gyro_angle = self.controller.get_gyro_angle() - self.start_target
-
-    def start(self) -> None:
-        self.controller.reset_gyro()
-        self.start_target = self.controller.get_gyro_angle()
-
-    def check(self) -> bool:
-        self.gyro_angle = self.controller.get_gyro_angle() - self.start_target
-
-        if abs(self.gyro_angle) < self.accel_distance:
-            c = (self.max_speed - self.start_speed) / f(self.accel_distance)
-            self.speed = c * f(self.gyro_angle) + self.start_speed
-        elif abs(self.gyro_angle) < abs(self.target) - self.deaccel_distance:
-            self.speed = self.max_speed
-        else:
-            try:
-                c = (self.max_speed - self.start_speed) / f(self.deaccel_distance)
-                self.speed = c * f(self.distance - self.gyro_angle) + self.start_speed
-            except:
-                self.speed = self.start_speed
-
-        self.controller.run_drive_right(self.speed)
-        self.controller.run_drive_left(-self.speed)
-
-        return self.gyro_angle <= self.target
-
-    def stop(self) -> None:
-        self.controller.brake_drive_right()
-
-
-class TurnRight(Task):
-    def __init__(
-        self,
-        controller,
-        speed: int,
-        angle: int,
-        start_speed: int,
-        accel_distance: int,
-        deaccel_distance: int,
-    ) -> None:
-        super().__init__()
-        self.controller = controller
-        self.max_speed = abs(speed)
-        self.target = float(abs(angle))
-        self.start_target = self.controller.get_gyro_angle()
-
-        self.start_speed = abs(start_speed)
-        self.accel_distance = float(abs(accel_distance))
-        self.deaccel_distance = float(abs(deaccel_distance))
-
-        self.speed = start_speed
-        self.gyro_angle = self.controller.get_gyro_angle() - self.start_target
-
-    def start(self) -> None:
-        self.controller.reset_gyro()
-        self.start_target = self.controller.get_gyro_angle()
-
-    def check(self) -> bool:
-        self.gyro_angle = self.controller.get_gyro_angle() - self.start_target
-
-        if abs(self.gyro_angle) < self.accel_distance:
-            c = (self.max_speed - self.start_speed) / f(self.accel_distance)
-            self.speed = c * f(self.gyro_angle) + self.start_speed
-        elif abs(self.gyro_angle) < abs(self.target) - self.deaccel_distance:
-            self.speed = self.max_speed
-        else:
-            try:
-                c = (self.max_speed - self.start_speed) / f(self.deaccel_distance)
-                self.speed = c * f(self.distance - self.gyro_angle) + self.start_speed
-            except:
-                self.speed = self.start_speed
-
-        self.controller.run_drive_left(self.speed)
-
-        return self.gyro_angle >= self.target
-
-    def stop(self) -> None:
-        self.controller.brake_drive_left()
-
-
-class TurnRightOnSpot(Task):
-    def __init__(
-        self,
-        controller,
-        speed: int,
-        angle: int,
-        start_speed: int,
-        accel_distance: int,
-        deaccel_distance: int,
-    ) -> None:
-        super().__init__()
-        self.controller = controller
-        self.max_speed = abs(speed)
-        self.target = float(abs(angle))
-        self.start_target = self.controller.get_gyro_angle()
-
-        self.start_speed = abs(start_speed)
-        self.accel_distance = float(abs(accel_distance))
-        self.deaccel_distance = float(abs(deaccel_distance))
-
-        self.speed = start_speed
-        self.gyro_angle = self.controller.get_gyro_angle() - self.start_target
-
-    def start(self) -> None:
-        self.controller.reset_gyro()
-        self.start_target = self.controller.get_gyro_angle()
-
-    def check(self) -> bool:
-        self.gyro_angle = self.controller.get_gyro_angle() - self.start_target
-
-        if abs(self.gyro_angle) < self.accel_distance:
-            c = (self.max_speed - self.start_speed) / f(self.accel_distance)
-            self.speed = c * f(self.gyro_angle) + self.start_speed
-        elif abs(self.gyro_angle) < abs(self.target) - self.deaccel_distance:
-            self.speed = self.max_speed
-        else:
-            try:
-                c = (self.max_speed - self.start_speed) / f(self.deaccel_distance)
-                self.speed = c * f(self.distance - self.gyro_angle) + self.start_speed
-            except:
-                self.speed = self.start_speed
-
-        self.controller.run_drive_left(self.speed)
-        self.controller.run_drive_right(-self.speed)
-
-        return self.gyro_angle >= self.target
-
-    def stop(self) -> None:
-        self.controller.brake_drive_left()
-        self.controller.brake_drive_right()
-
-
 class WaitMs(Task):
     def __init__(
         self,
@@ -892,13 +535,13 @@ class CreateGlobalTimer(Task):
         super().__init__()
         self.controller = controller
         self.robot = robot
-        
+
         self.index = index
 
     def start(self) -> None:
         timer = self.controller.create_timer()
         timer.start()
-        
+
         self.robot.timers[str(self.index)] = timer
 
     def check(self) -> None:
@@ -918,7 +561,7 @@ class WaitGlobalTimer(Task):
         self.index = index
         self.time = time
         self.timer = None
-            
+
     def start(self) -> None:
         if self.robot.timers.get(str(self.index)):
             self.timer = self.robot.timers[str(self.index)]
@@ -984,15 +627,16 @@ class Tasks:
         kp: int = DEFAULT_KP,
         ki: int = DEFAULT_KI,
         kd: int = DEFAULT_KD,
-    ) -> DriveForwardGyro:
+    ) -> DriveGyro:
         if accel_distance < 0:
             accel_distance = distance * DEFAULT_ACCEL_DISTANCE_MULTIPLIER
 
         if deaccel_distance < 0:
             deaccel_distance = distance * DEFAULT_DEACCEL_DISTANCE_MULTIPLIER
 
-        return DriveForwardGyro(
+        return DriveGyro(
             self.controller,
+            forward=True,
             speed=speed,
             distance=distance,
             start_speed=start_speed,
@@ -1011,15 +655,16 @@ class Tasks:
         start_speed: int = DEFAULT_START_SPEED,
         accel_distance: int = -1,
         deaccel_distance: int = -1,
-    ) -> DriveForwardGyro:
+    ) -> Drive:
         if accel_distance < 0:
             accel_distance = distance * DEFAULT_ACCEL_DISTANCE_MULTIPLIER
 
         if deaccel_distance < 0:
             deaccel_distance = distance * DEFAULT_DEACCEL_DISTANCE_MULTIPLIER
 
-        return DriveForward(
+        return Drive(
             self.controller,
+            forward=True,
             speed=speed,
             distance=distance,
             start_speed=start_speed,
@@ -1034,10 +679,11 @@ class Tasks:
         kp: int = DEFAULT_KP,
         ki: int = DEFAULT_KI,
         kd: int = DEFAULT_KD,
-    ) -> DriveForwardTimeGyro:
+    ) -> DriveTimeGyro:
 
-        return DriveForwardTimeGyro(
+        return DriveTimeGyro(
             self.controller,
+            forward=True,
             speed=speed,
             time=time,
             kp=kp,
@@ -1056,15 +702,16 @@ class Tasks:
         kp: int = DEFAULT_KP,
         ki: int = DEFAULT_KI,
         kd: int = DEFAULT_KD,
-    ) -> DriveBackwardGyro:
+    ) -> DriveGyro:
         if accel_distance < 0:
             accel_distance = distance * DEFAULT_ACCEL_DISTANCE_MULTIPLIER
 
         if deaccel_distance < 0:
             deaccel_distance = distance * DEFAULT_DEACCEL_DISTANCE_MULTIPLIER
 
-        return DriveBackwardGyro(
+        return DriveGyro(
             self.controller,
+            forward=False,
             speed=speed,
             distance=distance,
             start_speed=start_speed,
@@ -1083,15 +730,16 @@ class Tasks:
         start_speed: int = DEFAULT_START_SPEED,
         accel_distance: int = -1,
         deaccel_distance: int = -1,
-    ) -> DriveBackwardGyro:
+    ) -> Drive:
         if accel_distance < 0:
             accel_distance = distance * DEFAULT_ACCEL_DISTANCE_MULTIPLIER
 
         if deaccel_distance < 0:
             deaccel_distance = distance * DEFAULT_DEACCEL_DISTANCE_MULTIPLIER
 
-        return DriveBackward(
+        return Drive(
             self.controller,
+            forward=False,
             speed=speed,
             distance=distance,
             start_speed=start_speed,
@@ -1099,62 +747,78 @@ class Tasks:
             deaccel_distance=deaccel_distance,
         )
 
-    def module_left_cw(self, speed: int, distance: int) -> ModuleLeftCW:
-        return ModuleLeftCW(self.controller, speed=speed, distance=distance)
+    def module_left_cw(self, speed: int, distance: int) -> Module:
+        return Module(
+            self.controller, left=True, cw=True, speed=speed, distance=distance
+        )
 
     def module_left_time_cw(
         self,
         speed: int,
         time: int,
-    ) -> ModuleLeftTimeCW:
+    ) -> Module:
 
-        return ModuleLeftTimeCW(
+        return ModuleTime(
             self.controller,
+            left=True,
+            cw=True,
             speed=speed,
             time=time,
         )
 
-    def module_right_cw(self, speed: int, distance: int) -> ModuleRightCW:
-        return ModuleRightCW(self.controller, speed=speed, distance=distance)
+    def module_right_cw(self, speed: int, distance: int) -> Module:
+        return Module(
+            self.controller, left=False, cw=True, speed=speed, distance=distance
+        )
 
     def module_right_time_cw(
         self,
         speed: int,
         time: int,
-    ) -> ModuleRightTimeCW:
+    ) -> ModuleTime:
 
-        return ModuleRightTimeCW(
+        return ModuleTime(
             self.controller,
+            left=False,
+            cw=True,
             speed=speed,
             time=time,
         )
 
-    def module_left_ccw(self, speed: int, distance: int) -> ModuleLeftCCW:
-        return ModuleLeftCCW(self.controller, speed=speed, distance=distance)
+    def module_left_ccw(self, speed: int, distance: int) -> Module:
+        return Module(
+            self.controller, left=True, cw=False, speed=speed, distance=distance
+        )
 
     def module_left_time_ccw(
         self,
         speed: int,
         time: int,
-    ) -> ModuleLeftTimeCCW:
+    ) -> ModuleTime:
 
-        return ModuleLeftTimeCCW(
+        return ModuleTime(
             self.controller,
+            left=True,
+            cw=False,
             speed=speed,
             time=time,
         )
 
-    def module_right_ccw(self, speed: int, distance: int) -> ModuleRightCCW:
-        return ModuleRightCCW(self.controller, speed=speed, distance=distance)
+    def module_right_ccw(self, speed: int, distance: int) -> Module:
+        return Module(
+            self.controller, left=False, cw=False, speed=speed, distance=distance
+        )
 
     def module_right_time_ccw(
         self,
         speed: int,
         time: int,
-    ) -> ModuleRightTimeCCW:
+    ) -> ModuleTime:
 
-        return ModuleRightTimeCCW(
+        return ModuleTime(
             self.controller,
+            left=False,
+            cw=False,
             speed=speed,
             time=time,
         )
@@ -1166,15 +830,17 @@ class Tasks:
         start_speed: int = DEFAULT_START_SPEED,
         accel_distance: int = -1,
         deaccel_distance: int = -1,
-    ) -> TurnLeft:
+    ) -> Turn:
         if accel_distance < 0:
             accel_distance = angle * DEFAULT_ACCEL_DISTANCE_MULTIPLIER
 
         if deaccel_distance < 0:
             deaccel_distance = angle * DEFAULT_DEACCEL_DISTANCE_MULTIPLIER
 
-        return TurnLeft(
+        return Turn(
             self.controller,
+            left=True,
+            on_spot=False,
             speed=speed,
             angle=angle,
             start_speed=start_speed,
@@ -1189,15 +855,17 @@ class Tasks:
         start_speed: int = DEFAULT_START_SPEED,
         accel_distance: int = -1,
         deaccel_distance: int = -1,
-    ) -> TurnLeftOnSpot:
+    ) -> Turn:
         if accel_distance < 0:
             accel_distance = angle * DEFAULT_ACCEL_DISTANCE_MULTIPLIER
 
         if deaccel_distance < 0:
             deaccel_distance = angle * DEFAULT_DEACCEL_DISTANCE_MULTIPLIER
 
-        return TurnLeftOnSpot(
+        return Turn(
             self.controller,
+            left=False,
+            on_spot=True,
             speed=speed,
             angle=angle,
             start_speed=start_speed,
@@ -1212,15 +880,17 @@ class Tasks:
         start_speed: int = DEFAULT_START_SPEED,
         accel_distance: int = -1,
         deaccel_distance: int = -1,
-    ) -> TurnRight:
+    ) -> Turn:
         if accel_distance < 0:
             accel_distance = angle * DEFAULT_ACCEL_DISTANCE_MULTIPLIER
 
         if deaccel_distance < 0:
             deaccel_distance = angle * DEFAULT_DEACCEL_DISTANCE_MULTIPLIER
 
-        return TurnRight(
+        return Turn(
             self.controller,
+            left=False,
+            on_spot=False,
             speed=speed,
             angle=angle,
             start_speed=start_speed,
@@ -1235,15 +905,17 @@ class Tasks:
         start_speed: int = DEFAULT_START_SPEED,
         accel_distance: int = -1,
         deaccel_distance: int = -1,
-    ) -> TurnRightOnSpot:
+    ) -> Turn:
         if accel_distance < 0:
             accel_distance = angle * DEFAULT_ACCEL_DISTANCE_MULTIPLIER
 
         if deaccel_distance < 0:
             deaccel_distance = angle * DEFAULT_DEACCEL_DISTANCE_MULTIPLIER
 
-        return TurnRightOnSpot(
+        return Turn(
             self.controller,
+            left=True,
+            on_spot=True,
             speed=speed,
             angle=angle,
             start_speed=start_speed,

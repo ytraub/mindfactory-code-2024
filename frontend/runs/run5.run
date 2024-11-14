@@ -1,4 +1,4 @@
-color NONE
+color WHITE
 
 set_event (index=1)
 tasksplit {
