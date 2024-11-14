@@ -160,7 +160,12 @@ class DriveGyro(Task):
         self.controller.reset_gyro()
 
         global_error = self.controller.get_global_error()
-        self.target += global_error
+        if global_error < 0:
+            self.target -= abs(global_error)
+        else:
+            self.target += abs(global_error)
+            
+        print(self.target)
             
 
     def check(self) -> bool:
@@ -395,11 +400,6 @@ class Turn(Task):
 
     def stop(self) -> None:
         self.controller.brake_drive()
-        print(
-            self.controller.desired_target,
-            self.controller.get_gyro_raw_angle(),
-            self.controller.get_global_error(),
-        )
 
 
 class Menu(Task):

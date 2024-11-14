@@ -5,7 +5,7 @@
 		self.run_name = 'a'
 		self.run_color = 'Color.NONE'
 	def create_chain(self, robot):
-		robot.chain([robot.tasks.turn_right_on_spot(angle=90,speed=30,),
+		robot.chain([robot.tasks.turn_left_on_spot(angle=90,speed=30,),
 		robot.tasks.wait_ms(time=1000,),
 		robot.tasks.drive_forward_gyro(distance=800,speed=40,),], self.run_color)
 class Run1:
