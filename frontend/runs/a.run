@@ -2,3 +2,5 @@ color NONE
 
 turn_right_on_spot(angle=45 speed=30)
 turn_left_on_spot(angle=45 speed=30)
+turn_left_on_spot(angle=45 speed=30)
+turn_right_on_spot(angle=45 speed=30)

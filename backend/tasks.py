@@ -343,11 +343,7 @@ class Turn(Task):
         self.start_speed = abs(start_speed)
         self.speed = start_speed
 
-        if left:
-            self.target = -float(abs(angle))
-        else:
-            self.target = float(abs(angle))
-
+        self.target = float(abs(angle))
         self.accel_distance = float(abs(accel_distance))
         self.deaccel_distance = float(abs(deaccel_distance))
 
@@ -357,6 +353,11 @@ class Turn(Task):
     def start(self) -> None:
         self.controller.reset_gyro()
         self.start_target = self.controller.get_gyro_angle()
+
+        if self.left:
+            self.controller.desired_target -= self.target
+        else:
+            self.controller.desired_target += self.target
 
     def check(self) -> bool:
         self.gyro_angle = self.controller.get_gyro_angle() - self.start_target
@@ -372,26 +373,25 @@ class Turn(Task):
                 self.speed = c * f(self.target - self.gyro_angle) + self.start_speed
             except:
                 self.speed = self.start_speed
-                
+
         if self.left:
             if self.on_spot:
                 self.controller.run_drive_right(self.speed)
                 self.controller.run_drive_left(-self.speed)
             else:
                 self.controller.run_drive_right(self.speed)
-                
-            return self.gyro_angle <= self.target
         else:
             if self.on_spot:
                 self.controller.run_drive_right(-self.speed)
                 self.controller.run_drive_left(self.speed)
             else:
                 self.controller.run_drive_left(self.speed)
-                
-            return self.gyro_angle >= self.target
+
+        return abs(self.gyro_angle) >= self.target
 
     def stop(self) -> None:
         self.controller.brake_drive()
+        print(self.controller.desired_target, self.controller.get_gyro_raw_angle(), self.controller.get_global_error())
 
 
 class Menu(Task):

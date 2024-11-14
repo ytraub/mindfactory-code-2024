@@ -19,6 +19,7 @@ class Controller:
         self.ground_color_c = ColorSensor(Port.C)
 
         self.gyro_offset_angle = self.get_gyro_raw_angle()
+        self.desired_target = 0
 
     ###### < Movement > ######
 
@@ -119,6 +120,9 @@ class Controller:
 
     def get_gyro_raw_angle(self) -> float:
         return self.hub.imu.heading()
+    
+    def get_global_error(self) -> float:
+        return self.desired_target - self.get_gyro_raw_angle()
     
     def reset_gyro(self) -> None:
         self.gyro_offset_angle = self.get_gyro_raw_angle()
