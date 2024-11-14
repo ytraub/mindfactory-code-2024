@@ -159,6 +159,10 @@ class DriveGyro(Task):
         self.controller.reset_drive(0)
         self.controller.reset_gyro()
 
+        global_error = self.controller.get_global_error()
+        self.target += global_error
+            
+
     def check(self) -> bool:
         self.current_distance = abs(self.controller.angle_drive_left())
 
@@ -213,7 +217,7 @@ class DriveTimeGyro(Task):
 
         self.time = abs(time)
         self.speed = abs(speed)
-        self.target = abs(gyro_target)
+        self.target = abs(gyro_target) - self.controller.get_global_error()
 
         self.kp = abs(kp)
         self.ki = abs(ki)
@@ -370,7 +374,7 @@ class Turn(Task):
         else:
             try:
                 c = (self.max_speed - self.start_speed) / f(self.deaccel_distance)
-                self.speed = c * f(self.target - self.gyro_angle) + self.start_speed
+                self.speed = c * f(self.target - abs(self.gyro_angle)) + self.start_speed
             except:
                 self.speed = self.start_speed
 
@@ -391,7 +395,11 @@ class Turn(Task):
 
     def stop(self) -> None:
         self.controller.brake_drive()
-        print(self.controller.desired_target, self.controller.get_gyro_raw_angle(), self.controller.get_global_error())
+        print(
+            self.controller.desired_target,
+            self.controller.get_gyro_raw_angle(),
+            self.controller.get_global_error(),
+        )
 
 
 class Menu(Task):

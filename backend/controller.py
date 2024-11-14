@@ -20,6 +20,9 @@ class Controller:
 
         self.gyro_offset_angle = self.get_gyro_raw_angle()
         self.desired_target = 0
+        
+    def set_desired_target(self, value: float) -> None:
+        self.desired_target = value
 
     ###### < Movement > ######
 
