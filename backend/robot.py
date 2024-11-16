@@ -44,7 +44,7 @@ class Robot:
         for run in __runs__:
             run.create_chain(self)
 
-        self.set_loading(False)
+        self.set_loading(False) 
 
     def setup(self) -> None:
         self.controller.hub.display.orientation(Side.TOP)
@@ -74,7 +74,9 @@ class Robot:
     def start_run(self) -> None:
         self.set_running(True)
 
+        self.controller.set_desired_target(0)
         self.controller.reset_motors(0)
+        self.controller.reset_gyro_angle(0)
 
     def end_run(self) -> None:
         self.set_running(False)
