@@ -108,25 +108,24 @@
 		self.run_name = 'run6'
 		self.run_color = 'Color.MAGENTA'
 	def create_chain(self, robot):
-		robot.chain([robot.tasks.drive_forward_gyro(distance=1610,speed=80,),
+		robot.chain([robot.tasks.drive_forward_gyro(distance=1610,speed=90,),
 		robot.tasks.module_left_cw(distance=700,speed=100,),
-		robot.tasks.drive_backward_gyro(distance=230,speed=50,),
-		robot.tasks.turn_right_on_spot(angle=45,speed=10,),
+		robot.tasks.drive_backward_gyro(distance=290,speed=50,),
+		robot.tasks.turn_right_on_spot(angle=45,speed=30,),
 		robot.tasks.drive_forward_gyro(distance=230,speed=50,),
 		robot.tasks.drive_forward_gyro(distance=80,speed=10,),
 		robot.tasks.module_right_ccw(distance=550,speed=100,),
-		robot.tasks.wait_ms(time=400,),
+		robot.tasks.wait_ms(time=200,),
 		robot.tasks.set_event(index=1,),
 		[robot.tasks.module_right_cw(distance=300,speed=80,),robot.tasks.module_left_ccw(distance=700,speed=100,),robot.tasks.trigger_event(index=1,)],
-		robot.tasks.drive_backward_gyro(distance=415,speed=50,),
-		robot.tasks.turn_left_on_spot(angle=90,speed=15,),
-		robot.tasks.drive_backward_gyro(distance=820,speed=50,),
+		robot.tasks.drive_backward_gyro(distance=460,speed=60,),
+		robot.tasks.turn_left_on_spot(angle=92,speed=30,),
+		robot.tasks.drive_backward_gyro(distance=860,speed=60,),
 		robot.tasks.module_right_ccw(distance=260,speed=60,),
-		robot.tasks.set_event(index=2,),
-		[robot.tasks.wait_ms(time=500,),robot.tasks.module_right_cw(distance=80,speed=40,),robot.tasks.trigger_event(index=2,)],
-		robot.tasks.drive_forward_gyro(distance=30,speed=20,),
-		robot.tasks.wait_event(index=2,),
-		robot.tasks.module_right_cw(distance=450,speed=100,),
+		robot.tasks.drive_forward_gyro(distance=40,speed=20,),
+		robot.tasks.module_right_cw(distance=150,speed=100,),
+		robot.tasks.drive_forward_gyro(distance=50,speed=20,),
+		robot.tasks.module_right_cw(distance=250,speed=100,),
 		robot.tasks.drive_backward_gyro(distance=500,speed=100,),], self.run_color)
 class Run7:
 	def __init__(self):
