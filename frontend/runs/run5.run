@@ -6,15 +6,21 @@ tasksplit {
     trigger_event (index=1)
 }
 
+module_right_ccw(distance=220 speed=30)
 drive_forward_gyro(distance=990 speed=40)
 wait_event (index=1)
 module_left_cw(distance=1250 speed=100)
 
-drive_forward_gyro(distance=1290 speed=30)
-module_left_ccw(distance=1500 speed=100)
-drive_backward_gyro(distance=230 speed=40)
+drive_forward_gyro(distance=1300 speed=30)
+module_left_ccw(distance=2100 speed=100)
+drive_backward_gyro(distance=250 speed=40)
 
-module_right_ccw(distance=130 speed=50)
+tasksplit {
+    module_right_cw(distance=170 speed=30)
+}
+drive_backward_gyro(distance=300 speed=40)
 
-wait_ms(time=5000)
-module_left_ccw(distance=1000 speed=100)
+tasksplit {
+    module_right_ccw(distance=450 speed=100)
+}
+drive_backward_gyro(distance=220 speed=80)

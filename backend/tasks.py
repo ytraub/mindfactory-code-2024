@@ -289,7 +289,11 @@ class Module(Task):
             self.speed = -abs(speed)
 
     def start(self) -> None:
-        self.controller.reset_module_left(0)
+        if self.left:
+            self.controller.reset_module_left(0)
+        else:
+            self.controller.reset_module_right(0)
+            
 
     def check(self) -> bool:
         if self.left:
@@ -300,7 +304,10 @@ class Module(Task):
             return abs(self.controller.angle_module_right()) >= self.distance
 
     def stop(self) -> None:
-        self.controller.brake_module_left()
+        if self.left:
+            self.controller.brake_module_left()
+        else:
+            self.controller.brake_module_right()
 
 
 class ModuleTime(Task):
@@ -337,7 +344,10 @@ class ModuleTime(Task):
         return self.timer.finished(self.time)
 
     def stop(self) -> None:
-        self.controller.brake_module_left()
+        if self.left:
+            self.controller.brake_module_left()
+        else:
+            self.controller.brake_module_right()
 
 
 class Turn(Task):
