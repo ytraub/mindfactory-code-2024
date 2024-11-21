@@ -2,3 +2,4 @@ color NONE
 
 turn_right_on_spot(angle=90 speed=30)
 turn_left_on_spot(angle=90 speed=30)
+
