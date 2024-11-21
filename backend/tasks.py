@@ -19,6 +19,11 @@ DEFAULT_KP = 1
 DEFAULT_KI = 0.002
 DEFAULT_KD = 0.1
 
+
+## Default time in ms the align block spends adjusting according to the global error
+# Adjust as needed
+DEFAULT_ALIGN_TIME = 1000
+
 # before alex and casi changes
 # DEFAULT_KP = 1
 # DEFAULT_KI = 0.002
@@ -161,9 +166,6 @@ class DriveGyro(Task):
 
         global_error = self.controller.get_global_error()
         self.target = 0 + global_error
-        
-        print(global_error, self.target)
-            
 
     def check(self) -> bool:
         self.current_distance = abs(self.controller.angle_drive_left())
@@ -376,7 +378,9 @@ class Turn(Task):
         else:
             try:
                 c = (self.max_speed - self.start_speed) / f(self.deaccel_distance)
-                self.speed = c * f(self.target - abs(self.gyro_angle)) + self.start_speed
+                self.speed = (
+                    c * f(self.target - abs(self.gyro_angle)) + self.start_speed
+                )
             except:
                 self.speed = self.start_speed
 
@@ -394,6 +398,41 @@ class Turn(Task):
                 self.controller.run_drive_left(self.speed)
 
         return abs(self.gyro_angle) >= self.target
+
+    def stop(self) -> None:
+        self.controller.brake_drive()
+
+
+class AlignGyro(Task):
+    def __init__(
+        self,
+        controller,
+        time: int,
+        kp: int,
+    ) -> None:
+        super().__init__()
+        self.controller = controller
+        
+        self.kp = kp
+
+        self.time = time
+        self.timer = self.controller.create_timer()
+
+    def start(self) -> None:
+        self.controller.reset_gyro()
+        self.timer.start()
+
+        global_error = self.controller.get_global_error()
+        self.target = 0 + global_error
+
+    def check(self) -> bool:
+        error = self.target - self.controller.get_gyro_angle()
+        correction = self.kp * error
+        
+        self.controller.run_drive_left(correction)
+        self.controller.run_drive_right(-correction)
+
+        return self.timer.finished(self.time)
 
     def stop(self) -> None:
         self.controller.brake_drive()
@@ -751,6 +790,9 @@ class Tasks:
             accel_distance=accel_distance,
             deaccel_distance=deaccel_distance,
         )
+        
+    def align_gyro(self, time: int = DEFAULT_ALIGN_TIME, kp: int = DEFAULT_KP) -> AlignGyro:
+        return AlignGyro(self.controller, time=time, kp=kp)
 
     def module_left_cw(self, speed: int, distance: int) -> Module:
         return Module(

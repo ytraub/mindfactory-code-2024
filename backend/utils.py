@@ -8,6 +8,7 @@ class Timer:
 
     def start(self) -> None:
         self.last_tick = self.stop_watch.time()
+        self.stop_watch.resume()
         
     def stop(self) -> None:
         self.stop_watch.pause()
