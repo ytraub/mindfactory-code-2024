@@ -44,7 +44,7 @@ class Robot:
         for run in __runs__:
             run.create_chain(self)
 
-        self.set_loading(False)
+        self.set_loading(False) 
 
     def setup(self) -> None:
         self.controller.hub.display.orientation(Side.TOP)

@@ -15,7 +15,7 @@ tasksplit {
 }
 
 // Drive to unknown creature
-drive_forward_gyro(distance=130 speed=20)
+drive_forward_gyro(distance=115 speed=20)
 turn_left(angle=45 speed=30)
 
 set_event (index=1)
@@ -49,21 +49,21 @@ tasksplit {
     trigger_event (index=3)
 }
 
-drive_forward_gyro(distance=550 speed=50)
+drive_forward_gyro(distance=570 speed=50)
 drive_forward_gyro(distance=100 speed=10)
 wait_event(index=3)
 
 // Get probe
-module_left_ccw(distance=400 speed=100)
+module_left_ccw(distance=375 speed=100)
 drive_forward_gyro(distance=50 speed=10)
-wait_ms (time=200)
+// wait_ms (time=3000)
 
 tasksplit {
     module_left_ccw(distance=1400 speed=100)
 }
 
 // Turn to side of red base
-turn_left(angle=90 speed=20)
+turn_left(angle=88 speed=20)
 module_left_cw(distance=500 speed=100)
 
 set_event (index=5)
@@ -77,31 +77,35 @@ tasksplit {
 
 // Adjust path by slight right curve
 drive_forward_gyro(distance=450 speed=50)
+wait_ms(time=100)
 turn_right(angle=20 speed=15)
-drive_forward_gyro(distance=250 speed=30)
+wait_ms(time=100)
+drive_forward_gyro(distance=180 speed=30)
+wait_ms(time=100)
 turn_left(angle=20 speed=15)
+wait_ms(time=100)
 drive_forward_gyro(distance=250 speed=30)
 
 wait_event (index=5)
 
 // Do anglerfisch and probe nr. 2
-module_right_ccw(distance=1500 speed=100)
+module_right_ccw(distance=1360 speed=100)
 drive_forward_gyro(distance=90 speed=30)
-module_left_cw(distance=400 speed=100)
+module_left_cw(distance=480 speed=100)
 
 tasksplit {
     module_left_cw(distance=300 speed=80)
 }
 
-drive_forward_gyro(distance=480 speed=30)
+drive_forward_gyro(distance=530 speed=30)
 
 set_event (index=6)
 tasksplit {
-    module_right_cw(distance=1500 speed=100)
+    module_right_cw(distance=1300 speed=100)
     trigger_event (index=6)
 }
 
-module_left_ccw(distance=260 speed=100)
+module_left_ccw(distance=300 speed=100)
 wait_event (index=6)
 
 // Drive in direction of base
@@ -112,7 +116,7 @@ drive_forward_gyro(distance=250 speed=30)
 turn_left(angle=10 speed=30)
 wait_ms(time=200)
 
-drive_forward_gyro(distance=140 speed=30)
+drive_forward_gyro(distance=130 speed=30)
 turn_left(angle=30 speed=30)
 wait_ms(time=200)
 

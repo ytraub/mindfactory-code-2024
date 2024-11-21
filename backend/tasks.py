@@ -42,6 +42,15 @@ def f(x):
     return sqrt(abs(x))
 
 
+def wait(controller, time: int) -> None:
+    timer = controller.create_timer()
+    timer.start()
+
+    while not timer.finished(time):
+        pass
+
+    return
+
 class Task:
     def __init__(self) -> None:
         self.next_tasks: Task | list[Task] | None = None
