@@ -160,12 +160,9 @@ class DriveGyro(Task):
         self.controller.reset_gyro()
 
         global_error = self.controller.get_global_error()
-        if global_error < 0:
-            self.target -= abs(global_error)
-        else:
-            self.target += abs(global_error)
-            
-        print(self.target)
+        self.target = 0 + global_error
+        
+        print(global_error, self.target)
             
 
     def check(self) -> bool:
