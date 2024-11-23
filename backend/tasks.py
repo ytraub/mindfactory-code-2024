@@ -930,7 +930,7 @@ class Tasks:
 
         return Turn(
             self.controller,
-            left=False,
+            left=True,
             on_spot=True,
             speed=speed,
             angle=angle,
@@ -980,7 +980,7 @@ class Tasks:
 
         return Turn(
             self.controller,
-            left=True,
+            left=False,
             on_spot=True,
             speed=speed,
             angle=angle,

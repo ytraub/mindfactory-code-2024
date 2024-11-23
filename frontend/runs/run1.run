@@ -10,9 +10,6 @@ tasksplit {
 drive_backward(distance=150 speed=10)
 wait_event (index=1)
 drive_backward(distance=80 speed=10)
-tasksplit {
-    module_left_ccw(distance=175 speed=60)
-}
 
 // Drive to unknown creature
 drive_forward_gyro(distance=115 speed=20)
@@ -20,8 +17,8 @@ turn_left(angle=45 speed=30)
 
 set_event (index=1)
 tasksplit {
-    wait_ms(time=1400)
-    module_left_cw(distance=500 speed=90)
+    wait_ms(time=1500)
+    module_left_cw(distance=100 speed=90)
     trigger_event (index=1)
 }
 
@@ -30,32 +27,28 @@ drive_forward_time_gyro(time=200 speed=20)
 wait_event (index=1)
 wait_ms(time=200)
 
-set_event (index=2)
-tasksplit {
-    module_left_ccw(distance=500 speed=90)
-    trigger_event (index=2)
-}
+
 
 drive_backward(distance=420 speed=30)
-wait_event(index=2)
+
 turn_right_on_spot(angle=45 speed=10)
 
-// Drive to probe
+// Drive and get probe
 set_event (index=3)
 tasksplit {
-    module_left_cw(distance=500 speed=60)
-    wait_ms(time=400)
-    module_left_cw(distance=1300 speed=100)
+    module_left_cw(distance=400 speed=60)
+    wait_ms(time=600)
+    module_left_cw(distance=1150 speed=100)
     trigger_event (index=3)
 }
 
-drive_forward_gyro(distance=570 speed=50)
-drive_forward_gyro(distance=100 speed=10)
+drive_forward_gyro(distance=565 speed=50)
+drive_forward_gyro(distance=120 speed=10)
 wait_event(index=3)
 
-// Get probe
+// Pull probe
 module_left_ccw(distance=375 speed=100)
-drive_forward_gyro(distance=50 speed=10)
+//drive_forward_gyro(distance=20 speed=10)
 // wait_ms (time=3000)
 
 tasksplit {
@@ -63,7 +56,8 @@ tasksplit {
 }
 
 // Turn to side of red base
-turn_left(angle=88 speed=20)
+turn_left(angle=90 speed=20)
+align_gyro()
 module_left_cw(distance=500 speed=100)
 
 set_event (index=5)
@@ -71,54 +65,42 @@ tasksplit {
     wait_ms(time=100)
     module_left_cw(distance=100 speed=80)
     wait_ms(time=2000)
-    module_left_ccw(distance=550 speed=80)
+    module_left_ccw(distance=580 speed=80)
     trigger_event (index=5)
 }
 
 // Adjust path by slight right curve
 drive_forward_gyro(distance=450 speed=50)
-wait_ms(time=100)
 turn_right(angle=20 speed=15)
-wait_ms(time=100)
-drive_forward_gyro(distance=180 speed=30)
-wait_ms(time=100)
+drive_forward_gyro(distance=155 speed=30)
 turn_left(angle=20 speed=15)
-wait_ms(time=100)
+align_gyro()
 drive_forward_gyro(distance=250 speed=30)
 
 wait_event (index=5)
 
 // Do anglerfisch and probe nr. 2
-module_right_ccw(distance=1360 speed=100)
+module_right_ccw(distance=1570 speed=100)
 drive_forward_gyro(distance=90 speed=30)
 module_left_cw(distance=480 speed=100)
 
 tasksplit {
     module_left_cw(distance=300 speed=80)
 }
-
-drive_forward_gyro(distance=530 speed=30)
+align_gyro()
+drive_forward_gyro(distance=560 speed=30)
 
 set_event (index=6)
 tasksplit {
-    module_right_cw(distance=1300 speed=100)
+    module_right_cw(distance=1390 speed=100)
     trigger_event (index=6)
 }
 
-module_left_ccw(distance=300 speed=100)
+module_left_ccw(distance=900 speed=100)
 wait_event (index=6)
 
-// Drive in direction of base
-turn_left(angle=10 speed=30)
-wait_ms(time=200)
 
-drive_forward_gyro(distance=250 speed=30)
-turn_left(angle=10 speed=30)
-wait_ms(time=200)
+drive_forward_gyro(distance=400 speed=30)
+turn_left (angle=70 speed=20)
 
-drive_forward_gyro(distance=130 speed=30)
-turn_left(angle=30 speed=30)
-wait_ms(time=200)
-
-
-drive_forward_gyro(distance=900 speed=60)
+drive_forward_gyro(distance=1050 speed=100)
