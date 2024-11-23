@@ -3,6 +3,6 @@ __pycache__/
 .venv/
 .vscode/
 
-/backend/runs.py
-/frontend/output/*
-/frontend/generated/*
+backend/runs.py
+frontend/generated/data.py
+frontend/output/runs.py
