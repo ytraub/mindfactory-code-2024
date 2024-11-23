@@ -77,6 +77,7 @@ class Robot:
         self.controller.set_desired_target(0)
         self.controller.reset_motors(0)
         self.controller.reset_gyro_angle(0)
+        self.controller.reset_gyro()
 
     def end_run(self) -> None:
         self.set_running(False)

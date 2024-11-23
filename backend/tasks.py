@@ -16,7 +16,7 @@ DEFAULT_START_SPEED = 10
 ## Defaults for pid multipliers
 # Adjust as needed
 DEFAULT_KP = 1
-DEFAULT_KI = 0.002
+DEFAULT_KI = 0.0
 DEFAULT_KD = 0.1
 
 
@@ -175,6 +175,8 @@ class DriveGyro(Task):
 
         global_error = self.controller.get_global_error()
         self.target = 0 + global_error
+        
+        print(self.target)
 
     def check(self) -> bool:
         self.current_distance = abs(self.controller.angle_drive_left())
@@ -201,6 +203,7 @@ class DriveGyro(Task):
         if self.forward:
             self.controller.run_drive_left(self.speed + correction)
             self.controller.run_drive_right(self.speed - correction)
+            # print(self.speed + correction, self.speed - correction)
         else:
             self.controller.run_drive_left(-(self.speed - correction))
             self.controller.run_drive_right(-(self.speed + correction))

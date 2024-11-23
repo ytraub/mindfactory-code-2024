@@ -1,13 +1,4 @@
 color GREEN
 
-drive_forward_gyro(distance=900 speed=60)
-drive_forward_time_gyro(time=300 speed=20)
-
-module_left_ccw(distance=400 speed=40)
-wait_ms(time=200)
-module_left_cw(distance=400 speed=20)
-wait_ms(time=200)
-drive_backward(distance=30 speed=20)
-
-module_right_ccw(distance=300 speed=80)
-drive_backward(distance=900 speed=80)
+drive_forward_gyro(distance=965 speed=30)
+module_left_cw(distance=300 speed=80)

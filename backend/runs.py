@@ -1,5 +1,13 @@
 """This is a generated file. Don't change anything manually."""
 
+class A:
+	def __init__(self):
+		self.run_name = 'a'
+		self.run_color = 'Color.NONE'
+	def create_chain(self, robot):
+		robot.chain([robot.tasks.set_event(index=1,),
+		[robot.tasks.module_right_ccw(distance=10000,speed=100,)],
+		robot.tasks.drive_backward_gyro(distance=500,speed=10,),], self.run_color)
 class Run1:
 	def __init__(self):
 		self.run_name = 'run1'
@@ -18,12 +26,11 @@
 		robot.tasks.drive_forward_time_gyro(time=200,speed=20,),
 		robot.tasks.wait_event(index=1,),
 		robot.tasks.wait_ms(time=200,),
-		robot.tasks.drive_backward(distance=410,speed=30,),
+		robot.tasks.drive_backward(distance=420,speed=30,),
 		robot.tasks.turn_right_on_spot(angle=45,speed=10,),
-		robot.tasks.align_gyro(),
 		robot.tasks.set_event(index=3,),
 		[robot.tasks.module_left_cw(distance=400,speed=60,),robot.tasks.wait_ms(time=600,),robot.tasks.module_left_cw(distance=1150,speed=100,),robot.tasks.trigger_event(index=3,)],
-		robot.tasks.drive_forward_gyro(distance=595,speed=50,),
+		robot.tasks.drive_forward_gyro(distance=565,speed=50,),
 		robot.tasks.drive_forward_gyro(distance=120,speed=10,),
 		robot.tasks.wait_event(index=3,),
 		robot.tasks.module_left_ccw(distance=375,speed=100,),
@@ -35,12 +42,12 @@
 		[robot.tasks.wait_ms(time=100,),robot.tasks.module_left_cw(distance=100,speed=80,),robot.tasks.wait_ms(time=2000,),robot.tasks.module_left_ccw(distance=580,speed=80,),robot.tasks.trigger_event(index=5,)],
 		robot.tasks.drive_forward_gyro(distance=450,speed=50,),
 		robot.tasks.turn_right(angle=20,speed=15,),
-		robot.tasks.drive_forward_gyro(distance=175,speed=30,),
+		robot.tasks.drive_forward_gyro(distance=155,speed=30,),
 		robot.tasks.turn_left(angle=20,speed=15,),
 		robot.tasks.align_gyro(),
 		robot.tasks.drive_forward_gyro(distance=250,speed=30,),
 		robot.tasks.wait_event(index=5,),
-		robot.tasks.module_right_ccw(distance=1600,speed=100,),
+		robot.tasks.module_right_ccw(distance=1570,speed=100,),
 		robot.tasks.drive_forward_gyro(distance=90,speed=30,),
 		robot.tasks.module_left_cw(distance=480,speed=100,),
 		[robot.tasks.module_left_cw(distance=300,speed=80,)],
@@ -58,15 +65,8 @@
 		self.run_name = 'run2'
 		self.run_color = 'Color.GREEN'
 	def create_chain(self, robot):
-		robot.chain([robot.tasks.drive_forward_gyro(distance=900,speed=60,),
-		robot.tasks.drive_forward_time_gyro(time=300,speed=20,),
-		robot.tasks.module_left_ccw(distance=400,speed=40,),
-		robot.tasks.wait_ms(time=200,),
-		robot.tasks.module_left_cw(distance=400,speed=20,),
-		robot.tasks.wait_ms(time=200,),
-		robot.tasks.drive_backward(distance=30,speed=20,),
-		robot.tasks.module_right_ccw(distance=300,speed=80,),
-		robot.tasks.drive_backward(distance=900,speed=80,),], self.run_color)
+		robot.chain([robot.tasks.drive_forward_gyro(distance=965,speed=30,),
+		robot.tasks.module_left_cw(distance=300,speed=80,),], self.run_color)
 class Run3:
 	def __init__(self):
 		self.run_name = 'run3'
@@ -190,5 +190,5 @@
 		robot.tasks.turn_left(angle=20,speed=15,),
 		robot.tasks.wait_ms(time=100,),
 		robot.tasks.drive_forward_gyro(distance=250,speed=30,),], self.run_color)
-__runs__ = [Run1(),Run2(),Run3(),Run4(),Run5(),Run6(),Run7(),Run8()]
+__runs__ = [A(),Run1(),Run2(),Run3(),Run4(),Run5(),Run6(),Run7(),Run8()]
 
