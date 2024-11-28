@@ -1,13 +1,5 @@
 """This is a generated file. Don't change anything manually."""
 
-class A:
-	def __init__(self):
-		self.run_name = 'a'
-		self.run_color = 'Color.NONE'
-	def create_chain(self, robot):
-		robot.chain([robot.tasks.set_event(index=1,),
-		[robot.tasks.module_right_ccw(distance=10000,speed=100,)],
-		robot.tasks.drive_backward_gyro(distance=500,speed=10,),], self.run_color)
 class Run1:
 	def __init__(self):
 		self.run_name = 'run1'
@@ -190,5 +182,5 @@
 		robot.tasks.turn_left(angle=20,speed=15,),
 		robot.tasks.wait_ms(time=100,),
 		robot.tasks.drive_forward_gyro(distance=250,speed=30,),], self.run_color)
-__runs__ = [A(),Run1(),Run2(),Run3(),Run4(),Run5(),Run6(),Run7(),Run8()]
+__runs__ = [Run1(),Run2(),Run3(),Run4(),Run5(),Run6(),Run7(),Run8()]
 

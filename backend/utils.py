@@ -5,6 +5,9 @@ class Timer:
     def __init__(self):
         self.stop_watch = StopWatch()
         self.last_tick = None
+        
+    def get_time(self) -> int:
+        return self.stop_watch.time()
 
     def start(self) -> None:
         self.last_tick = self.stop_watch.time()
