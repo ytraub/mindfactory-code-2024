@@ -13,4 +13,4 @@ module_right_ccw(distance=800 speed=60)
 
 drive_backward_gyro(distance=120 speed=20)
 turn_right_on_spot(angle=35 speed=30)
-drive_backward_gyro(distance=1200 speed=80)
+drive_backward_gyro(distance=1200 speed=80)   
