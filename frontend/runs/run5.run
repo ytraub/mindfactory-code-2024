@@ -37,7 +37,10 @@ wait_ms(time=400)
 drive_backward_gyro(distance=200 speed=10)
 wait_event(index=2)
 
+// Richtung ändern
 module_right_cw(distance=200 speed=100)
+//
+
 drive_backward_gyro(distance=200 speed=20)
 
 tasksplit {
