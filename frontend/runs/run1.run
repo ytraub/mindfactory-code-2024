@@ -18,7 +18,7 @@ turn_left(angle=45 speed=30)
 set_event (index=1)
 tasksplit {
     wait_ms(time=1500)
-    module_left_cw(distance=100 speed=90)
+    module_left_cw(distance=60 speed=90)
     trigger_event (index=1)
 }
 
@@ -29,7 +29,7 @@ wait_ms(time=200)
 
 
 
-drive_backward(distance=420 speed=30)
+drive_backward(distance=380 speed=30)
 
 turn_right_on_spot(angle=45 speed=10)
 
@@ -48,8 +48,6 @@ wait_event(index=3)
 
 // Pull probe
 module_left_ccw(distance=375 speed=100)
-//drive_forward_gyro(distance=20 speed=10)
-// wait_ms (time=3000)
 
 tasksplit {
     module_left_ccw(distance=1400 speed=100)
@@ -72,7 +70,7 @@ tasksplit {
 // Adjust path by slight right curve
 drive_forward_gyro(distance=450 speed=50)
 turn_right(angle=20 speed=15)
-drive_forward_gyro(distance=155 speed=30)
+drive_forward_gyro(distance=200 speed=30)
 turn_left(angle=20 speed=15)
 align_gyro()
 drive_forward_gyro(distance=250 speed=30)
@@ -80,7 +78,7 @@ drive_forward_gyro(distance=250 speed=30)
 wait_event (index=5)
 
 // Do anglerfisch and probe nr. 2
-module_right_ccw(distance=1570 speed=100)
+module_right_ccw(distance=1650 speed=100)
 drive_forward_gyro(distance=90 speed=30)
 module_left_cw(distance=480 speed=100)
 
@@ -92,7 +90,7 @@ drive_forward_gyro(distance=560 speed=30)
 
 set_event (index=6)
 tasksplit {
-    module_right_cw(distance=1390 speed=100)
+    module_right_cw(distance=1460 speed=100)
     trigger_event (index=6)
 }
 

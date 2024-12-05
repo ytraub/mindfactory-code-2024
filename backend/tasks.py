@@ -176,8 +176,6 @@ class DriveGyro(Task):
 
         global_error = self.controller.get_global_error()
         self.target = 0 + global_error
-        
-        print(self.target)
 
     def check(self) -> bool:
         self.current_distance = abs(self.controller.angle_drive_left())
