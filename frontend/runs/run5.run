@@ -23,13 +23,13 @@ module_left_cw(distance=1100 speed=100)
 set_event(index=1)
 
 tasksplit {
-    module_left_cw(distance=350 speed=100)
+    module_left_cw(distance=300 speed=100)
     trigger_event(index=1)
 }
 
 drive_backward_gyro(distance=50 speed=40)
 wait_event(index=1)
-module_left_cw(distance=550 speed=100)
+module_left_cw(distance=650 speed=100)
 
 
 // Solve Krabbenhabitat
