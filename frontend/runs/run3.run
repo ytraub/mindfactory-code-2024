@@ -15,16 +15,23 @@ wait_event(index=0)
 
 wait_ms(time=400)
 
+set_event(index=1)
+tasksplit {
+    module_left_cw(distance=100 speed=80)
+    trigger_event(index=1)
+}
+
 module_right_cw(distance=250 speed=100)
+wait_event(index=1)
 
 tasksplit {
-    module_left_cw(distance=250 speed=100)
+    module_left_cw(distance=150 speed=40)
 }
 
 drive_backward_gyro(distance=520 speed=60)
 turn_right_on_spot(angle=90 speed=10)
 drive_forward_gyro(distance=300 speed=30)
-drive_forward_time_gyro(time=200 speed=10)
+drive_forward_time_gyro(time=400 speed=10)
 
 drive_backward_gyro(distance=350 speed=30)
 turn_left_on_spot(angle=70 speed=25)
