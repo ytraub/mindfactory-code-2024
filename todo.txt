@@ -1,0 +1,3 @@
+- run 3: Schiffrack weiter rein fahren
+- run 5: Gerüst für unbekannte Kreatur nicht umschmeissen
+- run 6: Kleines Schiff weiter nach vorne fahren
