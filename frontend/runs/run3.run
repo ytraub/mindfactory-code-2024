@@ -1,20 +1,31 @@
 color RED
 
-drive_forward_gyro(distance=80 speed=10)
-turn_right(angle=8 speed=25)
-drive_forward_gyro(distance=1200 speed=50)
-turn_left(angle=7 speed=30)
-module_right_cw(distance=110 speed=20)
-drive_forward_time_gyro(time=2000 speed=20)
-// drive_backward(distance=20 speed=20)
-module_right_cw(distance=80 speed=60)
-module_left_cw(distance=100 speed=20)
-module_right_ccw(distance=80 speed=40)
-drive_backward(distance=430 speed=40)
-turn_right(angle=30 speed=20)
-drive_backward(distance=200 speed=40)
-turn_right_on_spot(angle=60 speed=30)
-drive_forward_gyro(distance=400 speed=20)
-drive_backward(distance=350 speed=30)
-turn_right_on_spot(angle=105 speed=20)
-drive_forward_gyro(distance=600 speed=60)
+drive_forward_gyro(distance=1600 speed=60)
+
+wait_ms(time=400)
+
+set_event(index=0)
+tasksplit {
+    module_right_ccw(distance=250 speed=100)
+    trigger_event(index=0)
+}
+
+module_left_ccw(distance=250 speed=40)
+wait_event(index=0)
+
+wait_ms(time=400)
+
+module_right_cw(distance=250 speed=100)
+
+tasksplit {
+    module_left_cw(distance=250 speed=100)
+}
+
+drive_backward_gyro(distance=520 speed=60)
+turn_right_on_spot(angle=90 speed=10)
+drive_forward_gyro(distance=300 speed=30)
+drive_forward_time_gyro(time=200 speed=10)
+
+drive_backward_gyro(distance=350 speed=30)
+turn_left_on_spot(angle=70 speed=25)
+drive_backward_gyro(distance=900 speed=100)
