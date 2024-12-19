@@ -1,6 +1,6 @@
 color RED
 
-drive_forward_gyro(distance=1600 speed=60)
+drive_forward_gyro(distance=1600 speed=80)
 
 wait_ms(time=400)
 
@@ -28,10 +28,10 @@ tasksplit {
     module_left_cw(distance=150 speed=40)
 }
 
-drive_backward_gyro(distance=520 speed=60)
+drive_backward_gyro(distance=520 speed=80)
 turn_right_on_spot(angle=90 speed=10)
-drive_forward_gyro(distance=300 speed=30)
-drive_forward_time_gyro(time=400 speed=10)
+drive_forward_gyro(distance=300 speed=50)
+drive_forward_time_gyro(time=200 speed=20)
 
 drive_backward_gyro(distance=350 speed=30)
 turn_left_on_spot(angle=70 speed=25)
