@@ -1,17 +1,24 @@
 color BLUE
 
 set_event (index=1)
+
 tasksplit {
     module_left_ccw(distance=400 speed=60)
     wait_ms(time=500)
     module_left_cw(distance=400 speed=60)
     trigger_event (index=1)
 }
+
 drive_backward(distance=150 speed=10)
 wait_event (index=1)
 drive_backward(distance=80 speed=10)
 
 // Drive to unknown creature
+tasksplit {
+    // Adjust upper arm a bit to fit
+    module_right_ccw(distance=300 speed=100)
+}
+
 drive_forward_gyro(distance=115 speed=20)
 turn_left(angle=45 speed=30)
 
@@ -24,14 +31,13 @@ tasksplit {
 
 drive_forward_gyro(distance=800 speed=40)
 drive_forward_time_gyro(time=200 speed=20)
+
 wait_event (index=1)
 wait_ms(time=200)
 
-
-
 drive_backward(distance=380 speed=30)
-
 turn_right_on_spot(angle=45 speed=10)
+
 align_gyro()
 
 
@@ -40,59 +46,72 @@ set_event (index=3)
 tasksplit {
     wait_ms(time=400)
     module_left_cw(distance=400 speed=60)
+
     wait_ms(time=400)
     module_left_cw(distance=800 speed=100)
+
     trigger_event (index=3)
 }
 
 drive_forward_gyro(distance=565 speed=50)
 drive_forward_gyro(distance=120 speed=10)
+
 wait_event(index=3)
+
 module_left_cw(distance=350 speed=100)
 
 // Pull probe
 module_left_ccw(distance=375 speed=100)
 
 tasksplit {
-    module_left_ccw(distance=1350 speed=100)
+    module_left_ccw(distance=1250 speed=100)
 }
 
 // Turn to side of red base
 turn_left(angle=90 speed=20)
+
 align_gyro()
+
 module_left_cw(distance=550 speed=100)
 
 // Adjust path by slight right curve
 drive_forward_gyro(distance=450 speed=50)
 turn_right(angle=20 speed=15)
+
 drive_forward_gyro(distance=200 speed=30)
 turn_left(angle=20 speed=15)
+
 align_gyro()
+
 tasksplit{
     module_left_ccw(distance=380 speed=80)
 }
-drive_forward_gyro(distance=250 speed=30)
+
+drive_forward_gyro(distance=340 speed=30)
 
 // Do anglerfisch and probe nr. 2
 module_right_ccw(distance=1650 speed=100)
-drive_forward_gyro(distance=150 speed=30)
 
 tasksplit {
     module_left_cw(distance=600 speed=80)
 }
+
 align_gyro()
+
 drive_forward_gyro(distance=460 speed=30)
-align_gyro()
 
 set_event (index=6)
 tasksplit {
-    module_right_cw(distance=1460 speed=100)
+    align_gyro()
     trigger_event (index=6)
+}
+
+tasksplit {
+    module_right_cw(distance=1460 speed=100)
 }
 
 module_left_ccw(distance=900 speed=100)
 wait_event (index=6)
-
 
 drive_forward_gyro(distance=400 speed=30)
 turn_left (angle=70 speed=20)
