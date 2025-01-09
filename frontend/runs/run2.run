@@ -1,16 +1,15 @@
 color GREEN
 
-drive_forward_gyro(distance=900 speed=100)
-module_right_ccw(distance=340 speed=100)
+drive_forward_gyro(distance=960 speed=100)
+module_right_ccw(distance=290 speed=100)
 
-wait_ms(time=400)
+wait_ms(time=200)
 
-tasksplit {
-    module_right_cw(distance=340 speed=100)
-}
+drive_forward_gyro(distance=45 speed=40)
 
-drive_forward_gyro(distance=60 speed=20)
+wait_ms(time=200)
+
 module_left_cw(distance=280 speed=30)
 wait_ms(time=400)
-module_left_ccw(distance=280 speed=10)
+module_left_ccw(distance=280 speed=100)
 drive_backward_gyro(distance=900 speed=100)
