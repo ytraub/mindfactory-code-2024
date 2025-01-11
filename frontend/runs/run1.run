@@ -78,7 +78,7 @@ module_left_cw(distance=550 speed=100)
 drive_forward_gyro(distance=450 speed=50)
 turn_right(angle=20 speed=15)
 
-drive_forward_gyro(distance=200 speed=30)
+drive_forward_gyro(distance=205 speed=30)
 turn_left(angle=20 speed=15)
 
 align_gyro()
@@ -93,6 +93,7 @@ drive_forward_gyro(distance=340 speed=30)
 module_right_ccw(distance=1650 speed=100)
 
 tasksplit {
+    wait_ms(time=1400)
     module_left_cw(distance=600 speed=80)
 }
 
