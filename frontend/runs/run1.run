@@ -1,5 +1,7 @@
 color BLUE
 
+create_global_timer(index=0)
+
 set_event (index=1)
 
 tasksplit {

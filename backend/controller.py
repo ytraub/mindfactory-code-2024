@@ -24,6 +24,9 @@ class Controller:
     def set_desired_target(self, value: float) -> None:
         self.desired_target = value
 
+    def reset_desired_target(self) -> None:
+        self.desired_target = 0
+
     ###### < Movement > ######
 
     def run_drive_left(self, speed: int) -> None:

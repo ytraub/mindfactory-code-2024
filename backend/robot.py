@@ -74,7 +74,7 @@ class Robot:
     def start_run(self) -> None:
         self.set_running(True)
 
-        self.controller.set_desired_target(0)
+        self.controller.reset_desired_target()
         self.controller.reset_motors(0)
         self.controller.reset_gyro_angle(0)
         self.controller.reset_gyro()
@@ -82,8 +82,9 @@ class Robot:
     def end_run(self) -> None:
         self.set_running(False)
 
-        self.controller.brake_motors()
+        self.controller.reset_desired_target()
         self.controller.reset_motors(0)
+        self.controller.reset_gyro_angle(0)
 
     def chain(self, tasks: list[Task | list[Task]], run_color: str) -> None:
         start_task: Task | None = None
