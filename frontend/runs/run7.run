@@ -2,13 +2,13 @@ color WHITE
 
 drive_forward_gyro(distance=980 speed=100)
 turn_left_on_spot(angle=52 speed=20)
-drive_forward_gyro(distance=1000 speed=80)
+drive_forward_gyro(distance=1080 speed=80)
 
 tasksplit {
     module_left_cw(distance=150 speed=10)
 }
 
-drive_forward_time_gyro(time=200 speed=10)
+drive_forward_time_gyro(time=300 speed=10)
 
 // Solve Uboot
 module_right_cw(distance=650 speed=100)
