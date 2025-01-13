@@ -1,37 +1,49 @@
 color RED
 
-drive_forward_gyro(distance=1590 speed=100)
-
-wait_ms(time=400)
-
 set_event(index=0)
 tasksplit {
-    module_right_ccw(distance=260 speed=100)
+    module_right_ccw(distance=130 speed=20)
+}
+
+tasksplit {
+    wait_ms(time=2000)
+    module_left_ccw(distance=300 speed=60)
+
     trigger_event(index=0)
 }
 
-module_left_ccw(distance=300 speed=60)
-wait_event(index=0)
+drive_forward_gyro(distance=1600 speed=100)
 
-wait_ms(time=400)
+wait_event(index=0)
 
 set_event(index=1)
 tasksplit {
-    module_left_cw(distance=100 speed=80)
+    module_left_ccw(distance=600 speed=100)
     trigger_event(index=1)
 }
 
-module_right_cw(distance=260 speed=100)
+module_right_ccw(distance=140 speed=40)
 wait_event(index=1)
 
 tasksplit {
-    module_left_cw(distance=300 speed=40)
+    module_right_cw(distance=70 speed=50)
+    wait_ms(time=2000)
+    module_right_cw(distance=180 speed=50)
+}
+
+module_left_cw(distance=650 speed=100)
+
+tasksplit {
+    module_left_cw(distance=200 speed=100)
 }
 
 drive_backward_gyro(distance=520 speed=80)
 turn_right_on_spot(angle=90 speed=10)
-drive_forward_gyro(distance=300 speed=60)
-drive_forward_time_gyro(time=300 speed=20)
+
+wait_ms(time=100)
+
+drive_forward_gyro(distance=280 speed=40)
+drive_forward_time_gyro(time=400 speed=20)
 
 drive_backward_gyro(distance=350 speed=60)
 turn_left_on_spot(angle=70 speed=25)
