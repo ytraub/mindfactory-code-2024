@@ -10,10 +10,10 @@ tasksplit {
 
 drive_forward_time_gyro(time=300 speed=10)
 
+wait_global_timer(index=0 time=14800)
+
 // Solve Uboot
 module_right_cw(distance=650 speed=100)
-
-wait_global_timer(index=0 time=14900)
 
 // Wait to match end
 drive_backward_gyro(distance=150 speed=30)
