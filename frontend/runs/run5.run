@@ -17,7 +17,7 @@ tasksplit {
 
 
 // Push Boat
-drive_forward_gyro(distance=1300 speed=70)
+drive_forward_gyro(distance=1300 speed=80)
 
 module_left_cw(distance=1000 speed=100)
 
@@ -54,5 +54,5 @@ drive_forward_gyro(distance=900 speed=100)
 tasksplit {
     module_left_cw(distance=800 speed=100)
 }
-turn_right(angle=30 speed=20)
+turn_right(angle=30 speed=40)
 drive_forward_gyro(distance=500 speed=100)
