@@ -2,9 +2,14 @@ color WHITE
 
 
 // Drive out of Base
-module_left_cw(distance=600 speed=100)
-drive_forward_gyro(distance=890 speed=60)
-module_left_ccw(distance=690 speed=100)
+module_left_cw(distance=200 speed=100)
+
+tasksplit {
+    module_left_cw(distance=600 speed=100)
+}
+
+drive_forward_gyro(distance=890 speed=80)
+module_left_ccw(distance=890 speed=100)
 
 tasksplit {
     module_right_ccw(distance=270 speed=100)
@@ -12,7 +17,7 @@ tasksplit {
 
 
 // Push Boat
-drive_forward_gyro(distance=1300 speed=50)
+drive_forward_gyro(distance=1300 speed=70)
 
 module_left_cw(distance=1000 speed=100)
 
@@ -30,7 +35,7 @@ tasksplit {
 }
 
 wait_ms(time=400)
-drive_backward_gyro(distance=200 speed=40)
+drive_backward_gyro(distance=180 speed=40)
 wait_event(index=2)
 
 module_right_ccw(distance=600 speed=100)
@@ -41,7 +46,7 @@ tasksplit {
     module_left_ccw(distance=1350 speed=100)
 }
 
-wait_ms(time=1000)
+wait_ms(time=800)
 drive_forward_gyro(distance=900 speed=100)
 
 
