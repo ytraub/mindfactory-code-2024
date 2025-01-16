@@ -2,19 +2,23 @@ color RED
 
 set_event(index=0)
 tasksplit {
-    module_right_ccw(distance=130 speed=20)
-}
-
-tasksplit {
-    wait_ms(time=2000)
-    module_left_ccw(distance=300 speed=60)
-
+    module_right_cw(distance=450 speed=80)
+    wait_ms(time=200)
+    module_right_cw(distance=100 speed=100)
     trigger_event(index=0)
 }
 
-drive_forward_gyro(distance=1600 speed=100)
+drive_forward_gyro(distance=1200 speed=100)
 
 wait_event(index=0)
+
+tasksplit {
+    wait_ms(time=500)
+    module_left_ccw(distance=300 speed=100)
+}
+
+module_right_ccw(distance=250 speed=100)
+drive_forward_gyro(distance=400 speed=100)
 
 set_event(index=1)
 tasksplit {
@@ -22,13 +26,13 @@ tasksplit {
     trigger_event(index=1)
 }
 
-module_right_ccw(distance=140 speed=40)
+module_right_cw(distance=250 speed=100)
 wait_event(index=1)
 
 tasksplit {
-    module_right_cw(distance=70 speed=50)
+    module_right_ccw(distance=150 speed=50)
     wait_ms(time=2000)
-    module_right_cw(distance=180 speed=50)
+    module_right_ccw(distance=400 speed=50)
 }
 
 module_left_cw(distance=650 speed=100)
