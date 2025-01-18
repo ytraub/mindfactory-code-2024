@@ -60,10 +60,10 @@ drive_forward_gyro(distance=120 speed=10)
 
 wait_event(index=3)
 
-module_left_cw(distance=300 speed=100)
+module_left_cw(distance=275 speed=100)
 
 // Pull probe
-module_left_ccw(distance=325 speed=100)
+module_left_ccw(distance=300 speed=100)
 
 tasksplit {
     module_left_ccw(distance=1250 speed=100)
@@ -89,7 +89,7 @@ wait_event(index=7)
 drive_forward_gyro(distance=450 speed=50)
 turn_right(angle=20 speed=15)
 
-drive_forward_gyro(distance=200 speed=30)
+drive_forward_gyro(distance=180 speed=30)
 turn_left(angle=20 speed=15)
 
 align_gyro()
@@ -100,11 +100,11 @@ tasksplit {
 
 tasksplit {
     // probe nr.2 partial 1
-    wait_ms(time=400)
+    wait_ms(time=600)
     module_right_ccw(distance=550 speed=100)
 }
 
-drive_forward_gyro(distance=340 speed=30)
+drive_forward_gyro(distance=355 speed=30)
 
 // probe nr. 2 partial 2
 module_right_ccw(distance=800 speed=100)
