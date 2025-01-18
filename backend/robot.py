@@ -14,6 +14,8 @@ class Robot:
         self.running = False
         self.loading = False
 
+        self.menu = self.tasks.menu()
+
         self.runs = []
         self.timers = {}
 
@@ -53,7 +55,7 @@ class Robot:
         self.controller.reset_gyro_angle(0)
         self.controller.reset_motors(0)
 
-        self.runtime.add_tasks(self.tasks.menu())
+        self.runtime.add_tasks(self.menu)
         self.runtime.start(self)
 
     def execute_run(self, index: int) -> None:
@@ -85,6 +87,8 @@ class Robot:
         self.controller.reset_desired_target()
         self.controller.reset_motors(0)
         self.controller.reset_gyro_angle(0)
+
+        self.menu.incerement_index()
 
     def chain(self, tasks: list[Task | list[Task]], run_color: str) -> None:
         start_task: Task | None = None
