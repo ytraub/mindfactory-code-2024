@@ -636,7 +636,10 @@ class WaitGlobalTimer(Task):
 
     def check(self) -> None:
         if self.timer:
+            print(self.timer.get_time(), self.time, self.timer.reached(self.time))
             return self.timer.reached(self.time)
+        else:
+            print("No timer found for index", self.index)
 
         return False
 
