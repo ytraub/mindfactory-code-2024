@@ -60,10 +60,10 @@ drive_forward_gyro(distance=120 speed=10)
 
 wait_event(index=3)
 
-module_left_cw(distance=330 speed=100)
+module_left_cw(distance=300 speed=100)
 
 // Pull probe
-module_left_ccw(distance=355 speed=100)
+module_left_ccw(distance=325 speed=100)
 
 tasksplit {
     module_left_ccw(distance=1250 speed=100)
