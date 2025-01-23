@@ -350,6 +350,40 @@ class ModuleTime(Task):
         else:
             self.controller.brake_module_right()
 
+class DriveCustom(Task):
+    def __init__(
+        self,
+        controller,
+        forward: bool,
+        speed_left: int,
+        speed_right: int,
+        time: int,
+    ) -> None:
+        super().__init__()
+        self.controller = controller
+        self.forward = forward
+
+        self.time = abs(time)
+        self.speed_left = abs(speed_left)
+        self.speed_right = abs(speed_right)
+
+        self.timer = self.controller.create_timer()
+
+    def start(self) -> None:
+        self.timer.start()
+
+    def check(self) -> bool:
+        if self.forward:
+            self.controller.run_drive_left(self.speed_left)
+            self.controller.run_drive_right(self.speed_right)
+        else:
+            self.controller.run_drive_left(-self.speed_left)
+            self.controller.run_drive_right(-self.speed_right)
+
+        return self.timer.finished(self.time)
+
+    def stop(self) -> None:
+        self.controller.brake_drive()
 
 class Turn(Task):
     def __init__(
@@ -814,7 +848,14 @@ class Tasks:
             accel_distance=accel_distance,
             deaccel_distance=deaccel_distance,
         )
+    
+    def drive_custom_forward(self, time: int, speed_left: int, speed_right: int) -> DriveCustom:
+        return DriveCustom(self.controller, forward=True, speed_left=speed_left, speed_right=speed_right, time=time)
         
+    def drive_custom_backward(self, time: int, speed_left: int, speed_right: int) -> DriveCustom:
+        return DriveCustom(self.controller, forward=False, speed_left=speed_left, speed_right=speed_right, time=time)
+        
+
     def align_gyro(self, time: int = DEFAULT_ALIGN_TIME, kp: int = DEFAULT_KP) -> AlignGyro:
         return AlignGyro(self.controller, time=time, kp=kp)
 

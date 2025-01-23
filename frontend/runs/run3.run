@@ -20,6 +20,7 @@ module_right_ccw(distance=140 speed=100)
 
 wait_ms(time=200)
 
-drive_backward_gyro(distance=1000 speed=100)
-turn_right_on_spot(angle=50 speed=30)
-drive_backward_gyro(distance=600 speed=100)
+//drive_backward_gyro(distance=1000 speed=100)
+//turn_right_on_spot(angle=50 speed=30)
+//drive_backward_gyro(distance=600 speed=100)
+drive_custom_backward(time=1200 speed_right=100 speed_left=90)
