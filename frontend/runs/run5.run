@@ -9,7 +9,7 @@ tasksplit {
 }
 
 drive_forward_gyro(distance=890 speed=80)
-module_left_ccw(distance=890 speed=100)
+module_left_ccw(distance=870 speed=100)
 
 tasksplit {
     module_right_ccw(distance=270 speed=100)
