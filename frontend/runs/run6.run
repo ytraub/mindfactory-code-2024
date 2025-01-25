@@ -6,7 +6,7 @@ module_left_cw(distance=700 speed=100)
 drive_backward_gyro(distance=260 speed=50)
 turn_right_on_spot(angle=45 speed=10)
 drive_forward_gyro(distance=230 speed=40)
-drive_forward_gyro(distance=80 speed=20)
+drive_forward_time_gyro(time=600 speed=20)
 
 module_right_ccw(distance=550 speed=100)
 wait_ms(time=500)
