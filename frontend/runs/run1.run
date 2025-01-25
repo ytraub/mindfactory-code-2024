@@ -98,16 +98,20 @@ tasksplit {
     module_left_ccw(distance=380 speed=80)
 }
 
+set_event(index=69)
 tasksplit {
     // probe nr.2 partial 1
-    wait_ms(time=600)
+    wait_ms(time=1000)
     module_right_ccw(distance=550 speed=100)
+    trigger_event(index=69)
 }
 
 drive_forward_gyro(distance=355 speed=30)
 
+wait_event(index=69)
+
 // probe nr. 2 partial 2
-module_right_ccw(distance=800 speed=100)
+module_right_ccw(distance=900 speed=100)
 
 set_event (index=6)
 tasksplit {
