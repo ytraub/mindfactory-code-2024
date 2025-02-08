@@ -114,31 +114,20 @@
 		self.run_name = 'run5'
 		self.run_color = 'Color.WHITE'
 	def create_chain(self, robot):
-		robot.chain([robot.tasks.module_left_cw(distance=200,speed=100,),
-		[robot.tasks.module_left_cw(distance=600,speed=100,)],
-		robot.tasks.drive_forward_gyro(distance=890,speed=80,),
-		robot.tasks.module_left_ccw(distance=870,speed=100,),
-		[robot.tasks.module_right_ccw(distance=270,speed=100,)],
-		robot.tasks.drive_forward_gyro(distance=1300,speed=80,),
-		robot.tasks.module_left_cw(distance=1000,speed=100,),
-		robot.tasks.drive_backward_gyro(distance=50,speed=40,),
-		robot.tasks.wait_event(index=1,),
-		robot.tasks.module_left_cw(distance=1200,speed=100,),
-		robot.tasks.module_right_ccw(distance=135,speed=100,),
-		robot.tasks.set_event(index=2,),
-		[robot.tasks.module_right_ccw(distance=405,speed=100,),robot.tasks.trigger_event(index=2,)],
+		robot.chain([robot.tasks.drive_forward_gyro(distance=2180,speed=80,),
+		robot.tasks.module_right_cw(distance=135,speed=100,),
+		robot.tasks.set_event(index=0,),
+		[robot.tasks.module_right_cw(distance=405,speed=100,),robot.tasks.trigger_event(index=0,)],
 		robot.tasks.wait_ms(time=400,),
-		robot.tasks.drive_backward_gyro(distance=180,speed=40,),
-		robot.tasks.wait_event(index=2,),
-		robot.tasks.module_right_ccw(distance=600,speed=100,),
-		robot.tasks.drive_backward_gyro(distance=50,speed=20,),
-		robot.tasks.module_right_ccw(distance=540,speed=100,),
-		[robot.tasks.module_left_ccw(distance=1350,speed=100,)],
-		robot.tasks.wait_ms(time=800,),
-		robot.tasks.drive_forward_gyro(distance=900,speed=100,),
-		[robot.tasks.module_left_cw(distance=800,speed=100,)],
-		robot.tasks.turn_right(angle=30,speed=40,),
-		robot.tasks.drive_forward_gyro(distance=500,speed=100,),], self.run_color)
+		robot.tasks.drive_backward_gyro(distance=190,speed=40,),
+		robot.tasks.wait_event(index=0,),
+		robot.tasks.module_right_cw(distance=450,speed=100,),
+		robot.tasks.drive_backward_gyro(distance=70,speed=20,),
+		robot.tasks.set_event(index=0,),
+		[robot.tasks.wait_ms(time=400,),robot.tasks.module_left_cw(distance=800,speed=100,),robot.tasks.module_left_time_cw(time=200,speed=100,),robot.tasks.trigger_event(index=0,)],
+		robot.tasks.module_right_cw(distance=600,speed=100,),
+		robot.tasks.wait_event(index=0,),
+		robot.tasks.drive_custom_forward(time=1600,speed_right=85,speed_left=100,),], self.run_color)
 class Run6:
 	def __init__(self):
 		self.run_name = 'run6'

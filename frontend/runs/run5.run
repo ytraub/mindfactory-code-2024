@@ -1,58 +1,30 @@
-color WHITE 
+color WHITE
 
+drive_forward_gyro(distance=2180 speed=80)
 
-// Drive out of Base
-module_left_cw(distance=200 speed=100)
-
+module_right_cw(distance=135 speed=100)
+set_event(index=0)
 tasksplit {
-    module_left_cw(distance=600 speed=100)
-}
-
-drive_forward_gyro(distance=890 speed=80)
-module_left_ccw(distance=870 speed=100)
-
-tasksplit {
-    module_right_ccw(distance=270 speed=100)
-}
-
-
-// Push Boat
-drive_forward_gyro(distance=1300 speed=80)
-
-module_left_cw(distance=1000 speed=100)
-
-drive_backward_gyro(distance=50 speed=40)
-wait_event(index=1)
-module_left_cw(distance=1200 speed=100)
-
-
-// Solve Krabbenhabitat
-module_right_ccw(distance=135 speed=100)
-set_event(index=2)
-tasksplit {
-    module_right_ccw(distance=405 speed=100)
-    trigger_event(index=2)
+    module_right_cw(distance=405 speed=100)
+    trigger_event(index=0)
 }
 
 wait_ms(time=400)
-drive_backward_gyro(distance=180 speed=40)
-wait_event(index=2)
+drive_backward_gyro(distance=190 speed=40)
+wait_event(index=0)
 
-module_right_ccw(distance=600 speed=100)
-drive_backward_gyro(distance=50 speed=20)
-module_right_ccw(distance=540 speed=100)
+module_right_cw(distance=450 speed=100)
+drive_backward_gyro(distance=70 speed=20)
 
+set_event(index=0)
 tasksplit {
-    module_left_ccw(distance=1350 speed=100)
-}
-
-wait_ms(time=800)
-drive_forward_gyro(distance=900 speed=100)
-
-
-// Retract Zahnradstange
-tasksplit {
+    wait_ms(time=400)
     module_left_cw(distance=800 speed=100)
+    module_left_time_cw(time=200 speed=100)
+    trigger_event(index=0)
 }
-turn_right(angle=30 speed=40)
-drive_forward_gyro(distance=500 speed=100)
+
+module_right_cw(distance=600 speed=100)
+wait_event(index=0)
+
+drive_custom_forward(time=1600 speed_right=85 speed_left=100)
