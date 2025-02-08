@@ -2,7 +2,3 @@ __pycache__/
 *.pyc
 .venv/
 .vscode/
-
-backend/runs.py
-frontend/generated/data.py
-frontend/output/runs.py
