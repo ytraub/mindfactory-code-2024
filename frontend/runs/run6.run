@@ -8,21 +8,20 @@ turn_right_on_spot(angle=45 speed=10)
 drive_forward_gyro(distance=230 speed=40)
 drive_forward_time_gyro(time=600 speed=20)
 
-module_right_ccw(distance=550 speed=100)
-wait_ms(time=500)
+module_right_ccw(distance=300 speed=100)
 
 set_event (index=1)
 tasksplit {
-    module_right_cw(distance=300 speed=80)
-    module_left_ccw(distance=700 speed=100)
+    wait_ms(time=500)
+    module_right_cw(distance=80 speed=80)
     trigger_event (index=1)
 }
 
 // Drive out of whale
-drive_backward_gyro(distance=425 speed=60)
-turn_left_on_spot(angle=92 speed=15)
+drive_backward_gyro(distance=450 speed=60)
+turn_left_on_spot(angle=90 speed=15)
 
-drive_backward_gyro(distance=820 speed=60)
+drive_backward_gyro(distance=840 speed=60)
 module_right_ccw(distance=260 speed=60)
 
 drive_forward_gyro(distance=60 speed=20)
@@ -30,4 +29,4 @@ module_right_cw(distance=170 speed=100)
 drive_forward_gyro(distance=50 speed=20)
 module_right_cw(distance=250 speed=100)
 
-drive_backward_gyro(distance=500 speed=100)
+drive_backward_gyro(distance=550 speed=100)
