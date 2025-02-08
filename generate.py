@@ -1,4 +1,5 @@
 import inspect
+import os
 from backend.tasks import Tasks
 
 DATA_DIRECTORY = "frontend/generated"
@@ -40,6 +41,7 @@ def main() -> None:
         if "self" in method_param_set:
             method_param_set.remove("self")
 
+    os.makedirs(DATA_DIRECTORY, exist_ok=True)
     with open(f"{DATA_DIRECTORY}/data.py", "w+") as data:
         data.write(f"TASKS={methods}\n")
         data.write(f"PARAMS={params}\n")
