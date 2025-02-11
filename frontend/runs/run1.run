@@ -113,7 +113,7 @@ module_right_ccw(distance=900 speed=100)
 
 set_event (index=5)
 tasksplit {
-    wait_ms(time=200)
+    wait_ms(time=300)
 
     // anglerfisch rein
     module_left_cw(distance=600 speed=100)
