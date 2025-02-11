@@ -6,20 +6,8 @@ drive_forward_gyro(distance=130 speed=40)
 module_right_cw(distance=150 speed=100)
 wait_ms(time=200)
 module_right_ccw(distance=800 speed=100)
-set_event (index=1)
-tasksplit {
-    module_right_cw(distance=800 speed=100)
-    trigger_event (index=1)
-}
 drive_forward_gyro(distance=50 speed=20)
-module_left_cw(distance=600 speed=100)
-wait_event (index=1)
-module_left_cw(distance=250 speed=100)
+module_left_cw(distance=750 speed=100)
 
-tasksplit {
-    module_right_ccw(distance=600 speed=1000)
-}
 
-drive_backward_gyro(distance=140 speed=100)
-turn_right_on_spot(angle=35 speed=30)
-drive_backward_gyro(distance=1200 speed=100)   
+drive_custom_backward(time=1600 speed_right=100 speed_left=66)
