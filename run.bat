@@ -1,10 +1,11 @@
-clear
+@echo off
+cls
 python generate.py
 
 cd frontend
 python main.py
 cd ..
-cp frontend/output/runs.py backend/runs.py
+copy frontend\output\runs.py backend\runs.py
 
-cd backend/
+cd backend
 pybricksdev run ble main.py
