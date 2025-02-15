@@ -794,6 +794,26 @@ class Tasks:
             gyro_target=0,
         )
 
+    def drive_backward_time_gyro(
+        self,
+        speed: int,
+        time: int,
+        kp: int = DEFAULT_KP,
+        ki: int = DEFAULT_KI,
+        kd: int = DEFAULT_KD,
+    ) -> DriveTimeGyro:
+
+        return DriveTimeGyro(
+            self.controller,
+            forward=False,
+            speed=speed,
+            time=time,
+            kp=kp,
+            ki=ki,
+            kd=kd,
+            gyro_target=0,
+        )
+
     def drive_backward_gyro(
         self,
         speed: int,
