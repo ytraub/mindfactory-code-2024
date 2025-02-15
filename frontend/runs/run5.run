@@ -10,7 +10,7 @@ tasksplit {
 }
 
 wait_ms(time=400)
-drive_backward_gyro(distance=190 speed=40)
+drive_backward_gyro(distance=195 speed=40)
 wait_event(index=0)
 
 module_right_cw(distance=450 speed=100)

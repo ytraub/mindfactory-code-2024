@@ -15,6 +15,8 @@ drive_backward(distance=150 speed=10)
 wait_event (index=0)
 drive_backward(distance=80 speed=10)
 
+wait_ms(time=1000)
+
 // Drive to unknown creature
 tasksplit {
     // Adjust upper arm a bit to fit
@@ -113,7 +115,7 @@ module_right_ccw(distance=900 speed=100)
 
 set_event (index=5)
 tasksplit {
-    wait_ms(time=300)
+    wait_ms(time=100)
 
     // anglerfisch rein
     module_left_cw(distance=600 speed=100)
