@@ -18,13 +18,13 @@ tasksplit {
 }
 
 // Drive out of whale
-drive_backward_gyro(distance=450 speed=60)
+drive_backward_gyro(distance=455 speed=60)
 turn_left_on_spot(angle=90 speed=15)
 
-drive_backward_gyro(distance=840 speed=60)
+drive_backward_gyro(distance=885 speed=60)
 module_right_ccw(distance=260 speed=60)
 
-drive_forward_gyro(distance=60 speed=20)
+drive_forward_gyro(distance=120 speed=20)
 module_right_cw(distance=170 speed=100)
 drive_forward_gyro(distance=50 speed=20)
 module_right_cw(distance=250 speed=100)

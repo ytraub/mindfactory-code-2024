@@ -16,15 +16,14 @@ wait_event(index=0)
 module_right_cw(distance=450 speed=100)
 drive_backward_gyro(distance=70 speed=20)
 
-set_event(index=0)
-tasksplit {
-    wait_ms(time=400)
-    module_left_cw(distance=800 speed=100)
-    module_left_time_cw(time=200 speed=100)
-    trigger_event(index=0)
-}
-
 module_right_cw(distance=600 speed=100)
+
+drive_backward_gyro(distance=70 speed=40)
+
+module_left_cw(distance=800 speed=100)
+module_left_time_cw(time=200 speed=100)
+
+
 wait_event(index=0)
 
-drive_custom_forward(time=1600 speed_right=85 speed_left=100)
+drive_custom_forward(time=1600 speed_right=86 speed_left=100)
