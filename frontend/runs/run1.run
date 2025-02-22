@@ -15,7 +15,7 @@ drive_backward_time_gyro(time=800 speed=10)
 wait_event (index=0)
 drive_backward_time_gyro(time=300 speed=10)
 
-wait_ms(time=500)
+wait_ms(time=1000)
 
 // Drive to unknown creature
 tasksplit {
