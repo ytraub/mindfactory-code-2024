@@ -40,13 +40,13 @@
 		robot.tasks.wait_event(index=3,),
 		robot.tasks.drive_forward_gyro(distance=450,speed=50,),
 		robot.tasks.turn_right(angle=20,speed=15,),
-		robot.tasks.drive_forward_gyro(distance=160,speed=30,),
+		robot.tasks.drive_forward_gyro(distance=170,speed=30,),
 		robot.tasks.turn_left(angle=20,speed=15,),
 		robot.tasks.align_gyro(),
 		[robot.tasks.module_left_ccw(distance=360,speed=80,)],
 		robot.tasks.set_event(index=4,),
 		[robot.tasks.wait_ms(time=1000,),robot.tasks.module_right_ccw(distance=530,speed=100,),robot.tasks.trigger_event(index=4,)],
-		robot.tasks.drive_forward_gyro(distance=390,speed=30,),
+		robot.tasks.drive_forward_gyro(distance=380,speed=30,),
 		robot.tasks.wait_event(index=4,),
 		robot.tasks.module_right_ccw(distance=920,speed=100,),
 		robot.tasks.set_event(index=5,),
@@ -128,7 +128,7 @@
 	def create_chain(self, robot):
 		robot.chain([robot.tasks.drive_forward_gyro(distance=1610,speed=90,),
 		robot.tasks.module_left_cw(distance=700,speed=100,),
-		robot.tasks.drive_backward_gyro(distance=275,speed=50,),
+		robot.tasks.drive_backward_gyro(distance=260,speed=50,),
 		robot.tasks.turn_right_on_spot(angle=45,speed=10,),
 		robot.tasks.drive_forward_gyro(distance=230,speed=40,),
 		robot.tasks.drive_forward_time_gyro(time=600,speed=20,),
@@ -137,11 +137,11 @@
 		robot.tasks.wait_ms(time=500,),
 		robot.tasks.set_event(index=1,),
 		[robot.tasks.module_right_cw(distance=80,speed=80,),robot.tasks.trigger_event(index=1,)],
-		robot.tasks.drive_backward_gyro(distance=460,speed=60,),
+		robot.tasks.drive_backward_gyro(distance=435,speed=60,),
 		robot.tasks.turn_left_on_spot(angle=90,speed=15,),
 		robot.tasks.drive_backward_gyro(distance=885,speed=60,),
 		robot.tasks.module_right_ccw(distance=260,speed=60,),
-		robot.tasks.drive_forward_gyro(distance=105,speed=20,),
+		robot.tasks.drive_forward_gyro(distance=110,speed=20,),
 		robot.tasks.module_right_cw(distance=170,speed=100,),
 		robot.tasks.drive_forward_gyro(distance=30,speed=20,),
 		robot.tasks.module_right_cw(distance=250,speed=100,),

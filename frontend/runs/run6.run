@@ -3,7 +3,7 @@ color MAGENTA
 drive_forward_gyro(distance=1610 speed=90)
 module_left_cw(distance=700 speed=100)
 
-drive_backward_gyro(distance=275 speed=50)
+drive_backward_gyro(distance=260 speed=50)
 turn_right_on_spot(angle=45 speed=10)
 drive_forward_gyro(distance=230 speed=40)
 drive_forward_time_gyro(time=600 speed=20)
@@ -21,13 +21,13 @@ tasksplit {
 }
 
 // Drive out of whale
-drive_backward_gyro(distance=460 speed=60)
+drive_backward_gyro(distance=435 speed=60)
 turn_left_on_spot(angle=90 speed=15)
 
 drive_backward_gyro(distance=885 speed=60)
 module_right_ccw(distance=260 speed=60)
 
-drive_forward_gyro(distance=105 speed=20)
+drive_forward_gyro(distance=110 speed=20)
 module_right_cw(distance=170 speed=100)
 drive_forward_gyro(distance=30 speed=20)
 module_right_cw(distance=250 speed=100)
