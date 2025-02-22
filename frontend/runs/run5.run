@@ -2,13 +2,16 @@ color WHITE
 
 drive_forward_gyro(distance=2180 speed=80)
 
-module_right_time_cw(time=800 speed=100)
-drive_backward_gyro(distance=193 speed=40)
+module_right_time_cw(time=600 speed=100)
+drive_backward_gyro(distance=230 speed=40)
 
-module_right_time_cw(time=800 speed=100)
+module_right_time_cw(time=600 speed=100)
+
+wait_ms(time=500)
+
 drive_backward_gyro(distance=70 speed=20)
 
-module_right_time_cw(time=800 speed=100)
+module_right_time_cw(time=600 speed=100)
 drive_backward_gyro(distance=90 speed=40)
 
 module_left_cw(distance=800 speed=100)
@@ -17,4 +20,4 @@ module_left_time_cw(time=100 speed=100)
 
 wait_event(index=0)
 
-drive_custom_forward(time=1600 speed_right=90 speed_left=100)
+drive_custom_forward(time=1700 speed_right=90 speed_left=100)
