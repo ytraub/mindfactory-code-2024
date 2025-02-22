@@ -11,9 +11,9 @@ tasksplit {
     trigger_event (index=0)
 }
 
-drive_backward(distance=150 speed=10)
+drive_backward_time_gyro(time=800 speed=10)
 wait_event (index=0)
-drive_backward(distance=80 speed=10)
+drive_backward_time_gyro(time=300 speed=10)
 
 wait_ms(time=500)
 
@@ -103,15 +103,15 @@ tasksplit {
 set_event(index=4)
 tasksplit {
     wait_ms(time=1000)
-    module_right_ccw(distance=550 speed=100)
+    module_right_ccw(distance=530 speed=100)
     trigger_event(index=4)
 }
 
-drive_forward_gyro(distance=380 speed=30)
+drive_forward_gyro(distance=390 speed=30)
 
 wait_event(index=4)
 
-module_right_ccw(distance=900 speed=100)
+module_right_ccw(distance=920 speed=100)
 
 set_event (index=5)
 tasksplit {
