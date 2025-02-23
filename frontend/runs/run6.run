@@ -24,7 +24,7 @@ tasksplit {
 drive_backward_gyro(distance=435 speed=60)
 turn_left_on_spot(angle=90 speed=15)
 
-drive_backward_gyro(distance=885 speed=60)
+drive_backward_gyro(distance=855 speed=60)
 module_right_ccw(distance=260 speed=60)
 
 drive_forward_gyro(distance=110 speed=20)
