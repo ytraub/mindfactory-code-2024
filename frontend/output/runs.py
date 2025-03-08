@@ -110,17 +110,15 @@
 		self.run_name = 'run5'
 		self.run_color = 'Color.WHITE'
 	def create_chain(self, robot):
-		robot.chain([robot.tasks.drive_forward_gyro(distance=2185,speed=80,),
-		robot.tasks.drive_backward_gyro(distance=5,speed=80,),
-		robot.tasks.module_right_time_ccw(time=550,speed=100,),
+		robot.chain([robot.tasks.drive_forward_gyro(distance=2170,speed=80,),
+		robot.tasks.module_right_time_ccw(time=700,speed=100,),
 		robot.tasks.wait_ms(time=500,),
-		robot.tasks.drive_backward_gyro(distance=150,speed=80,),
-		[robot.tasks.module_right_time_cw(time=2000,speed=5,)],
-		robot.tasks.drive_backward_gyro(distance=500,speed=40,),
+		robot.tasks.drive_backward_gyro(distance=280,speed=40,),
+		robot.tasks.drive_forward_gyro(distance=25,speed=40,),
+		robot.tasks.drive_backward_gyro(distance=315,speed=40,),
 		robot.tasks.module_left_cw(distance=800,speed=100,),
-		robot.tasks.drive_forward_gyro(distance=800,speed=100,),
-		[robot.tasks.module_right_time_ccw(time=200,speed=100,)],
-		robot.tasks.drive_custom_forward(time=1600,speed_right=90,speed_left=100,),], self.run_color)
+		[robot.tasks.wait_ms(time=1000,),robot.tasks.module_left_ccw(distance=500,speed=100,)],
+		robot.tasks.drive_custom_forward(time=1900,speed_right=98,speed_left=100,),], self.run_color)
 class Run6:
 	def __init__(self):
 		self.run_name = 'run6'
