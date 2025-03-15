@@ -1,138 +1,92 @@
 color BLUE
 
 create_global_timer(index=0)
-
 set_event (index=0)
-
 tasksplit {
+    // push and pull for crab habitat
     module_left_ccw(distance=400 speed=60)
     wait_ms(time=500)
     module_left_cw(distance=400 speed=60)
     trigger_event (index=0)
 }
-
-drive_backward_time_gyro(time=800 speed=10)
+ // drive backwards while solving crabs
+drive_backward_time_gyro(time=500 speed=10)
 wait_event (index=0)
-drive_backward_time_gyro(time=300 speed=10)
 
 wait_ms(time=1000)
 
 // Drive to unknown creature
-tasksplit {
-    // Adjust upper arm a bit to fit
-    module_right_ccw(distance=300 speed=100)
-}
 
-drive_forward_gyro(distance=115 speed=40)
+drive_forward_gyro(distance=107 speed=40)
 turn_left(angle=45 speed=30)
 
-set_event (index=1)
+drive_forward_gyro(distance=550 speed=80)
 tasksplit {
-    wait_ms(time=500)
-    module_left_cw(distance=60 speed=90)
-    trigger_event (index=1)
+    // Adjust upper arm a bit to fit
+    module_left_cw(distance=300 speed=100)
 }
 
-drive_forward_gyro(distance=800 speed=80)
+drive_forward_gyro(distance=100 speed=15)
+drive_forward_gyro(distance=150 speed=30)
 drive_forward_time_gyro(time=200 speed=20)
 
-wait_event (index=1)
-wait_ms(time=200)
-
-drive_backward(distance=380 speed=40)
-turn_right_on_spot(angle=45 speed=10)
-
-align_gyro()
-
-
-// Drive and get probe
-set_event (index=2)
+// drive from unknown creature to back of field
 tasksplit {
     wait_ms(time=400)
-    module_left_cw(distance=400 speed=60)
-
-    wait_ms(time=400)
-    module_left_cw(distance=800 speed=100)
-
-    trigger_event (index=2)
+    module_left_ccw(distance=300 speed=100)
 }
+drive_backward(distance=530 speed=30)
+wait_ms(time=500)
+turn_right(angle=45 speed=15)
+wait_ms(time=500)
+drive_backward_time_gyro(time=800 speed=30)
+wait_ms(time=1000)
 
-drive_forward_gyro(distance=575 speed=50)
-drive_forward_gyro(distance=120 speed=10)
+tasksplit {
+    module_left_cw(distance=250 speed=60)
+}
+drive_forward_gyro(distance=680 speed=60)
 
+set_event(index=1)
+tasksplit {
+    //collect plankton probe
+    module_left_cw(distance=1400 speed=100)
+    trigger_event(index=1)
+}
+drive_forward_gyro(distance=165 speed=10)
+wait_event(index=1)
+wait_ms(time=500)
+
+set_event(index=2)
+tasksplit {
+    wait_ms(time=800)
+    drive_forward_gyro(distance=80 speed=20)
+    trigger_event(index=2)
+}
+//pull in plankton probe
+module_left_ccw(distance=1750 speed=100)
 wait_event(index=2)
 
-module_left_cw(distance=250 speed=100)
-
-// Pull probe
-module_left_ccw(distance=300 speed=100)
-
-tasksplit {
-    module_left_ccw(distance=1250 speed=100)
-}
-
-tasksplit {
-    module_right_ccw(distance=300 speed=80)
-}
-
-// Turn to side of red base
+//turn to other side
 turn_left(angle=90 speed=20)
-
-set_event(index=3)
-tasksplit {
-    align_gyro()
-    trigger_event(index=3)
-}
-
-module_left_cw(distance=550 speed=100)
-wait_event(index=3)
-
-// Adjust path by slight right curve
-drive_forward_gyro(distance=450 speed=50)
-turn_right(angle=20 speed=15)
-
-drive_forward_gyro(distance=170 speed=30)
-turn_left(angle=20 speed=15)
-
 align_gyro()
-
-tasksplit { 
-    module_left_ccw(distance=360 speed=80)
-}
-
-set_event(index=4)
-tasksplit {
-    wait_ms(time=1000)
-    module_right_ccw(distance=530 speed=100)
-    trigger_event(index=4)
-}
-
-drive_forward_gyro(distance=380 speed=30)
-
-wait_event(index=4)
-
-module_right_ccw(distance=920 speed=100)
-
-set_event (index=5)
-tasksplit {
-    wait_ms(time=100)
-
-    // anglerfisch rein
-    module_left_cw(distance=600 speed=100)
-    trigger_event (index=5)
-}
 
 tasksplit {
     wait_ms(time=200)
-    module_right_cw(distance=1850 speed=100)
+    module_left_cw(distance=600 speed=100)
 }
+drive_forward_gyro(distance=250 speed=30)
+drive_forward_gyro(distance=900 speed=60)
 
-drive_forward_gyro(distance=490 speed=60)
-wait_event (index=5)
+//collect ground(less) probe
+module_right_cw(distance=570 speed=60)
 
-module_left_ccw(distance=900 speed=100)
+tasksplit {
+    module_right_ccw(distance=530 speed=60)
+}
+drive_forward_gyro(distance=480 speed=60)
+module_left_ccw(distance=320 speed=60)
 
-drive_forward_gyro(distance=400 speed=40)
-turn_left (angle=70 speed=30)
-
-drive_forward_gyro(distance=1050 speed=100)
+drive_forward_gyro(distance=400 speed=30)
+turn_left(angle=67 speed=20)
+drive_forward_gyro(distance=1000 speed=80)
