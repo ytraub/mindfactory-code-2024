@@ -7,24 +7,24 @@
 	def create_chain(self, robot):
 		robot.chain([robot.tasks.create_global_timer(index=0,),
 		robot.tasks.set_event(index=0,),
-		[robot.tasks.module_left_ccw(distance=400,speed=60,),robot.tasks.wait_ms(time=500,),robot.tasks.module_left_cw(distance=400,speed=60,),robot.tasks.trigger_event(index=0,)],
+		[robot.tasks.module_left_ccw(distance=400,speed=60,),robot.tasks.wait_ms(time=200,),robot.tasks.module_left_cw(distance=400,speed=60,),robot.tasks.trigger_event(index=0,)],
 		robot.tasks.drive_backward_time_gyro(time=500,speed=10,),
 		robot.tasks.wait_event(index=0,),
-		robot.tasks.wait_ms(time=1000,),
+		robot.tasks.wait_ms(time=500,),
 		robot.tasks.drive_forward_gyro(distance=107,speed=40,),
 		robot.tasks.turn_left(angle=45,speed=30,),
 		robot.tasks.drive_forward_gyro(distance=550,speed=80,),
 		[robot.tasks.module_left_cw(distance=300,speed=100,)],
 		robot.tasks.drive_forward_gyro(distance=100,speed=15,),
 		robot.tasks.drive_forward_gyro(distance=150,speed=30,),
-		robot.tasks.drive_forward_time_gyro(time=200,speed=20,),
+		robot.tasks.drive_forward_time_gyro(time=300,speed=20,),
 		[robot.tasks.wait_ms(time=400,),robot.tasks.module_left_ccw(distance=300,speed=100,)],
-		robot.tasks.drive_backward(distance=530,speed=30,),
-		robot.tasks.wait_ms(time=300,),
+		robot.tasks.drive_backward(distance=535,speed=30,),
+		robot.tasks.wait_ms(time=200,),
 		robot.tasks.turn_right(angle=45,speed=15,),
-		robot.tasks.wait_ms(time=300,),
-		robot.tasks.drive_backward_time_gyro(time=1200,speed=30,),
-		robot.tasks.wait_ms(time=800,),
+		robot.tasks.wait_ms(time=200,),
+		robot.tasks.drive_backward_time_gyro(time=800,speed=30,),
+		robot.tasks.wait_ms(time=500,),
 		[robot.tasks.module_left_cw(distance=250,speed=60,)],
 		robot.tasks.drive_forward_gyro(distance=680,speed=60,),
 		robot.tasks.set_event(index=1,),
@@ -33,21 +33,24 @@
 		robot.tasks.wait_event(index=1,),
 		robot.tasks.wait_ms(time=500,),
 		robot.tasks.set_event(index=2,),
-		[robot.tasks.wait_ms(time=800,),robot.tasks.drive_forward_gyro(distance=80,speed=20,),robot.tasks.trigger_event(index=2,)],
-		robot.tasks.module_left_ccw(distance=1750,speed=100,),
+		[robot.tasks.wait_ms(time=500,),robot.tasks.drive_forward_gyro(distance=80,speed=20,),robot.tasks.trigger_event(index=2,)],
+		robot.tasks.module_left_ccw(distance=400,speed=100,),
+		robot.tasks.wait_ms(time=800,),
+		robot.tasks.module_left_ccw(distance=1350,speed=100,),
 		robot.tasks.wait_event(index=2,),
 		robot.tasks.turn_left(angle=90,speed=20,),
-		robot.tasks.align_gyro(),
-		[robot.tasks.wait_ms(time=200,),robot.tasks.module_left_cw(distance=600,speed=100,)],
+		robot.tasks.set_event(index=3,),
+		[robot.tasks.wait_ms(time=200,),robot.tasks.module_left_cw(distance=600,speed=100,),robot.tasks.wait_ms(time=1200,),robot.tasks.module_right_cw(distance=350,speed=60,),robot.tasks.trigger_event(index=3,)],
 		robot.tasks.drive_forward_gyro(distance=250,speed=30,),
 		robot.tasks.drive_forward_gyro(distance=900,speed=60,),
-		robot.tasks.module_right_cw(distance=570,speed=60,),
+		robot.tasks.wait_event(index=3,),
+		robot.tasks.module_right_cw(distance=220,speed=60,),
 		[robot.tasks.module_right_ccw(distance=530,speed=60,)],
-		robot.tasks.drive_forward_gyro(distance=480,speed=60,),
-		robot.tasks.module_left_ccw(distance=320,speed=60,),
+		robot.tasks.drive_forward_gyro(distance=500,speed=60,),
+		robot.tasks.module_left_ccw(distance=250,speed=60,),
 		robot.tasks.drive_forward_gyro(distance=400,speed=30,),
 		robot.tasks.turn_left(angle=67,speed=20,),
-		robot.tasks.drive_forward_gyro(distance=1000,speed=80,),], self.run_color)
+		robot.tasks.drive_forward_gyro(distance=1000,speed=100,),], self.run_color)
 class Run2:
 	def __init__(self):
 		self.run_name = 'run2'
