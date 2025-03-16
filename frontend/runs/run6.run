@@ -1,37 +1,39 @@
 color MAGENTA
+wait_ms(time=10)
+tasksplit {
+    wait_ms(time=200)
+    module_left_cw(distance=400 speed=100)
+}
 
 drive_forward_gyro(distance=1610 speed=90)
-module_left_cw(distance=700 speed=100)
+module_left_cw(distance=300 speed=100)
 
 drive_backward_gyro(distance=260 speed=50)
 turn_right_on_spot(angle=45 speed=10)
-align_gyro()
-drive_forward_gyro(distance=230 speed=40)
-drive_forward_time_gyro(time=600 speed=20)
+wait_ms(time=200)
+drive_forward_gyro(distance=250 speed=40)
+set_event(index=0)
+tasksplit {
+    module_right_ccw(distance=300 speed=100)
+    trigger_event(index=0)
+}
+drive_forward_time_gyro(time=400 speed=20)
+wait_event(index=0)
 
-wait_ms(time=500)
-
-module_right_ccw(distance=300 speed=100)
-
-wait_ms(time=500)
-
-set_event (index=1)
 tasksplit {
     module_right_cw(distance=80 speed=80)
-    trigger_event (index=1)
 }
 
 // Drive out of whale
-drive_backward_gyro(distance=420 speed=60)
+drive_backward_gyro(distance=410 speed=60)
 turn_left_on_spot(angle=90 speed=10)
-align_gyro()
 
-drive_backward_gyro(distance=855 speed=60)
+drive_backward_gyro(distance=840 speed=60)
 module_right_ccw(distance=260 speed=60)
 
-drive_forward_gyro(distance=110 speed=20)
-module_right_cw(distance=170 speed=100)
+drive_forward_gyro(distance=90 speed=40)
+module_right_cw(distance=200 speed=100)
 drive_forward_gyro(distance=30 speed=20)
-module_right_cw(distance=250 speed=100)
+module_right_cw(distance=220 speed=100)
 
 drive_backward_gyro(distance=550 speed=100)

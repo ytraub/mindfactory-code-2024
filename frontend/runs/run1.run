@@ -36,11 +36,11 @@ tasksplit {
     module_left_ccw(distance=300 speed=100)
 }
 drive_backward(distance=530 speed=30)
-wait_ms(time=500)
+wait_ms(time=300)
 turn_right(angle=45 speed=15)
-wait_ms(time=500)
-drive_backward_time_gyro(time=800 speed=30)
-wait_ms(time=1000)
+wait_ms(time=300)
+drive_backward_time_gyro(time=1200 speed=30)
+wait_ms(time=800)
 
 tasksplit {
     module_left_cw(distance=250 speed=60)
