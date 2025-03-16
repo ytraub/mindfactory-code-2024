@@ -18,7 +18,7 @@
 		robot.tasks.drive_forward_gyro(distance=100,speed=15,),
 		robot.tasks.drive_forward_gyro(distance=150,speed=30,),
 		robot.tasks.drive_forward_time_gyro(time=300,speed=20,),
-		[robot.tasks.wait_ms(time=400,),robot.tasks.module_left_ccw(distance=300,speed=100,)],
+		[robot.tasks.wait_ms(time=600,),robot.tasks.module_left_ccw(distance=300,speed=100,)],
 		robot.tasks.drive_backward(distance=535,speed=30,),
 		robot.tasks.wait_ms(time=200,),
 		robot.tasks.turn_right(angle=45,speed=15,),

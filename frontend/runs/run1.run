@@ -32,7 +32,7 @@ drive_forward_time_gyro(time=300 speed=20)
 
 // drive from unknown creature to back of field
 tasksplit {
-    wait_ms(time=400)
+    wait_ms(time=600)
     module_left_ccw(distance=300 speed=100)
 }
 drive_backward(distance=535 speed=30)
