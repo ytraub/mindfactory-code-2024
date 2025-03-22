@@ -21,6 +21,7 @@ drive_forward_time_gyro(time=400 speed=20)
 wait_event(index=0)
 
 tasksplit {
+    wait_ms(time=400)
     module_right_cw(distance=80 speed=80)
 }
 

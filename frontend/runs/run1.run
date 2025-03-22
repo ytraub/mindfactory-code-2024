@@ -23,7 +23,7 @@ turn_left(angle=45 speed=30)
 drive_forward_gyro(distance=550 speed=80)
 tasksplit {
     // Adjust upper arm a bit to fit
-    module_left_cw(distance=300 speed=100)
+    module_left_cw(distance=350 speed=100)
 }
 
 drive_forward_gyro(distance=100 speed=15)
@@ -32,8 +32,8 @@ drive_forward_time_gyro(time=300 speed=20)
 
 // drive from unknown creature to back of field
 tasksplit {
-    wait_ms(time=600)
-    module_left_ccw(distance=300 speed=100)
+    wait_ms(time=800)
+    module_left_ccw(distance=350 speed=100)
 }
 drive_backward(distance=535 speed=30)
 wait_ms(time=200)
