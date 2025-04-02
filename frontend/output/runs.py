@@ -39,6 +39,7 @@
 		robot.tasks.module_left_ccw(distance=1350,speed=100,),
 		robot.tasks.wait_event(index=2,),
 		robot.tasks.turn_left(angle=90,speed=20,),
+		robot.tasks.align_gyro(),
 		robot.tasks.set_event(index=3,),
 		[robot.tasks.wait_ms(time=200,),robot.tasks.module_left_cw(distance=600,speed=100,),robot.tasks.wait_ms(time=1200,),robot.tasks.module_right_cw(distance=350,speed=60,),robot.tasks.trigger_event(index=3,)],
 		robot.tasks.drive_forward_gyro(distance=250,speed=30,),
@@ -47,7 +48,7 @@
 		robot.tasks.module_right_cw(distance=220,speed=60,),
 		[robot.tasks.module_right_ccw(distance=530,speed=60,)],
 		robot.tasks.drive_forward_gyro(distance=500,speed=60,),
-		robot.tasks.module_left_ccw(distance=250,speed=60,),
+		robot.tasks.module_left_ccw(distance=300,speed=60,),
 		robot.tasks.drive_forward_gyro(distance=400,speed=30,),
 		robot.tasks.turn_left(angle=67,speed=20,),
 		robot.tasks.drive_forward_gyro(distance=1000,speed=100,),], self.run_color)
@@ -73,8 +74,8 @@
 		robot.tasks.drive_backward_gyro(distance=245,speed=50,),
 		robot.tasks.turn_left_on_spot(angle=90,speed=15,),
 		robot.tasks.align_gyro(),
-		robot.tasks.drive_forward_gyro(distance=500,speed=80,),
-		robot.tasks.drive_forward_gyro(distance=40,speed=20,),
+		robot.tasks.drive_forward_gyro(distance=450,speed=80,),
+		robot.tasks.drive_forward_time_gyro(time=500,speed=20,),
 		[robot.tasks.module_left_ccw(distance=400,speed=100,),robot.tasks.wait_ms(time=700,),robot.tasks.module_left_time_cw(time=800,speed=60,)],
 		robot.tasks.module_right_cw(distance=450,speed=100,),
 		robot.tasks.drive_backward_gyro(distance=20,speed=20,),

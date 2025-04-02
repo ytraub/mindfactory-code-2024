@@ -8,8 +8,8 @@ drive_forward_time_gyro(time=800 speed=10)
 drive_backward_gyro(distance=245 speed=50)
 turn_left_on_spot(angle=90 speed=15)
 align_gyro()
-drive_forward_gyro(distance=500 speed=80)
-drive_forward_gyro(distance=40 speed=20)
+drive_forward_gyro(distance=450 speed=80)
+drive_forward_time_gyro(time=500 speed=20)
 
 tasksplit {
     module_left_ccw(distance=400 speed=100)
