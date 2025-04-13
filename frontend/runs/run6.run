@@ -1,5 +1,7 @@
 color MAGENTA
+
 wait_ms(time=10)
+
 tasksplit {
     wait_ms(time=200)
     module_left_cw(distance=400 speed=100)
