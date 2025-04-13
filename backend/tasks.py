@@ -1055,14 +1055,8 @@ class Tasks:
             deaccel_distance=deaccel_distance,
         )
 
-    def wait_ms(
-        self,
-        time: int,
-    ) -> WaitMs:
-        return WaitMs(
-            self.controller,
-            time=time,
-        )
+    def wait_ms(self, time: int ) -> WaitMs:
+        return WaitMs(self.controller, time=time)
 
     def create_global_timer(self, index: int) -> CreateGlobalTimer:
         return CreateGlobalTimer(self.robot, self.controller, index=index)
