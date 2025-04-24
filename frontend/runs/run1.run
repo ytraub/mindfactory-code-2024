@@ -1,6 +1,7 @@
 color BLUE
 
 create_global_timer(index=0)
+
 set_event (index=0)
 tasksplit {
     // push and pull for crab habitat

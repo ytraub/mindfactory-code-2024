@@ -665,7 +665,6 @@ class WaitGlobalTimer(Task):
         if self.robot.timers.get(str(self.index)):
             self.timer = self.robot.timers[str(self.index)]
         else:
-            self.timer = None
             print_runtime_error(f"No timer with index: {self.index} found")
 
     def check(self) -> None:
@@ -674,30 +673,7 @@ class WaitGlobalTimer(Task):
             return self.timer.reached(self.time)
         else:
             print("No timer found for index", self.index)
-
-        return False
-
-
-class StopGlobalTimer(Task):
-    def __init__(
-        self,
-        robot,
-        index: int,
-    ) -> None:
-        super().__init__()
-        self.robot = robot
-        self.index = index
-
-    def start(self) -> None:
-        if self.robot.timers.get(str(self.index)):
-            self.robot.timers[str(self.index)].stop()
-            self.robot.timers[str(self.index)] = None
-        else:
-            print_runtime_error(f"No timer with index: {self.index} found")
-
-    def check(self) -> None:
-        return True
-
+            return True
 
 class Tasks:
     def __init__(self, robot, controller) -> None:
@@ -1063,6 +1039,3 @@ class Tasks:
 
     def wait_global_timer(self, index: int, time: int) -> WaitGlobalTimer:
         return WaitGlobalTimer(self.robot, index=index, time=time)
-
-    def stop_global_timer(self, index: int) -> StopGlobalTimer:
-        return StopGlobalTimer(self.robot, index=index)
