@@ -145,10 +145,11 @@
 		robot.chain([robot.tasks.drive_forward_gyro(distance=980,speed=100,),
 		robot.tasks.turn_left_on_spot(angle=52,speed=20,),
 		robot.tasks.drive_forward_gyro(distance=1000,speed=80,),
-		[robot.tasks.module_left_cw(distance=150,speed=10,)],
 		robot.tasks.drive_forward_time_gyro(time=600,speed=10,),
 		robot.tasks.module_right_cw(distance=650,speed=100,),
+		robot.tasks.module_left_ccw(distance=130,speed=80,),
 		robot.tasks.wait_ms(time=1000,),
+		[robot.tasks.module_left_cw(distance=130,speed=80,)],
 		robot.tasks.drive_backward_gyro(distance=150,speed=30,),], self.run_color)
 __runs__ = [Run1(),Run2(),Run3(),Run4(),Run5(),Run6(),Run7()]
 
