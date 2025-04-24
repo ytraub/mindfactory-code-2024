@@ -6,7 +6,7 @@ drive_forward_gyro(distance=1000 speed=80)
 
 drive_forward_time_gyro(time=600 speed=10)
 
-wait_global_timer(index=0 time=147000)
+wait_global_timer(index=0 time=146700)
 
 // Solve Uboot
 module_right_cw(distance=650 speed=100)
