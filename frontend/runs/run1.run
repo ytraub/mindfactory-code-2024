@@ -82,7 +82,13 @@ tasksplit {
     module_right_cw(distance=350 speed=60)
     trigger_event(index=3)
 }
+
 drive_forward_gyro(distance=250 speed=30)
+
+tasksplit {
+    module_left_ccw(distance=180 speed=60)
+}
+
 drive_forward_gyro(distance=900 speed=60)
 wait_event(index=3)
 
@@ -93,8 +99,9 @@ tasksplit {
     wait_ms(time=500)
     module_right_ccw(distance=680 speed=60)
 }
+
 drive_forward_gyro(distance=500 speed=60)
-module_left_ccw(distance=330 speed=60)
+module_left_ccw(distance=150 speed=60)
 
 drive_forward_gyro(distance=400 speed=30)
 turn_left(angle=67 speed=20)

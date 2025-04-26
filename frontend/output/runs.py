@@ -43,12 +43,13 @@
 		robot.tasks.set_event(index=3,),
 		[robot.tasks.wait_ms(time=200,),robot.tasks.module_left_cw(distance=600,speed=100,),robot.tasks.wait_ms(time=1200,),robot.tasks.module_right_cw(distance=350,speed=60,),robot.tasks.trigger_event(index=3,)],
 		robot.tasks.drive_forward_gyro(distance=250,speed=30,),
+		[robot.tasks.module_left_ccw(distance=180,speed=60,)],
 		robot.tasks.drive_forward_gyro(distance=900,speed=60,),
 		robot.tasks.wait_event(index=3,),
 		robot.tasks.module_right_cw(distance=350,speed=60,),
 		[robot.tasks.wait_ms(time=500,),robot.tasks.module_right_ccw(distance=680,speed=60,)],
 		robot.tasks.drive_forward_gyro(distance=500,speed=60,),
-		robot.tasks.module_left_ccw(distance=330,speed=60,),
+		robot.tasks.module_left_ccw(distance=150,speed=60,),
 		robot.tasks.drive_forward_gyro(distance=400,speed=30,),
 		robot.tasks.turn_left(angle=67,speed=20,),
 		robot.tasks.drive_forward_gyro(distance=1000,speed=100,),], self.run_color)
