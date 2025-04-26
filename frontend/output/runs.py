@@ -103,10 +103,10 @@
 		robot.chain([robot.tasks.drive_forward_gyro(distance=2170,speed=90,),
 		robot.tasks.module_right_time_ccw(time=700,speed=100,),
 		robot.tasks.drive_backward_gyro(distance=300,speed=40,),
-		robot.tasks.drive_forward_gyro(distance=40,speed=40,),
+		robot.tasks.drive_forward_gyro(distance=100,speed=40,),
 		robot.tasks.set_event(index=0,),
 		[robot.tasks.wait_ms(time=1000,),robot.tasks.module_left_cw(distance=800,speed=100,),robot.tasks.trigger_event(index=0,)],
-		robot.tasks.drive_backward_gyro(distance=320,speed=40,),
+		robot.tasks.drive_backward_gyro(distance=380,speed=40,),
 		robot.tasks.wait_event(index=0,),
 		[robot.tasks.wait_ms(time=1000,),robot.tasks.module_left_ccw(distance=500,speed=100,)],
 		robot.tasks.drive_custom_forward(time=1920,speed_right=98,speed_left=100,),], self.run_color)
