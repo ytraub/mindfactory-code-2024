@@ -8,4 +8,5 @@ module_right_ccw(distance=800 speed=100)
 drive_forward_gyro(distance=50 speed=20)
 module_left_cw(distance=750 speed=100)
 
-drive_custom_backward(time=1600 speed_right=100 speed_left=66)
+drive_custom_backward(time=800 speed_right=100 speed_left=50)
+drive_custom_backward(time=850 speed_right=100 speed_left=100)

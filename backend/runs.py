@@ -93,7 +93,8 @@
 		robot.tasks.module_right_ccw(distance=800,speed=100,),
 		robot.tasks.drive_forward_gyro(distance=50,speed=20,),
 		robot.tasks.module_left_cw(distance=750,speed=100,),
-		robot.tasks.drive_custom_backward(time=1600,speed_right=100,speed_left=66,),], self.run_color)
+		robot.tasks.drive_custom_backward(time=800,speed_right=100,speed_left=50,),
+		robot.tasks.drive_custom_backward(time=850,speed_right=100,speed_left=100,),], self.run_color)
 class Run5:
 	def __init__(self):
 		self.run_name = 'run5'
@@ -148,8 +149,9 @@
 		robot.tasks.drive_forward_time_gyro(time=600,speed=10,),
 		robot.tasks.wait_global_timer(index=0,time=146700,),
 		robot.tasks.module_right_cw(distance=650,speed=100,),
+		robot.tasks.wait_ms(time=600,),
 		robot.tasks.module_left_ccw(distance=130,speed=80,),
-		robot.tasks.wait_ms(time=1000,),
+		robot.tasks.wait_ms(time=400,),
 		[robot.tasks.module_left_cw(distance=130,speed=80,)],
 		robot.tasks.drive_backward_gyro(distance=150,speed=40,),], self.run_color)
 __runs__ = [Run1(),Run2(),Run3(),Run4(),Run5(),Run6(),Run7()]
