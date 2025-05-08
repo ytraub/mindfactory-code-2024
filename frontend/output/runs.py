@@ -91,10 +91,10 @@
 	def create_chain(self, robot):
 		robot.chain([robot.tasks.drive_forward_gyro(distance=1020,speed=100,),
 		robot.tasks.turn_left(angle=48,speed=30,),
-		robot.tasks.drive_forward_gyro(distance=130,speed=40,),
+		robot.tasks.drive_forward_gyro(distance=135,speed=40,),
 		robot.tasks.module_right_cw(distance=100,speed=100,),
 		robot.tasks.module_right_ccw(distance=800,speed=100,),
-		robot.tasks.drive_forward_gyro(distance=50,speed=20,),
+		robot.tasks.drive_forward_gyro(distance=45,speed=20,),
 		robot.tasks.module_left_cw(distance=750,speed=100,),
 		robot.tasks.drive_custom_backward(time=800,speed_right=100,speed_left=70,),
 		robot.tasks.drive_custom_backward(time=850,speed_right=100,speed_left=100,),], self.run_color)

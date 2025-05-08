@@ -2,10 +2,10 @@ color YELLOW
 
 drive_forward_gyro(distance=1020 speed=100)
 turn_left(angle=48 speed=30)
-drive_forward_gyro(distance=130 speed=40)
+drive_forward_gyro(distance=135 speed=40)
 module_right_cw(distance=100 speed=100)
 module_right_ccw(distance=800 speed=100)
-drive_forward_gyro(distance=50 speed=20)
+drive_forward_gyro(distance=45 speed=20)
 module_left_cw(distance=750 speed=100)
 
 drive_custom_backward(time=800 speed_right=100 speed_left=70)
