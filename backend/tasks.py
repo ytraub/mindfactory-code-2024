@@ -623,6 +623,19 @@ class WaitMs(Task):
     def check(self) -> bool:
         return self.timer.finished(self.time)
 
+class ResetGyro(Task):
+    def __init__(
+        self,
+        controller,
+    ) -> None:
+        super().__init__()
+        self.controller = controller
+
+    def start(self) -> None:
+        self.controller.reset_gyro()
+
+    def check(self) -> None:
+        return True
 
 class CreateGlobalTimer(Task):
     def __init__(
@@ -1032,6 +1045,9 @@ class Tasks:
 
     def wait_ms(self, time: int ) -> WaitMs:
         return WaitMs(self.controller, time=time)
+    
+    def reset_gyro(self) -> ResetGyro:
+        return ResetGyro(self.controller)
 
     def create_global_timer(self, index: int) -> CreateGlobalTimer:
         return CreateGlobalTimer(self.robot, self.controller, index=index)
