@@ -1,17 +1,18 @@
 color WHITE
 
+
 drive_forward_gyro(distance=980 speed=100)
 turn_left_on_spot(angle=52 speed=20)
 drive_forward_gyro(distance=1000 speed=80)
 
 drive_forward_time_gyro(time=600 speed=10)
 
-wait_global_timer(index=0 time=146700)
+wait_global_timer(index=0 time=146500)
 
 // Solve Uboot
-module_right_cw(distance=650 speed=100)
+module_right_time_cw(time=1400 speed=100)
 wait_ms(time=600)
-module_left_ccw(distance=130 speed=80)
+module_left_ccw(distance=130 speed=100)
 wait_ms(time=400)
 
 tasksplit {

@@ -148,10 +148,10 @@
 		robot.tasks.turn_left_on_spot(angle=52,speed=20,),
 		robot.tasks.drive_forward_gyro(distance=1000,speed=80,),
 		robot.tasks.drive_forward_time_gyro(time=600,speed=10,),
-		robot.tasks.wait_global_timer(index=0,time=146700,),
-		robot.tasks.module_right_cw(distance=650,speed=100,),
+		robot.tasks.wait_global_timer(index=0,time=146500,),
+		robot.tasks.module_right_time_cw(time=1400,speed=100,),
 		robot.tasks.wait_ms(time=600,),
-		robot.tasks.module_left_ccw(distance=130,speed=80,),
+		robot.tasks.module_left_ccw(distance=130,speed=100,),
 		robot.tasks.wait_ms(time=400,),
 		[robot.tasks.module_left_cw(distance=130,speed=80,)],
 		robot.tasks.drive_backward_gyro(distance=150,speed=40,),], self.run_color)
