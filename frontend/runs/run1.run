@@ -28,7 +28,7 @@ tasksplit {
 
 drive_forward_gyro(distance=100 speed=15)
 drive_forward_gyro(distance=150 speed=30)
-drive_forward_time_gyro(time=300 speed=20)
+drive_forward_time_gyro(time=800 speed=20)
 
 // drive from unknown creature to back of field
 tasksplit {

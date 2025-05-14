@@ -11,7 +11,7 @@ wait_global_timer(index=0 time=146500)
 
 // Solve Uboot
 module_right_time_cw(time=1400 speed=100)
-wait_ms(time=600)
+wait_ms(time=300)
 module_left_ccw(distance=130 speed=100)
 wait_ms(time=400)
 
